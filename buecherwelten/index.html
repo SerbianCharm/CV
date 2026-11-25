@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'; require-trusted-types-for 'script'; trusted-types 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bücherwelten – Bücherei-Abenteuer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='2' width='5' height='12' fill='%23b8453a'/%3E%3Crect x='7' y='3' width='3' height='11' fill='%232f6fb0'/%3E%3Crect x='10' y='1' width='4' height='13' fill='%23e0b13c'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="spines" aria-hidden="true"></div>
+<main class="wrap">
+  <header>
+    <h1 class="sr">Bücherwelten</h1>
+    <canvas id="logo" width="80" height="11" aria-hidden="true"></canvas>
+    <p>Ein Bücherei-Abenteuer in der Hauptbücherei · Prototyp</p>
+  </header>
+  <div class="frame">
+    <div id="screen-wrap">
+      <canvas id="screen" tabindex="0" aria-label="Spielfläche: Bücherwelten. Steuerung mit Pfeiltasten, E und Esc."></canvas>
+    </div>
+  </div>
+  <div class="pad" id="pad" aria-label="Touch-Steuerung">
+    <div class="dpad">
+      <button type="button" class="up" data-btn="up" aria-label="hoch">▲</button>
+      <button type="button" class="left" data-btn="left" aria-label="links">◀</button>
+      <button type="button" class="right" data-btn="right" aria-label="rechts">▶</button>
+      <button type="button" class="down" data-btn="down" aria-label="runter">▼</button>
+    </div>
+    <div class="mid">
+      <button type="button" data-btn="map">Plan</button>
+      <button type="button" data-btn="menu">Menü</button>
+      <button type="button" data-btn="music" aria-label="Musik an oder aus">♪</button>
+    </div>
+    <div class="ab">
+      <button type="button" class="bb" data-btn="run tjump" aria-label="B: rennen oder springen">B</button>
+      <button type="button" class="ba" data-btn="act" aria-label="A: Aktion">A</button>
+    </div>
+  </div>
+  <p class="keys"><b>Pfeile/WASD</b> gehen · <b>Shift</b> rennen · <b>E</b> sprechen &amp; benutzen · <b>K</b> Lageplan · <b>M</b> Musik · <b>Esc</b> Menü</p>
+</main>
+<footer>Prototyp nach dem Konzept „Library Adventure Game“. Grafik, Texte und Musik entstehen im Browser – keine externen Inhalte, keine Netzwerkzugriffe, der Spielstand bleibt lokal im Browser.</footer>
+<script src="game.js"></script>
+</body>
+</html>
