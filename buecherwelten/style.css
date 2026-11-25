@@ -45,8 +45,11 @@ footer{color:#8f8193;font-size:13px;text-align:center;padding:4px 14px 16px;max-
 /* Handy quer: Spiel füllt den Bildschirm, Knöpfe liegen halbtransparent am Rand */
 @media (hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:540px){
 html,body{height:100%;overflow:hidden}body{min-height:0}.spines,header{display:none}
-.wrap{padding:0;gap:0;height:100vh;height:100dvh;justify-content:center}
-.frame{width:min(100vw,calc(100vh * 16 / 9));width:min(100vw,calc(100dvh * 16 / 9));min-width:0;padding:0;border-radius:0;background:none;box-shadow:none}
+.wrap{padding:0;gap:0}
+/* Fest positioniert wie die Knöpfe: iOS 26 legt Inhalt im Seitenfluss unter die Adressleiste,
+   fixe Elemente aber in den sichtbaren Bereich. Das Spiel füllt diesen Bereich in 16:9. */
+.frame{position:fixed;inset:0;width:auto;min-width:0;padding:0;border-radius:0;background:#0d0a10;box-shadow:none;display:flex;align-items:center;justify-content:center;container-type:size}
+#screen-wrap{width:min(100vw,calc(100vh * 16 / 9));width:min(100cqw,calc(100cqh * 16 / 9))}
 #screen-wrap,#screen{border-radius:0;box-shadow:none}
 .pad{position:fixed;inset:0;display:block;width:auto;max-width:none;padding:0;pointer-events:none}
 .pad>div{position:absolute;pointer-events:auto}
