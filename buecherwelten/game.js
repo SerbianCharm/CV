@@ -5053,6 +5053,18 @@ const Game = (() => {
     Input.onAny(() => ensureAudio());
     const pad = document.getElementById('pad');
     if (pad) Input.bindButtons(pad);
+    const fs = document.getElementById('fs');
+    if (fs && document.fullscreenEnabled && document.documentElement.requestFullscreen) {
+      fs.hidden = false;
+      fs.addEventListener('click', () => {
+        try {
+          if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+          else document.documentElement.requestFullscreen().catch(() => {});
+        } catch (e) {
+          /* Vollbild nicht erlaubt */
+        }
+      });
+    }
     screen.addEventListener('pointerdown', () => {
       try { screen.focus({ preventScroll: true }); } catch (e) { /* egal */ }
       ensureAudio();

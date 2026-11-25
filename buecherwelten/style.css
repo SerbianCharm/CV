@@ -30,5 +30,28 @@ header p{margin:0;color:var(--dim);font-size:15px}
 .ab button{width:64px;height:64px;border-radius:50%;font-size:22px}
 .ab .ba{background:#b8453a;border-color:#e07a6e}.ab .bb{background:#2f6fb0;border-color:#6fa3d8;margin-top:28px}
 footer{color:#8f8193;font-size:13px;text-align:center;padding:4px 14px 16px;max-width:80ch}
-@media (hover:none) and (pointer:coarse){.pad{display:flex}.keys{display:none}.frame{width:min(100%,calc((100vh - 330px) * 16 / 9))}}
+.hint{display:none;margin:0;color:var(--dim);font-size:14px;text-align:center}
+[hidden]{display:none!important}
 @media (max-width:600px){.frame{padding:6px;border-radius:8px}#logo{height:30px}header p{font-size:14px}}
+/* Touch (Tablet & Handy): Knöpfe statt Tastenhinweis */
+@media (hover:none) and (pointer:coarse){.pad{display:flex}.keys,footer{display:none}.frame{width:min(100%,calc((100vh - 300px) * 16 / 9))}}
+/* Handy hochkant: Spielfeld randlos über die volle Breite, kompakte Knöpfe */
+@media (hover:none) and (pointer:coarse) and (orientation:portrait){
+.spines{height:6px}.wrap{padding:6px 0 10px;gap:8px}header p{display:none}#logo{height:22px}
+.frame{width:100%;min-width:0;padding:0;border-radius:0;background:none;box-shadow:none}
+#screen-wrap{border-radius:0;box-shadow:0 2px 0 #d9b24a,0 -2px 0 #d9b24a}#screen{border-radius:0}
+.pad{width:100%;max-width:440px;padding:0 12px}.dpad{grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,46px)}
+.ab button{width:56px;height:56px;font-size:20px}.ab .bb{margin-top:24px}.mid button{min-width:58px;min-height:40px;font-size:14px}.hint{display:block}}
+/* Handy quer: Spiel füllt den Bildschirm, Knöpfe liegen halbtransparent am Rand */
+@media (hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:540px){
+html,body{height:100%;overflow:hidden}body{min-height:0}.spines,header{display:none}
+.wrap{padding:0;gap:0;height:100vh;height:100dvh;justify-content:center}
+.frame{width:min(100vw,calc(100vh * 16 / 9));width:min(100vw,calc(100dvh * 16 / 9));min-width:0;padding:0;border-radius:0;background:none;box-shadow:none}
+#screen-wrap,#screen{border-radius:0;box-shadow:none}
+.pad{position:fixed;inset:0;display:block;width:auto;max-width:none;padding:0;pointer-events:none}
+.pad>div{position:absolute;pointer-events:auto}
+.dpad{left:10px;bottom:10px;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px)}
+.ab{right:12px;bottom:12px}.ab button{width:54px;height:54px;font-size:19px}.ab .bb{margin-top:26px}
+.mid{right:10px;top:10px;flex-direction:column;gap:6px}.mid button{min-width:0;min-height:34px;padding:0 10px;font-size:13px}
+.pad button{background:rgba(59,45,66,.45);border-color:rgba(170,145,180,.5);box-shadow:none}
+.pad .ba{background:rgba(184,69,58,.5)}.pad .bb{background:rgba(47,111,176,.5)}}
