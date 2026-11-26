@@ -140,6 +140,7 @@ const FONT_SRC = {
   'ü': '.#.#.|.....|#...#|#...#|#...#|#...#|.####',
   'ß': '.##.|#..#|#..#|#.#.|#..#|#..#|#.#.',
   'é': '...#.|..#..|.###.|#...#|#####|#....|.###.',
+  'è': '.#...|..#..|.###.|#...#|#####|#....|.###.',
   '0': '.###.|#...#|#..##|#.#.#|##..#|#...#|.###.',
   '1': '.#.|##.|.#.|.#.|.#.|.#.|###',
   '2': '.###.|#...#|....#|...#.|..#..|.#...|#####',
@@ -1356,7 +1357,7 @@ const NPCS = deepFreeze([
   { id: 'gruber', name: 'Herr Gruber', floor: '2', x: 27, y: 14, dir: 'down', role: 'event', event: 'food', sit: true, look: mkLook('short', 'white', 'light', '#8a9a5b', '#4a3f35', 'glasses') },
   { id: 'leser1', name: 'Leserin', floor: '2', x: 26, y: 5, dir: 'down', sit: true, look: mkLook('long', 'black', 'brown', '#f4a261', '#3d405b'), lines: ['Pssst … ich bin gerade beim spannendsten Kapitel!'] },
   { id: 'reise', name: 'Reisender', floor: '2', x: 35, y: 15, dir: 'left', wander: true, look: mkLook('short', 'red', 'light', '#2a6f97', '#5c4033'), lines: ['Ich plane eine Reise! Reiseführer stehen hier im College 2 bei „Länder & Reisen“.', 'Lokal, regional, global – von Wien bis ans andere Ende der Welt ist alles da.'] },
-  { id: 'foyer1', name: 'Besucherin', floor: '2', x: 6, y: 13, dir: 'down', wander: true, look: mkLook('long', 'brown', 'dark', '#e9c46a', '#264653'), lines: ['Kennst du den Lageplan? Mit [K] siehst du, wo welches Thema steht.', 'Mit [B] siehst du alle Bücherwelten. Ich spare gerade auf „Moby Dick“!', 'Meine Jacke ist an der Garderobe – gleich da unten.'] },
+  { id: 'foyer1', name: 'Besucherin', floor: '2', x: 6, y: 13, dir: 'down', wander: true, look: mkLook('long', 'brown', 'dark', '#e9c46a', '#264653'), lines: ['Kennst du den Lageplan? Mit [K] siehst du, wo welches Thema steht.', 'Mit [B] – am Handy mit „Bücher“ – siehst du alle Bücherwelten. Ich spare gerade auf „Moby Dick“!', 'Meine Jacke ist an der Garderobe – gleich da unten.'] },
   { id: 'leser3', name: 'Leser', floor: '2', x: 50, y: 12, dir: 'down', sit: true, look: mkLook('short', 'grey', 'tan', '#5e548e', '#2b2d42', 'glasses'), lines: ['Philosophie, Psychologie, Recht … im College 3 könnte ich stundenlang stöbern.'] },
   { id: 'gang2', name: 'Student', floor: '2', x: 52, y: 10, dir: 'down', wander: true, look: mkLook('short', 'blonde', 'light', '#b56576', '#22223b'), lines: ['Hast du gewusst, dass es im College 3 eine „Bibliothek für Frauen und Männer“ gibt?'] },
   // --- 3. OG
@@ -1416,7 +1417,7 @@ const EVENT_IDS = Object.freeze(Object.keys(EVENTS));
 const NOVAK_INTRO = deepFreeze([
   'Servus und willkommen in der Hauptbücherei! Ich bin Frau Novak von der Ausleihe und Rückgabe.',
   'Die Bücherei ist in sechs Colleges aufgeteilt – jedes hat seine eigene Farbe. Hier im 2. OG: Gelb, Rot und Grau. Oben im 3. OG: Orange, Blau und Grün.',
-  'Mit [K] öffnest du jederzeit den Lageplan. Dort steht auch, welche Themen in welchem College zu finden sind.',
+  'Mit [K] – am Handy mit „Plan“ – öffnest du jederzeit den Lageplan. Dort steht auch, welche Themen in welchem College zu finden sind.',
   'Du kannst mir gleich helfen: Auf dem Rückgabewagen warten Bücher darauf, wieder ins richtige Regal zu kommen.',
   'Aber Achtung: Ein Buch am falschen Platz springt sofort wieder heraus – und das kostet Punkte!',
   'Hier, nimm gleich das erste. Auf dem Etikett steht das Thema. Viel Erfolg!',
@@ -1428,7 +1429,7 @@ const NOVAK_TIPS = deepFreeze([
   'Kennst du schon das 3. OG? Mit dem Lift oder über die Treppen kommst du hinauf.',
   'Auf dem Lageplan [K] siehst du alle Colleges und ihre Themen.',
   'An den Info-Theken gibt es Suchaufträge und Quizfragen – die bringen Punkte!',
-  'Mit [B] öffnest du die Bücherliste. Dort steht, ab wie vielen ★ sich welche Buchwelt öffnet.',
+  'Mit [B] – am Handy mit „Bücher“ – öffnest du die Bücherliste. Dort steht, ab wie vielen ★ sich welche Buchwelt öffnet.',
 ]);
 
 const OBJECT_TEXT = deepFreeze({
@@ -1479,10 +1480,23 @@ const Sound = (() => {
     return 440 * Math.pow(2, (n - 69) / 12);
   }
 
+  // iPhone/iPad: Ohne Angabe behandelt Safari Web-Audio wie „ambient“ – dann schaltet der
+  // Lautlos-Schalter alles stumm. Mit Musik an spielt das Spiel wie ein Video ("playback"),
+  // mit Musik aus gilt wieder der Lautlos-Schalter. Andere Browser kennen die API nicht.
+  function applySession() {
+    try {
+      const as = navigator.audioSession;
+      if (as && 'type' in as) as.type = musicOn ? 'playback' : 'ambient';
+    } catch (e) {
+      /* nicht unterstützt */
+    }
+  }
+
   function init() {
     if (ctx) return true;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return false;
+    applySession();
     try {
       ctx = new AC();
     } catch (e) {
@@ -1516,7 +1530,23 @@ const Sound = (() => {
   }
 
   function resume() {
-    if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+    if (ctx && ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {});
+  }
+
+  // Muss direkt in einem Nutzer-Ereignis laufen (touchend, pointerup, click, keydown).
+  // iOS gibt Audio bei touchstart/pointerdown nicht frei; ein stiller Mini-Ton „weckt“ den Kontext.
+  function unlock() {
+    if (!ctx && !init()) return;
+    if (ctx.state === 'running' || ctx.state === 'closed') return;
+    ctx.resume().catch(() => {});
+    try {
+      const src = ctx.createBufferSource();
+      src.buffer = ctx.createBuffer(1, 1, 22050);
+      src.connect(ctx.destination);
+      src.start(0);
+    } catch (e) {
+      /* egal */
+    }
   }
   function suspend() {
     if (ctx && ctx.state === 'running') ctx.suspend().catch(() => {});
@@ -1933,6 +1963,7 @@ const Sound = (() => {
 
   function setMusic(on) {
     musicOn = !!on;
+    applySession();
     if (musicBus) musicBus.gain.setTargetAtTime(musicOn ? 0.5 : 0, ctx.currentTime, 0.05);
   }
   function setSfx(on) {
@@ -1941,7 +1972,8 @@ const Sound = (() => {
   }
 
   return {
-    init, resume, suspend, play, stop, sfx, ambience, setMusic, setSfx, songTime, songInfo,
+    init, resume, unlock, suspend, play, stop, sfx, ambience, setMusic, setSfx, songTime, songInfo,
+    get state() { return ctx ? ctx.state : 'none'; },
     get musicOn() { return musicOn; },
     get sfxOn() { return sfxOn; },
     get ready() { return !!ctx; },
@@ -2080,6 +2112,7 @@ const Input = (() => {
   const held = new Set();
   const pressed = new Set();
   let anyListener = null;
+  let touchMode = false;
   const KEYMAP = {
     ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
     ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
@@ -2102,6 +2135,7 @@ const Input = (() => {
     if (!b) return;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     e.preventDefault();
+    touchMode = false;
     if (e.repeat && b !== 'up' && b !== 'down' && b !== 'left' && b !== 'right') return;
     press(b);
   }
@@ -2119,26 +2153,130 @@ const Input = (() => {
   }
 
   // Touch/Maus-Knöpfe: data-btn="up|down|left|right|act|run|map|books|menu|music"
+  const btnNames = (el) => String(el.dataset.btn).split(' ').filter((n) => /^[a-z]+$/.test(n));
+
   function bindButtons(root) {
+    const hasTouch = 'ontouchstart' in window;
+    // Maus und Stift: Zeiger-Ereignisse direkt am Knopf
     for (const el of root.querySelectorAll('[data-btn]')) {
-      const names = String(el.dataset.btn).split(' ').filter((n) => /^[a-z]+$/.test(n));
-      const down = (e) => {
+      const names = btnNames(el);
+      let down = false;
+      const onDown = (e) => {
+        if (hasTouch && e.pointerType === 'touch') return;
         e.preventDefault();
         try { el.setPointerCapture(e.pointerId); } catch (err) { /* egal */ }
+        down = true;
         el.classList.add('on');
         for (const n of names) press(n);
       };
-      const up = (e) => {
+      const onUp = (e) => {
+        if (!down || (hasTouch && e.pointerType === 'touch')) return;
         e.preventDefault();
+        down = false;
         el.classList.remove('on');
         for (const n of names) release(n);
       };
-      el.addEventListener('pointerdown', down);
-      el.addEventListener('pointerup', up);
-      el.addEventListener('pointercancel', up);
-      el.addEventListener('lostpointercapture', up);
+      el.addEventListener('pointerdown', onDown);
+      el.addEventListener('pointerup', onUp);
+      el.addEventListener('pointercancel', onUp);
+      el.addEventListener('lostpointercapture', onUp);
       el.addEventListener('contextmenu', (e) => e.preventDefault());
     }
+    if (hasTouch) bindTouch(root);
+  }
+
+  // Finger: ein zentraler Handler am Dokument, der selbst nachsieht, welcher Knopf unter dem
+  // Finger liegt. iOS Safari stellt Ereignisse an fest positionierten Knöpfen im Querformat
+  // sonst teils nicht zu (die Knöpfe reagierten erst nach einer Berührung im Hochformat).
+  // Nebenbei kann man jetzt auf dem Steuerkreuz von einer Richtung zur nächsten rutschen.
+  function bindTouch(root) {
+    const fingers = new Map();
+    const btns = () => Array.from(root.querySelectorAll('[data-btn]'));
+
+    function hit(x, y, onlyDpad) {
+      let best = null;
+      let bd = 1e9;
+      for (const el of btns()) {
+        if (onlyDpad && !el.closest('.dpad')) continue;
+        const r = el.getBoundingClientRect();
+        if (!r.width || !r.height) continue;
+        const m = 6;
+        if (x < r.left - m || x > r.right + m || y < r.top - m || y > r.bottom + m) continue;
+        const d = Math.hypot(x - (r.left + r.right) / 2, y - (r.top + r.bottom) / 2);
+        if (d < bd) { bd = d; best = el; }
+      }
+      return best;
+    }
+
+    function heldByOther(el, id) {
+      for (const [fid, f] of fingers) if (fid !== id && f.el === el) return true;
+      return false;
+    }
+
+    function setFinger(id, el) {
+      const f = fingers.get(id);
+      if (!f || f.el === el) return;
+      const prev = f.el;
+      f.el = el;
+      if (prev && !heldByOther(prev, id)) {
+        prev.classList.remove('on');
+        for (const n of btnNames(prev)) release(n);
+      }
+      if (el) {
+        el.classList.add('on');
+        for (const n of btnNames(el)) press(n);
+      }
+    }
+
+    function onStart(e) {
+      touchMode = true;
+      let used = false;
+      for (const t of e.changedTouches) {
+        const el = hit(t.clientX, t.clientY, false);
+        if (!el) continue;
+        used = true;
+        fingers.set(t.identifier, { el: null, dpad: !!el.closest('.dpad') });
+        setFinger(t.identifier, el);
+      }
+      if (used && e.cancelable) e.preventDefault();
+    }
+
+    function onMove(e) {
+      let used = false;
+      for (const t of e.changedTouches) {
+        const f = fingers.get(t.identifier);
+        if (!f) continue;
+        used = true;
+        if (f.dpad) setFinger(t.identifier, hit(t.clientX, t.clientY, true));
+      }
+      if (used && e.cancelable) e.preventDefault();
+    }
+
+    function onEnd(e) {
+      let used = false;
+      for (const t of e.changedTouches) {
+        if (!fingers.has(t.identifier)) continue;
+        used = true;
+        setFinger(t.identifier, null);
+        fingers.delete(t.identifier);
+      }
+      if (used && e.cancelable) e.preventDefault();
+    }
+
+    function releaseAll() {
+      for (const id of Array.from(fingers.keys())) {
+        setFinger(id, null);
+        fingers.delete(id);
+      }
+    }
+
+    document.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd, { passive: false });
+    document.addEventListener('touchcancel', onEnd, { passive: false });
+    // Beim Drehen des Geräts nichts „hängen“ lassen
+    window.addEventListener('orientationchange', releaseAll);
+    window.addEventListener('blur', releaseAll);
   }
 
   function clear() {
@@ -2158,6 +2296,7 @@ const Input = (() => {
     confirm: () => pressed.has('act') || pressed.has('jump'),
     endFrame: () => pressed.clear(),
     onAny: (fn) => { anyListener = fn; },
+    get touch() { return touchMode; },
   };
 })();
 
@@ -2303,7 +2442,11 @@ const Dialog = (() => {
     }
   }
 
-  return { open, close, update, draw, active: () => !!cur };
+  return {
+    open, close, update, draw, active: () => !!cur,
+    // Textbreite mit/ohne Porträt; so viele Zeilen passen in den Kasten
+    metrics: Object.freeze({ textW: BOX.w - 56, textWNarr: BOX.w - 16, maxLines: Math.floor((BOX.h - 15) / Font.LINE) + 1, choiceW: 300 }),
+  };
 })();
 
 // Hilfsfunktionen zum Bauen von Dialogseiten
@@ -2756,7 +2899,7 @@ const Library = (() => {
     const left = WORLDS[id].need - S.pts;
     if (left > 0 && left <= 10) {
       nearNoted.add(id);
-      Toast.show('Noch ' + left + ' ★ bis „' + WORLDS[id].title + '“ – siehe Bücherliste [B]', UI_COL.accent);
+      Toast.show('Noch ' + left + ' ★ bis „' + WORLDS[id].title + '“ – siehe Bücherliste', UI_COL.accent);
     }
   }
 
@@ -2858,7 +3001,7 @@ const Library = (() => {
           narr('Perfekt! „' + book.title + '“ steht wieder am richtigen Platz.'),
           npcPage(nov.def, 'Super gemacht! (Frau Novak winkt von der Rückgabe.) Am Rückgabewagen warten noch mehr Bücher – auch einer im 3. OG.'),
           npcPage(nov.def, 'An den Info-Theken gibt es Suchaufträge und Quizfragen. Und ab ' + WORLDS[WORLD_IDS[0]].need + ' ★ öffnet sich das erste Buch, in das du hineinspringen kannst!'),
-          npcPage(nov.def, 'Mit [B] siehst du alle Bücherwelten – und wie viele ★ du für jede brauchst.'),
+          npcPage(nov.def, 'Mit [B] – am Handy mit dem Knopf „Bücher“ – siehst du alle Bücherwelten und wie viele ★ du für jede brauchst.'),
         ]);
       }
     } else {
@@ -3489,7 +3632,7 @@ const Library = (() => {
       if (S.worldsDone.includes(id)) continue;
       const col = COLLEGES[TOPICS[w.topic].college];
       if (worldUnlocked(id)) return '„' + w.title + '“ wartet im College ' + col.num + ' (' + FLOOR_NAMES[col.floor] + '), Regal „' + TOPICS[w.topic].name + '“.';
-      return 'Sammle ' + w.need + ' ★ für „' + w.title + '“ – alle Buchwelten: [B]';
+      return 'Sammle ' + w.need + ' ★ für „' + w.title + '“ – alle Buchwelten: ' + (Input.touch ? 'Knopf „Bücher“' : '[B]');
     }
     return 'Alle Buchwelten erlebt! Sammle weiter Punkte und Abzeichen.';
   }
@@ -3566,6 +3709,14 @@ const Library = (() => {
 // Buchwelten – gemeinsame Teile: Buchseiten-Karte
 // ===================================================================
 const StoryCard = (() => {
+  // Aufgeschlagenes Buch: Position und Größe
+  const BX = 22;
+  const BY = 14;
+  const BW = 340;
+  const BH = 186;
+  const TEXT_W = BW / 2 - 26;
+  // Zeilen, die auf die rechte Seite passen, ohne die Seitenzahl zu berühren
+  const MAX_LINES = Math.floor((BH - 39) / Font.LINE) + 1;
   let pages = null;
   let idx = 0;
   let t = 0;
@@ -3604,10 +3755,10 @@ const StoryCard = (() => {
       rect(g, Math.floor(r() * VIEW_W), Math.floor(r() * VIEW_H), 1, 1, 'rgba(255,240,200,0.25)');
     }
     // Aufgeschlagenes Buch
-    const bx = 22;
-    const by = 14;
-    const bw = 340;
-    const bh = 186;
+    const bx = BX;
+    const by = BY;
+    const bw = BW;
+    const bh = BH;
     rect(g, bx - 4, by + 2, bw + 8, bh + 4, '#5a2b1f');
     rect(g, bx - 4, by + bh + 2, bw + 8, 4, '#3a1b13');
     rect(g, bx, by, bw / 2, bh, '#f4ead2');
@@ -3621,7 +3772,7 @@ const StoryCard = (() => {
     Font.drawCentered(g, p.title, lx, by + 18, '#5a2b1f', null, p.title.length > 12 ? 1 : 2);
     if (p.sub) Font.drawCentered(g, p.sub, lx, by + (p.title.length > 12 ? 32 : 42), '#8a5a3a');
     // rechte Seite: Text
-    const lines = Font.wrap(p.text, bw / 2 - 26);
+    const lines = Font.wrap(p.text, TEXT_W);
     let ty = by + 14;
     for (const l of lines) {
       Font.draw(g, l, bx + bw / 2 + 12, ty, '#3a2a22');
@@ -3636,7 +3787,10 @@ const StoryCard = (() => {
     onDone = null;
   }
 
-  return { show, update, draw, close, active: () => !!pages };
+  return {
+    show, update, draw, close, active: () => !!pages,
+    metrics: Object.freeze({ textW: TEXT_W, maxLines: MAX_LINES, titleW: BW / 2 - 12 }),
+  };
 })();
 
 // --- Gemeinsame Helfer für Buchwelten ------------------------------
@@ -5248,7 +5402,7 @@ const HaenselWorld = (() => {
 
   return {
     enter, update, draw,
-    debug: () => ({ phase, p, pebbles, found, home: HOME, path: pathTiles, candy }),
+    debug: () => ({ phase, p, pebbles, found, home: HOME, path: pathTiles, candy, solid, size: [MW, MH] }),
   };
 })();
 
@@ -5257,7 +5411,7 @@ const HaenselWorld = (() => {
 // Das Imitationsspiel: Wer am Fernschreiber ist Mensch, wer Maschine?
 // ===================================================================
 const TuringWorld = (() => {
-  const ROUNDS = [
+  const ROUNDS = deepFreeze([
     {
       intro: 'Hinter Tür A und Tür B steht je ein Fernschreiber. An einem tippt ein Mensch, am anderen antwortet unsere Rechenmaschine. Stell zwei Fragen – dann rate!',
       qs: [
@@ -5285,7 +5439,7 @@ const TuringWorld = (() => {
       ],
       explain: 'Sie klang freundlich, aber ihre Antworten waren leer: keine Erinnerungen, keine Gerüche, kein Hund in der Pfütze. Echte Erlebnisse lassen sich schwer fälschen.',
     },
-  ];
+  ]);
   const TURING = { name: 'Alan Turing', look: mkLook('short', 'black', 'light', '#6b5a45', '#3d3a35') };
   const CPS = 30;
   const DOOR_X = { A: 258, B: 318 };
@@ -5414,7 +5568,7 @@ const TuringWorld = (() => {
     const icon = emblemIcon('turing');
     StoryCard.show([
       { title: 'Das Imitationsspiel', sub: 'Alan Turing · 1950', icon, text: 'Du hast ' + correct + ' von ' + ROUNDS.length + ' Maschinen entlarvt.\n\nTuring schrieb 1950, er rechne damit, dass Computer um das Jahr 2000 so gut antworten, dass man nach fünf Minuten Fragen in fast jedem dritten Fall falsch rät.' },
-      { title: 'Und heute?', sub: 'Können Maschinen denken?', icon, text: 'Heute plaudern wir täglich mit Maschinen: Sprachassistenten, KI-Chatbots, automatisch geschriebene Texte. Oft merkt man es gar nicht.\n\nDarum lohnt sich, was Bibliotheken seit jeher können: Quellen prüfen, nachfragen, vergleichen. Bücher über Informatik und KI findest du im Know How.' + rewardLine(firstTime, pts) },
+      { title: 'Und heute?', sub: 'Können Maschinen denken?', icon, text: 'Heute plaudern wir täglich mit Maschinen – mit Sprachassistenten und KI-Chatbots. Oft merkt man es gar nicht.\n\nDarum lohnt sich, was Bibliotheken seit jeher können: Quellen prüfen, nachfragen, vergleichen. Bücher über Informatik und KI findest du im Know How.' + rewardLine(firstTime, pts) },
     ], () => onExit(result));
   }
 
@@ -5535,7 +5689,7 @@ const TuringWorld = (() => {
   }
 
   return {
-    enter, update, draw,
+    enter, update, draw, rounds: ROUNDS,
     debug: () => ({ phase, round, machine, asked: asked.slice(), correct, sel, guess }),
   };
 })();
@@ -6358,7 +6512,7 @@ const ReiseWorld = (() => {
     pass: { name: 'Passepartout', look: mkLook('short', 'black', 'light', '#b8453a', '#2b2d42', 'cap') },
     fix: { name: 'Detektiv Fix', look: mkLook('short', 'red', 'light', '#6b5a45', '#3d3a35', 'hat+beard') },
   };
-  const LEGS = [
+  const LEGS = deepFreeze([
     { from: 'London', to: 'Suez', days: 7, veh: 'zug',
       path: [[-0.13, 51.5], [2.35, 48.86], [7.7, 45.07], [12.5, 42], [17.94, 40.63], [22, 36.5], [28, 33], [32.3, 31.26], [32.55, 29.97]],
       before: [['fogg', 'Ich wette 20.000 Pfund, dass ich in 80 Tagen um die Welt reise. Abfahrt: heute, 2. Oktober 1872, 20:45 Uhr!'], ['pass', 'Mit nur einer Reisetasche, Monsieur? Na gut – allez!']],
@@ -6378,7 +6532,8 @@ const ReiseWorld = (() => {
       ] } },
     { from: 'Kalkutta', to: 'Hongkong', days: 13, veh: 'schiff',
       path: [[88.36, 22.57], [89, 19], [93, 14], [97, 7.5], [100, 4], [103.85, 1.29], [106.5, 5], [110, 12], [114.17, 22.32]],
-      after: [['', 'Sturm im Chinesischen Meer! Der Dampfer Rangoon kämpft sich durch die Wellen.']] },
+      after: [['', 'Sturm im Chinesischen Meer! Der Dampfer Rangoon kämpft sich durch die Wellen.']],
+      extra: 1, extraText: 'Durch den Sturm kommt die Rangoon einen Tag zu spät in Hongkong an.' },
     { from: 'Hongkong', to: 'Yokohama', days: 6, veh: 'boot',
       path: [[114.17, 22.32], [118, 24.5], [121, 28], [123, 31.2], [127, 32.5], [131, 33], [135, 33.5], [139.64, 35.44]],
       choice: { who: 'fogg', q: 'Fix hat Passepartout in einer Hafenkneipe aufgehalten – die Carnatic ist ohne euch abgefahren!', options: [
@@ -6404,7 +6559,23 @@ const ReiseWorld = (() => {
         { t: 'Auf den nächsten Dampfer warten', d: 3, reply: 'Drei Tage später geht es endlich los.' },
       ] },
       after: [['fix', 'Im Namen der Königin: Phileas Fogg, Sie sind verhaftet!'], ['', 'Erst nach Stunden stellt sich heraus: Der echte Bankräuber wurde schon vor Tagen gefasst. Fogg nimmt einen Sonderzug nach London.']] },
-  ];
+  ]);
+  // Tage einer Etappe: erste Hälfte nach Fahrplan, zweite Hälfte plus/minus der gewählten
+  // Option, dazu Verspätungen (Sturm). Der Spielablauf rechnet mit denselben Funktionen.
+  const firstHalf = (L) => (L.choice ? Math.floor(L.days / 2) : L.days);
+  const secondHalf = (L, o) => (L.choice ? Math.max(0, L.days - Math.floor(L.days / 2) + o.d) : 0);
+  function planDays(picks) {
+    let sum = 0;
+    LEGS.forEach((L, i) => {
+      const o = L.choice ? L.choice.options[picks[i] || 0] : null;
+      sum += firstHalf(L) + secondHalf(L, o) + (L.extra || 0);
+    });
+    return sum;
+  }
+  // Wer nach Osten um die Welt reist, zählt einen Tag mehr, als wirklich vergangen ist.
+  // Gewonnen, wenn die echte Ankunft (20:50 Uhr) vor dem 80. Tag liegt.
+  const isWon = (counted) => counted - 1 < 80;
+
   const VEH = {
     zug: buildSprite(['k.........', 'kk.kkkkk..', 'kkkkRRRk..', 'kRRRRRRkk.', 'kRRRRRRRRk', '.kkkkkkkk.', '.kWk.kWk..', '..k...k...']),
     schiff: buildSprite(['....kk....', '....kk..k.', '..kkkkkkk.', 'kkwwwwwwkk', '.kTTTTTTk.', '..kkkkkk..']),
@@ -6538,7 +6709,7 @@ const ReiseWorld = (() => {
     const L = LEGS[leg];
     veh = L.veh;
     phase = 'talk';
-    const go = () => beginTravel(0, L.choice ? 0.5 : 1, L.choice ? Math.floor(L.days / 2) : L.days);
+    const go = () => beginTravel(0, L.choice ? 0.5 : 1, firstHalf(L));
     if (L.before) Dialog.open(L.before.map(([w, tx]) => page(w, tx)), go);
     else go();
   }
@@ -6583,10 +6754,7 @@ const ReiseWorld = (() => {
           fn: () => {
             if (o.veh) veh = o.veh;
             Sound.sfx(o.d <= 0 ? 'correct' : 'wrong');
-            Dialog.open([narr(o.reply)], () => {
-              const rest = L.days - Math.floor(L.days / 2) + o.d;
-              beginTravel(0.5, 1, Math.max(0, rest));
-            });
+            Dialog.open([narr(o.reply)], () => beginTravel(0.5, 1, secondHalf(L, o)));
           },
         })),
       })]);
@@ -6601,10 +6769,10 @@ const ReiseWorld = (() => {
     };
     const pages = [narr('Angekommen in ' + L.to + '. Tag ' + days + ' von 80.')];
     if (L.after) for (const [w, tx] of L.after) pages.push(page(w, tx));
-    if (leg === 3) {
-      days += 1;
+    if (L.extra) {
+      days += L.extra;
       shownDays = days;
-      pages.push(narr('Durch den Sturm kommt die Rangoon einen Tag zu spät in Hongkong an. Tag ' + days + '.'));
+      pages.push(narr(L.extraText + ' Tag ' + days + '.'));
     }
     Dialog.open(pages, next);
   }
@@ -6630,7 +6798,7 @@ const ReiseWorld = (() => {
 
   function twist() {
     const real = days - 1;
-    const won = real < 80;
+    const won = isWon(days);
     const pages = [];
     if (days >= 80) {
       pages.push(npcPage(LOOKS.pass, 'Monsieur! Monsieur! Heute ist erst ' + (real === 79 ? 'Samstag' : 'der ' + real + '. Tag') + '! Wir sind immer nach Osten gereist – jeden Tag ging die Sonne ein bisschen früher auf. Wir haben einen ganzen Tag gewonnen!'));
@@ -6742,7 +6910,8 @@ const ReiseWorld = (() => {
   }
 
   return {
-    enter, update, draw,
+    enter, update, draw, planDays, isWon,
+    legs: LEGS, cities: CITIES, mapPoint: (lon, lat) => [mx(lon), my(lat)], mapRect: Object.freeze({ y: MAP_Y, h: MAP_H }),
     debug: () => ({ phase, leg, days, prog, veh }),
   };
 })();
@@ -6773,6 +6942,8 @@ const MondWorld = (() => {
   let firstTime = true;
   let result = null;
 
+  // Unter ~11 km/s holt die Erde die Kugel zurück, über 13 km/s wäre der Ruck zu heftig
+  const chargeVerdict = (v) => (v < 11 ? 'low' : v > 13 ? 'high' : 'ok');
   const moonYAt = (x) => MOON_Y + Math.pow((x - 192) / 210, 2) * 26;
   const pxSpeed = () => 40 + (speed - 11) * 12;
 
@@ -6824,10 +6995,11 @@ const MondWorld = (() => {
     if (Input.hit('down')) { speed = Math.max(4, speed - 0.5); Sound.sfx('blip'); }
     if (Input.confirm()) {
       phase = 'talk';
-      if (speed < 11) {
+      const verdict = chargeVerdict(speed);
+      if (verdict === 'low') {
         Sound.sfx('wrong');
         Dialog.open([npcPage(BARBICANE, 'Zu wenig! Mit ' + fmt(speed) + ' km/s fällt die Kugel zur Erde zurück. Um der Erdanziehung zu entkommen, braucht sie rund 11 Kilometer pro Sekunde.')], () => { phase = 'charge'; });
-      } else if (speed > 13) {
+      } else if (verdict === 'high') {
         Sound.sfx('wrong');
         Dialog.open([npcPage(ARDAN, 'Halt, halt! Bei ' + fmt(speed) + ' km/s wäre der Ruck beim Abschuss viel zu heftig für uns drei. Etwas weniger, bitte!')], () => { phase = 'charge'; });
       } else {
@@ -6997,8 +7169,8 @@ const MondWorld = (() => {
   }
 
   return {
-    enter, update, draw,
-    debug: () => ({ phase, speed, moonX, tries, shotY: shot ? shot.y : null, lead: (MOUTH_Y - moonYAt(CX)) / pxSpeed() * MOON_V }),
+    enter, update, draw, chargeVerdict,
+    debug: () => ({ phase, speed, moonX, tries, cx: CX, shotY: shot ? shot.y : null, lead: (MOUTH_Y - moonYAt(CX)) / pxSpeed() * MOON_V }),
   };
 })();
 
@@ -7014,12 +7186,12 @@ const AdaWorld = (() => {
     { s: '×', f: (a, b) => a * b, holes: [1, 1, 0, 0, 1] },
     { s: ':', f: (a, b) => a / b, holes: [0, 0, 1, 1, 0] },
   ];
-  const LEVELS = [
+  const LEVELS = deepFreeze([
     { vars: [2, 3], goal: 5, slots: 1, say: 'Im Speicher liegen zwei Zahlen: V1 = 2 und V2 = 3. Welche Rechenkarte brauchen wir, damit 5 herauskommt?' },
     { vars: [4, 6], goal: 24, slots: 1, say: 'Sehr gut! Jetzt liegen 4 und 6 im Speicher. Diesmal wollen wir 24.' },
     { vars: [5, 3, 4], goal: 32, slots: 2, say: 'Jetzt zwei Karten nacheinander: Zuerst rechnet die Maschine mit V1 und V2, dann mit dem Ergebnis und V3. Ziel: 32.' },
     { loop: true, start: 1, goal: 32, say: 'Mein Lieblingstrick: Wir lassen dieselbe Karte immer wieder laufen! Die Karte „× 2“ verdoppelt V1. Wie oft muss sie laufen, damit aus 1 die Zahl 32 wird?' },
-  ];
+  ]);
 
   let phase = 'intro';
   let t = 0;
@@ -7092,16 +7264,21 @@ const AdaWorld = (() => {
     }
   }
 
-  function compute() {
-    const L = LEVELS[level];
+  // Was rechnet die Maschine mit diesen Karten (bzw. Wiederholungen) aus?
+  function evaluate(li, cards, n) {
+    const L = LEVELS[li];
     if (L.loop) {
       const seq = [L.start];
-      for (let i = 0; i < reps; i++) seq.push(seq[seq.length - 1] * 2);
+      for (let i = 0; i < n; i++) seq.push(seq[seq.length - 1] * 2);
       return { value: seq[seq.length - 1], seq };
     }
-    let v = OPS[picks[0]].f(L.vars[0], L.vars[1]);
-    if (L.slots > 1) v = OPS[picks[1]].f(v, L.vars[2]);
+    let v = OPS[cards[0]].f(L.vars[0], L.vars[1]);
+    if (L.slots > 1) v = OPS[cards[1]].f(v, L.vars[2]);
     return { value: Math.round(v * 100) / 100, seq: null };
+  }
+
+  function compute() {
+    return evaluate(level, picks, reps);
   }
 
   function startRun() {
@@ -7290,7 +7467,7 @@ const AdaWorld = (() => {
   }
 
   return {
-    enter, update, draw,
+    enter, update, draw, evaluate, levels: LEVELS, ops: OPS.map((o) => o.s),
     debug: () => ({ phase, level, sel, picks: picks.slice(), reps, mistakes }),
   };
 })();
@@ -7434,7 +7611,7 @@ const BookList = (() => {
     t += dt;
     if (Input.hit('up')) { sel = (sel + WORLD_IDS.length - 1) % WORLD_IDS.length; Sound.sfx('blip'); }
     if (Input.hit('down')) { sel = (sel + 1) % WORLD_IDS.length; Sound.sfx('blip'); }
-    if (Input.hitAny('books', 'menu', 'map')) return false;
+    if (Input.hitAny('books', 'menu', 'map', 'tjump')) return false;
     if (Input.confirm()) {
       if (hooks && hooks.showOnMap) {
         Sound.sfx('select');
@@ -7492,29 +7669,38 @@ const BookList = (() => {
     }
   }
 
+  // Detailansicht rechts. Die Positionen stehen in einer eigenen Funktion,
+  // damit die Unit-Tests prüfen können, dass alle Texte in den Kasten passen.
+  const DETAIL = Object.freeze({ x: 222, y: 18, w: 158, h: 182 });
+  function detailLayout(id) {
+    const w = WORLDS[id];
+    const { y, w: pw } = DETAIL;
+    const title = Font.wrap(w.title, pw - 50);
+    const shelf = Font.wrap('Regal „' + TOPICS[w.topic].name + '“', pw - 22);
+    const teaser = Font.wrap(w.teaser, pw - 14);
+    const shelfY = y + 77;
+    const teaserY = shelfY + shelf.length * 10 + 4;
+    const statusY = y + 152;
+    return { title, shelf, teaser, shelfY, teaserY, teaserEnd: teaserY + (teaser.length - 1) * 11 + 9, ruleY: statusY - 4, statusY };
+  }
+
   function drawDetail(g, id) {
     const w = WORLDS[id];
     const st = worldState(id);
-    const x = 222;
-    const y = 18;
-    const pw = 158;
-    drawPanel(g, x, y, pw, 182, 'rgba(40,30,48,0.96)', st === 'locked' ? '#6b5a70' : st === 'done' ? '#ffd977' : UI_COL.border);
+    const { x, y, w: pw, h } = DETAIL;
+    const L = detailLayout(id);
+    drawPanel(g, x, y, pw, h, 'rgba(40,30,48,0.96)', st === 'locked' ? '#6b5a70' : st === 'done' ? '#ffd977' : UI_COL.border);
     drawBookCover(g, id, x + 7, y + 8, st, t);
-    Font.wrap(w.title, pw - 50).slice(0, 4).forEach((l, i) => Font.draw(g, l, x + 45, y + 9 + i * 10, st === 'locked' ? '#cfc3d0' : UI_COL.title));
-    let yy = y + 55;
-    Font.draw(g, w.author + ' · ' + w.year, x + 8, yy, UI_COL.dim);
-    yy += 12;
-    const topic = TOPICS[w.topic];
-    const col = COLLEGES[topic.college];
-    rect(g, x + 8, yy + 2, 6, 6, col.color);
-    Font.draw(g, FLOOR_NAMES[w.floor] + ' · College ' + col.num + ' · ' + col.colorName, x + 18, yy, UI_COL.text);
-    yy += 10;
-    for (const l of Font.wrap('Regal „' + topic.name + '“', pw - 22)) { Font.draw(g, l, x + 18, yy, UI_COL.dim); yy += 10; }
-    yy += 4;
-    for (const l of Font.wrap(w.teaser, pw - 14).slice(0, 4)) { Font.draw(g, l, x + 8, yy, '#efe6d6'); yy += 11; }
+    L.title.slice(0, 4).forEach((l, i) => Font.draw(g, l, x + 45, y + 9 + i * 10, st === 'locked' ? '#cfc3d0' : UI_COL.title));
+    Font.draw(g, w.author + ' · ' + w.year, x + 8, y + 55, UI_COL.dim);
+    const col = COLLEGES[TOPICS[w.topic].college];
+    rect(g, x + 8, y + 69, 6, 6, col.color);
+    Font.draw(g, FLOOR_NAMES[w.floor] + ' · College ' + col.num + ' · ' + col.colorName, x + 18, y + 67, UI_COL.text);
+    L.shelf.forEach((l, i) => Font.draw(g, l, x + 18, L.shelfY + i * 10, UI_COL.dim));
+    L.teaser.slice(0, 4).forEach((l, i) => Font.draw(g, l, x + 8, L.teaserY + i * 11, '#efe6d6'));
     // Status
-    const sy = y + 146;
-    rect(g, x + 5, sy - 4, pw - 10, 1, 'rgba(234,217,181,0.25)');
+    const sy = L.statusY;
+    rect(g, x + 5, L.ruleY, pw - 10, 1, 'rgba(234,217,181,0.25)');
     if (st === 'locked') {
       const left = Math.max(0, w.need - S.pts);
       Font.draw(g, 'Ab ' + w.need + ' ★ · noch ' + left + ' ★', x + 8, sy, '#ffc95b');
@@ -7542,11 +7728,13 @@ const BookList = (() => {
     Font.draw(g, pts, VIEW_W - Font.measure(pts) - 8, 4, '#ffd24a');
     WORLD_IDS.forEach((id, i) => drawRow(g, id, i));
     drawDetail(g, WORLD_IDS[sel]);
-    const help = hooks && hooks.showOnMap ? '↑↓ wählen · E Regal auf dem Lageplan zeigen · B schließen' : '↑↓ wählen · B schließen';
+    const help = Input.touch
+      ? (hooks && hooks.showOnMap ? '↑↓ wählen · A Regal auf dem Lageplan · B schließen' : '↑↓ wählen · B schließen')
+      : (hooks && hooks.showOnMap ? '↑↓ wählen · E Regal auf dem Lageplan zeigen · B schließen' : '↑↓ wählen · B schließen');
     Font.drawCentered(g, help, VIEW_W / 2, 204, UI_COL.dim);
   }
 
-  return { open, update, draw, get sel() { return sel; }, set sel(v) { sel = v; } };
+  return { open, update, draw, detailLayout, get sel() { return sel; }, set sel(v) { sel = v; } };
 })();
 
 // ===================================================================
@@ -7573,7 +7761,7 @@ const CONTROLS_TEXT = [
   ['M', 'Musik an/aus'],
   ['Esc / P', 'Menü'],
   ['In Buchwelten', 'Leertaste springen · E sprechen · ↑ klettern'],
-  ['Touch', 'Steuerkreuz · A = Aktion · B = rennen/springen · „Bücher“'],
+  ['Touch', 'Steuerkreuz · A Aktion · B rennen/springen · „Bücher“'],
 ];
 
 function fitText(text, maxW) {
@@ -7603,6 +7791,9 @@ const MapView = (() => {
   let t = 0;
   let target = null;
   const PLAN_COL = { c1: '#f2d64b', c2: '#e0453f', c3: '#a3a3a3', c4: '#f39232', c5: '#3f86d8', c6: '#4cb050' };
+  // Legende rechts: Colleges in Zeilen zu 11 px, darunter der Themenkasten (Zeilen zu 9 px)
+  const LEGEND = Object.freeze({ listY: 18, rowH: 11, panelY: 86, panelH: 116, topicW: 162, maxLines: Math.floor((116 - 8) / 9) });
+  const topicLines = (cid) => Object.keys(TOPICS).filter((k) => TOPICS[k].college === cid).flatMap((k) => Font.wrap('• ' + TOPICS[k].name, LEGEND.topicW));
 
   function buildPlan(F) {
     const c = makeCanvas(F.w * SC, F.h * SC);
@@ -7661,7 +7852,7 @@ const MapView = (() => {
     t += dt;
     if (Input.hit('up')) { sel = (sel + 5) % 6; Sound.sfx('blip'); }
     if (Input.hit('down')) { sel = (sel + 1) % 6; Sound.sfx('blip'); }
-    if (Input.hitAny('map', 'menu', 'act', 'jump', 'books')) return false;
+    if (Input.hitAny('map', 'menu', 'act', 'jump', 'books', 'tjump')) return false;
     return true;
   }
 
@@ -7703,37 +7894,30 @@ const MapView = (() => {
       rect(g, bx, by, 2 * SC, 2 * SC, on ? '#ffd977' : '#e0115f');
       drawBubble(g, bx + SC, by - r - 1, '★', '#c98f1c');
     }
-    // Legende
+    // Legende: die sechs Colleges, darunter alle Themen des gewählten Colleges
     const lx = 210;
     COLLEGE_IDS.forEach((cid, i) => {
       const c = COLLEGES[cid];
-      const y = 18 + i * 13;
+      const y = LEGEND.listY + i * LEGEND.rowH;
       const on = i === sel;
-      if (on) rect(g, lx - 2, y - 2, 170, 12, 'rgba(255,217,119,0.18)');
+      if (on) rect(g, lx - 2, y - 2, 170, LEGEND.rowH, 'rgba(255,217,119,0.18)');
       rect(g, lx, y, 8, 8, PLAN_COL[cid]);
       Font.draw(g, c.num + ' · ' + c.name, lx + 12, y - 1, on ? UI_COL.title : UI_COL.text);
     });
     const cid = COLLEGE_IDS[sel];
-    const topics = Object.keys(TOPICS).filter((k) => TOPICS[k].college === cid).map((k) => TOPICS[k].name);
-    drawPanel(g, lx - 4, 98, 174, 104, 'rgba(40,30,48,0.96)', PLAN_COL[cid]);
-    Font.draw(g, FLOOR_NAMES[COLLEGES[cid].floor] + ', ' + COLLEGES[cid].colorName + ':', lx + 2, 100, PLAN_COL[cid]);
-    let y = 112;
-    for (const tp of topics) {
-      for (const l of Font.wrap('• ' + tp, 162)) {
-        if (y < 196) Font.draw(g, l, lx + 2, y, UI_COL.text);
-        y += 9;
-      }
-    }
+    drawPanel(g, lx - 4, LEGEND.panelY, 174, LEGEND.panelH, 'rgba(40,30,48,0.96)', PLAN_COL[cid]);
+    topicLines(cid).slice(0, LEGEND.maxLines).forEach((l, i) => Font.draw(g, l, lx + 2, LEGEND.panelY + 4 + i * 9, UI_COL.text));
     if (target) {
       Font.draw(g, fitText('★ ' + target.label, 300), 8, 204, '#ffd977');
-      Font.draw(g, 'E zurück', VIEW_W - 8 - Font.measure('E zurück'), 204, UI_COL.dim);
+      const back = Input.touch ? 'A zurück' : 'E zurück';
+      Font.draw(g, back, VIEW_W - 8 - Font.measure(back), 204, UI_COL.dim);
     } else {
-      Font.draw(g, '↑↓ College wählen · K schließen', 8, 204, UI_COL.dim);
+      Font.draw(g, Input.touch ? '↑↓ College wählen · A schließen' : '↑↓ College wählen · K schließen', 8, 204, UI_COL.dim);
       Font.draw(g, 'L Lift · i Info · R Rückgabe', 210, 204, UI_COL.dim);
     }
   }
 
-  return { open, update, draw };
+  return { open, update, draw, topicLines, metrics: LEGEND };
 })();
 
 // --- Abzeichen --------------------------------------------------------
@@ -7975,13 +8159,12 @@ const Game = (() => {
   }
 
   function ensureAudio() {
-    if (!Sound.ready) {
-      if (Sound.init()) {
-        Sound.setMusic(S.music);
-        Sound.setSfx(S.sfx);
-      }
+    const fresh = !Sound.ready;
+    Sound.unlock();
+    if (fresh && Sound.ready) {
+      Sound.setMusic(S.music);
+      Sound.setSfx(S.sfx);
     }
-    Sound.resume();
   }
 
   // --- Szenenwechsel -----------------------------------------------
@@ -8247,6 +8430,11 @@ const Game = (() => {
     });
     Input.attach(window);
     Input.onAny(() => ensureAudio());
+    // Ton freischalten: iOS Safari akzeptiert dafür nur touchend/pointerup/click/keydown –
+    // nicht touchstart/pointerdown, auf die die Touch-Knöpfe reagieren. Daher zusätzlich hier.
+    for (const type of ['touchend', 'pointerup', 'click', 'keydown']) {
+      document.addEventListener(type, ensureAudio, { capture: true, passive: true });
+    }
     const pad = document.getElementById('pad');
     if (pad) Input.bindButtons(pad);
     const fs = document.getElementById('fs');

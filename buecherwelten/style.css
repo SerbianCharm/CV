@@ -3,7 +3,7 @@
    PICTURE: die Spielfläche selbst, groß, unter einem kleinen Pixel-Logo
    COLOUR and TYPE: Nacht-Aubergine, Regalholz, Goldakzent; Logo in der Pixelschrift des Spiels
    LAYOUT: Logo · Spielfläche 16:9 · Hinweise; Touch-Steuerung bei grobem Zeiger */
-:root{color-scheme:dark;--bg:#1b1420;--ink:#f3e9d6;--dim:#b9aab8;--gold:#ffd977;--wood:#6e4426}
+:root{color-scheme:dark;--bg:#1b1420;--ink:#f3e9d6;--dim:#b9aab8;--gold:#ffd977}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
 body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:clip}
@@ -19,7 +19,7 @@ header p{margin:0;color:var(--dim);font-size:15px}
 #screen:focus-visible{box-shadow:0 0 0 3px var(--gold)}
 .keys{margin:0;color:var(--dim);font-size:15px;text-align:center;max-width:72ch}
 .keys b{color:var(--ink);font-weight:600;background:#33283a;border:1px solid #5d4a63;border-radius:4px;padding:0 5px;white-space:nowrap}
-.pad{display:none;width:min(100%,640px);justify-content:space-between;align-items:center;gap:10px;user-select:none;-webkit-user-select:none;touch-action:none}
+.pad{display:none;width:min(100%,640px);justify-content:space-between;align-items:center;gap:10px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none}
 .dpad{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:2px}
 .pad button{font:700 18px/1 system-ui,sans-serif;color:var(--ink);background:#3b2d42;border:2px solid #6b5470;border-radius:10px;box-shadow:0 3px 0 #1a1220;touch-action:none;-webkit-tap-highlight-color:transparent}
 .pad button.on{transform:translateY(2px);box-shadow:0 1px 0 #1a1220;background:#5b4466}
@@ -46,11 +46,11 @@ footer{color:#8f8193;font-size:13px;text-align:center;padding:4px 14px 16px;max-
 .mid{display:flex;flex-direction:column;gap:4px}.mid button{min-width:58px;min-height:32px;font-size:13px}.hint{display:block}}
 /* Handy quer: Spiel füllt den Bildschirm, Knöpfe liegen halbtransparent am Rand */
 @media (hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:540px){
-html,body{height:100%;overflow:hidden}body{min-height:0}.spines,header{display:none}
+html,body{overflow:hidden}body{min-height:0}.spines,header{display:none}
 .wrap{padding:0;gap:0}
 /* Fest positioniert wie die Knöpfe: iOS 26 legt Inhalt im Seitenfluss unter die Adressleiste,
    fixe Elemente aber in den sichtbaren Bereich. Das Spiel füllt diesen Bereich in 16:9. */
-.frame{position:fixed;inset:0;width:auto;min-width:0;padding:0;border-radius:0;background:#0d0a10;box-shadow:none;display:flex;align-items:center;justify-content:center;container-type:size}
+.frame{position:fixed;inset:0;width:auto;min-width:0;padding:0;border-radius:0;background:#0d0a10;box-shadow:none;display:flex;align-items:center;justify-content:center;container-type:size;touch-action:none}
 #screen-wrap{width:min(100vw,calc(100vh * 16 / 9));width:min(100cqw,calc(100cqh * 16 / 9))}
 #screen-wrap,#screen{border-radius:0;box-shadow:none}
 .pad{position:fixed;inset:0;display:block;width:auto;max-width:none;padding:0;pointer-events:none}
