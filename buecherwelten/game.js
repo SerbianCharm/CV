@@ -2208,6 +2208,14 @@ const Input = (() => {
       return best;
     }
 
+    // Der Knopf, den der Browser selbst unter dem Finger gefunden hat (falls einer)
+    function targetButton(t) {
+      let el = t.target;
+      if (el && el.nodeType === 3) el = el.parentElement;
+      const b = el && el.closest ? el.closest('[data-btn]') : null;
+      return b && (!root.contains || root.contains(b)) ? b : null;
+    }
+
     function heldByOther(el, id) {
       for (const [fid, f] of fingers) if (fid !== id && f.el === el) return true;
       return false;
@@ -2232,7 +2240,7 @@ const Input = (() => {
       touchMode = true;
       let used = false;
       for (const t of e.changedTouches) {
-        const el = hit(t.clientX, t.clientY, false);
+        const el = targetButton(t) || hit(t.clientX, t.clientY, false);
         if (!el) continue;
         used = true;
         fingers.set(t.identifier, { el: null, dpad: !!el.closest('.dpad') });
@@ -2298,6 +2306,147 @@ const Input = (() => {
     onAny: (fn) => { anyListener = fn; },
     get touch() { return touchMode; },
   };
+})();
+
+// ===================================================================
+// Handy quer: Spielfläche und Knöpfe genau über den sichtbaren Bereich legen
+// ===================================================================
+// iOS Safari zeichnet position:fixed-Elemente im Querformat teils an einer anderen Stelle,
+// als es Berührungen auswertet (nach dem Drehen, mit Adressleiste oder Seitenzoom; WebKit-Bugs
+// 235684, 254861). Normale Elemente im Dokument betrifft das nicht. Darum liegen Spielfläche
+// und Knöpfe im Querformat absolut im Dokument und folgen per visualViewport dem sichtbaren
+// Ausschnitt – gezoomt wird dabei herausgerechnet. Ohne visualViewport bleibt es bei fixed.
+const Viewport = (() => {
+  const QUERY = '(hover:none) and (pointer:coarse) and (orientation:landscape) and (max-height:540px)';
+  let els = [];
+  let vv = null;
+  let mq = null;
+  let queued = false;
+  let active = false;
+
+  function rootClass(on) {
+    const root = document.documentElement;
+    if (root && root.classList) root.classList.toggle('vv', on);
+  }
+
+  function apply() {
+    queued = false;
+    if (!vv || !mq || !mq.matches) {
+      if (active) {
+        for (const el of els) {
+          el.style.width = '';
+          el.style.height = '';
+          el.style.transform = '';
+        }
+        rootClass(false);
+        active = false;
+      }
+      return;
+    }
+    const s = vv.scale > 0 ? vv.scale : 1;
+    const w = vv.width * s;
+    const h = vv.height * s;
+    if (!(w > 0 && h > 0)) return;
+    const tf = 'translate(' + vv.pageLeft + 'px,' + vv.pageTop + 'px) scale(' + 1 / s + ')';
+    for (const el of els) {
+      el.style.width = w + 'px';
+      el.style.height = h + 'px';
+      el.style.transform = tf;
+    }
+    rootClass(true);
+    active = true;
+  }
+
+  function queue() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(apply);
+  }
+
+  function attach(list) {
+    els = list.filter(Boolean);
+    vv = window.visualViewport || null;
+    if (!vv || !window.matchMedia || !els.length) return false;
+    mq = window.matchMedia(QUERY);
+    vv.addEventListener('resize', queue);
+    vv.addEventListener('scroll', queue);
+    window.addEventListener('resize', queue);
+    window.addEventListener('pageshow', queue);
+    window.addEventListener('orientationchange', () => {
+      queue();
+      // iOS meldet beim Drehen kurz noch alte Maße – etwas später nochmal nachmessen
+      setTimeout(queue, 300);
+      setTimeout(queue, 900);
+    });
+    if (mq.addEventListener) mq.addEventListener('change', queue);
+    else if (mq.addListener) mq.addListener(queue);
+    apply();
+    return true;
+  }
+
+  // Fehlersuche am Handy: Seite mit #touchdebug öffnen. Grün: wo das Spiel die Knöpfe sieht,
+  // rot: wo es die Finger sieht. Liegen beide auf den echten Knöpfen und Fingern, passt alles.
+  function debug(pad) {
+    const c = document.createElement('canvas');
+    c.className = 'touchdebug';
+    document.body.appendChild(c);
+    const g = c.getContext('2d');
+    let points = [];
+    const r1 = (n) => Math.round(n * 10) / 10;
+    function draw() {
+      const de = document.documentElement;
+      const w = de.clientWidth;
+      const h = de.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+      c.style.transform = 'translate(' + window.scrollX + 'px,' + window.scrollY + 'px)';
+      c.width = Math.round(w * dpr);
+      c.height = Math.round(h * dpr);
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.lineWidth = 2;
+      g.strokeStyle = '#3cff6a';
+      for (const b of pad.querySelectorAll('[data-btn]')) {
+        const r = b.getBoundingClientRect();
+        if (r.width) g.strokeRect(r.left, r.top, r.width, r.height);
+      }
+      g.fillStyle = '#ff3b3b';
+      for (const [x, y] of points) {
+        g.beginPath();
+        g.arc(x, y, 6, 0, Math.PI * 2);
+        g.fill();
+      }
+      const v = window.visualViewport;
+      const lines = [
+        'Modus: ' + (active ? 'absolut (visualViewport)' : 'fixed'),
+        'Layout ' + w + '×' + h + ' · scroll ' + r1(window.scrollX) + '/' + r1(window.scrollY) + ' · dpr ' + r1(dpr),
+        v ? 'visualViewport ' + r1(v.width) + '×' + r1(v.height) + ' · offset ' + r1(v.offsetLeft) + '/' + r1(v.offsetTop) +
+          ' · page ' + r1(v.pageLeft) + '/' + r1(v.pageTop) + ' · zoom ' + r1(v.scale) : 'kein visualViewport',
+      ];
+      g.font = '12px system-ui, sans-serif';
+      const y0 = Math.round(h / 2) - 30;
+      lines.forEach((l, i) => {
+        g.fillStyle = 'rgba(0,0,0,0.7)';
+        g.fillRect(6, y0 + i * 17, g.measureText(l).width + 10, 16);
+        g.fillStyle = '#ffffff';
+        g.fillText(l, 11, y0 + 12 + i * 17);
+      });
+    }
+    const note = (e) => {
+      points = Array.from(e.touches || []).map((t) => [t.clientX, t.clientY]);
+      draw();
+    };
+    for (const type of ['touchstart', 'touchmove', 'touchend', 'touchcancel']) document.addEventListener(type, note, { passive: true });
+    window.addEventListener('resize', () => requestAnimationFrame(draw));
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => requestAnimationFrame(draw));
+      window.visualViewport.addEventListener('scroll', () => requestAnimationFrame(draw));
+    }
+    draw();
+    return c;
+  }
+
+  return { attach, apply, debug, QUERY, get active() { return active; } };
 })();
 
 // ===================================================================
@@ -8437,6 +8586,9 @@ const Game = (() => {
     }
     const pad = document.getElementById('pad');
     if (pad) Input.bindButtons(pad);
+    // Handy quer: Spielfläche und Knöpfe folgen dem sichtbaren Bereich (siehe Viewport)
+    Viewport.attach([screen.closest ? screen.closest('.frame') : null, pad]);
+    if (pad && window.location && window.location.hash === '#touchdebug') Viewport.debug(pad);
     const fs = document.getElementById('fs');
     if (fs && document.fullscreenEnabled && document.documentElement.requestFullscreen) {
       fs.hidden = false;

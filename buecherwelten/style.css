@@ -32,6 +32,8 @@ header p{margin:0;color:var(--dim);font-size:15px}
 footer{color:#8f8193;font-size:13px;text-align:center;padding:4px 14px 16px;max-width:80ch}
 .hint{display:none;margin:0;color:var(--dim);font-size:14px;text-align:center}
 [hidden]{display:none!important}
+/* Fehlersuche Touch (#touchdebug) */
+.touchdebug{position:absolute;left:0;top:0;z-index:10;pointer-events:none;transform-origin:0 0}
 @media (max-width:600px){.frame{padding:6px;border-radius:8px}#logo{height:30px}header p{font-size:14px}}
 /* Touch (Tablet & Handy): Knöpfe statt Tastenhinweis */
 @media (hover:none) and (pointer:coarse){.pad{display:flex}.keys,footer{display:none}.frame{width:min(100%,calc((100vh - 300px) * 16 / 9))}
@@ -59,4 +61,7 @@ html,body{overflow:hidden}body{min-height:0}.spines,header{display:none}
 .ab{right:12px;bottom:12px}.ab button{width:54px;height:54px;font-size:19px}.ab .bb{margin-top:26px}
 .mid{right:10px;top:10px;display:flex;flex-direction:column;gap:6px}.mid button{min-width:0;min-height:34px;padding:0 10px;font-size:13px}
 .pad button{background:rgba(59,45,66,.45);border-color:rgba(170,145,180,.5);box-shadow:none}
-.pad .ba{background:rgba(184,69,58,.5)}.pad .bb{background:rgba(47,111,176,.5)}}
+.pad .ba{background:rgba(184,69,58,.5)}.pad .bb{background:rgba(47,111,176,.5)}
+/* Mit visualViewport (Viewport in game.js): absolut statt fixed – iOS wertet Berührungen an fixed-Elementen
+   im Querformat teils versetzt aus. Größe und Lage setzt das Skript passend zum sichtbaren Bereich. */
+html.vv .frame,html.vv .pad{position:absolute;inset:auto;left:0;top:0;transform-origin:0 0}}
