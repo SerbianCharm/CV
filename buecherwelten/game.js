@@ -1275,6 +1275,13 @@ const SEARCHES = deepFreeze([
   { id: 's08', short: 'ein Manga', ask: 'Ein Kind möchte einen Manga ausleihen.', hint: 'Comics & Mangas gibt es im Kirango.', topic: 'c4_comics', found: 'Gefunden: ein spannender Manga!' },
   { id: 's09', short: 'ein Stadtführer für Wien', ask: 'Eine Touristin sucht einen Stadtführer für Wien.', hint: '„Wien & Österreich“ steht im College 2 (rot).', topic: 'c2_wien', found: 'Gefunden: ein Stadtführer für Wien!' },
   { id: 's10', short: 'ein Ratgeber zur Bewerbung', ask: 'Jemand braucht Tipps für die erste Bewerbung.', hint: '„Beruf & Karriere“ findest du im Know How.', topic: 'c6_beruf', found: 'Gefunden: ein Ratgeber zum Bewerben!' },
+  { id: 's11', short: 'das Märchen „Hänsel und Gretel“', ask: 'Ein Bub wünscht sich das Märchen „Hänsel und Gretel“ – am liebsten mit vielen Bildern.', hint: 'Märchen mit Bildern stehen bei den Bilderbüchern im Kirango (3. OG, orange).', topic: 'c4_bilder', found: 'Gefunden: „Hänsel und Gretel“ als Bilderbuch!' },
+  { id: 's12', short: 'ein Buch über künstliche Intelligenz', ask: 'Eine Studentin will verstehen, wie KI-Chatbots funktionieren. Finde ein Buch über künstliche Intelligenz!', hint: 'KI gehört zu „Informatik & Computer“ im Know How (3. OG, grün).', topic: 'c6_it', found: 'Gefunden: „Künstliche Intelligenz verstehen“!' },
+  { id: 's13', short: 'ein Buch über Politik und Satire', ask: 'Ein Leser sucht ein Buch darüber, wie Satire die Mächtigen aufs Korn nimmt.', hint: 'Politik und Medien findest du im College 3 (grau).', topic: 'c3_gpm', found: 'Gefunden: „Satire und Macht“!' },
+  { id: 's14', short: 'ein Buch über das Ballett „Der Nussknacker“', ask: 'Eine Ballettschülerin sucht ein Buch über „Der Nussknacker“.', hint: 'Ballett steht bei „Theater & Tanz & Film“ im Kunstraum (3. OG, blau).', topic: 'c5_ttf', found: 'Gefunden: ein Bildband über den „Nussknacker“!' },
+  { id: 's15', short: 'Ideen für eine Weltreise', ask: 'Ein Paar plant eine Reise rund um die Welt und braucht Ideen für die Route.', hint: 'Reisebücher stehen bei „Länder & Reisen“ im College 2 (rot).', topic: 'c2_reisen', found: 'Gefunden: „Einmal rund um die Welt“!' },
+  { id: 's16', short: 'ein Buch über Raketen', ask: 'Ein Kind will wissen, wie Raketen ins All kommen. Finde ein Buch über Raketentechnik!', hint: 'Technik findest du im Know How – gleich neben Informatik.', topic: 'c6_technik', found: 'Gefunden: „Raketen und Raumfahrt“!' },
+  { id: 's17', short: 'ein Mathebuch über Zahlenfolgen', ask: 'Eine Schülerin liebt Rätsel mit Zahlenfolgen – genau wie einst Ada Lovelace.', hint: 'Mathematik steht bei den Naturwissenschaften im Know How.', topic: 'c6_nawi', found: 'Gefunden: „Das Buch der Zahlenfolgen“!' },
 ]);
 
 // Quizfragen zur Bücherei & Systematik
@@ -1291,14 +1298,35 @@ const QUIZ = deepFreeze([
   { id: 'q10', q: 'Wo findest du Hörbücher für Erwachsene?', a: ['College 1 – Literatur & Sprache', 'College 6 – Know How', 'College 3 – Standorte'], ok: 0, ex: '„Hörbuch & Film“ gehört zum College 1. Hörbücher für Kinder gibt es im Kirango.' },
   { id: 'q11', q: 'Was kann man in einer Artothek ausleihen?', a: ['Autoteile', 'Bilder und Kunstwerke', 'Antike Möbel'], ok: 1, ex: 'In einer Artothek leiht man Bilder und Kunstwerke aus – wie Bücher, nur für die Wand!' },
   { id: 'q12', q: 'Welche Themen gehören zum College 3?', a: ['Comics, Bilderbücher, DVDs', 'Musik, Noten, Kunst', 'Philosophie, Psychologie, Recht'], ok: 2, ex: 'Im College 3 stehen u. a. Philosophie, Psychologie, Recht, Pädagogik und Religionen.' },
+  { id: 'q13', q: 'Wer gilt als erste Programmiererin der Welt?', a: ['Marie Curie', 'Ada Lovelace', 'Bertha von Suttner'], ok: 1, ex: 'Ada Lovelace veröffentlichte 1843 ein Rechenprogramm für Charles Babbages Analytische Maschine.' },
+  { id: 'q14', q: 'Wie heißt der Test, ob man eine Maschine im Gespräch von einem Menschen unterscheiden kann?', a: ['Turing-Test', 'Crashtest', 'Lackmustest'], ok: 0, ex: 'Alan Turing nannte ihn 1950 „Imitationsspiel“. Heute heißt er nach ihm Turing-Test.' },
+  { id: 'q15', q: 'Wie heißt das Land der winzigen Menschen in „Gullivers Reisen“?', a: ['Nimmerland', 'Liliput', 'Lummerland'], ok: 1, ex: 'Gulliver strandet in Liliput. Die Menschen dort sind kaum größer als ein Daumen.' },
+  { id: 'q16', q: 'Wer hat „In 80 Tagen um die Welt“ geschrieben?', a: ['Jules Verne', 'Karl May', 'Mark Twain'], ok: 0, ex: 'Jules Verne. Von ihm stammt auch „Von der Erde zum Mond“.' },
 ]);
 
-// Buchwelten (werden mit Punkten freigeschaltet)
+// Buchwelten (werden mit Punkten freigeschaltet). Reihenfolge = Freischalt-Reihenfolge.
+// Abstand zwischen zwei Welten wächst um je 10 ★ (30, 40, 50 … 100).
 const WORLDS = deepFreeze({
-  moby: { title: 'Moby Dick', author: 'Herman Melville', year: 1851, topic: 'c1_lit', floor: '2', need: 30 },
-  alice: { title: 'Alice im Wunderland', author: 'Lewis Carroll', year: 1865, topic: 'c4_kinder', floor: '3', need: 80 },
+  haensel: { title: 'Hänsel und Gretel', author: 'Brüder Grimm', by: 'den Brüdern Grimm', year: 1812, topic: 'c4_bilder', floor: '3', need: 20, color: '#c0703a',
+    teaser: 'Nachts im Wald: Folge den Kieselsteinen im Mondlicht nach Hause.' },
+  moby: { title: 'Moby Dick', author: 'Herman Melville', year: 1851, topic: 'c1_lit', floor: '2', need: 50, color: '#3f74a8',
+    teaser: 'Kletter in den Mastkorb der Pequod und halte Ausschau nach dem weißen Wal.' },
+  alice: { title: 'Alice im Wunderland', author: 'Lewis Carroll', year: 1865, topic: 'c4_kinder', floor: '3', need: 90, color: '#5b9bd5',
+    teaser: 'Folge dem weißen Kaninchen in den Kaninchenbau – und fall und fall …' },
+  turing: { title: 'Können Maschinen denken?', author: 'Alan Turing', year: 1950, topic: 'c6_it', floor: '3', need: 140, color: '#3b8f5a',
+    teaser: 'Das Imitationsspiel: Wer am Fernschreiber ist Mensch, wer Maschine?' },
+  gulliver: { title: 'Gullivers Reisen', author: 'Jonathan Swift', year: 1726, topic: 'c3_gpm', floor: '2', need: 200, color: '#b8453a',
+    teaser: 'Als Riese in Liliput: Zieh die Flotte von Blefuscu an den Strand.' },
+  nuss: { title: 'Nussknacker und Mausekönig', author: 'E. T. A. Hoffmann', year: 1816, topic: 'c5_ttf', floor: '3', need: 270, color: '#7b3fa0',
+    teaser: 'Um Mitternacht erwachen die Spielsachen. Knack die Nüsse im Takt!' },
+  reise: { title: 'In 80 Tagen um die Welt', author: 'Jules Verne', year: 1873, topic: 'c2_reisen', floor: '2', need: 350, color: '#d9a441',
+    teaser: 'Phileas Fogg hat gewettet. Zug, Schiff oder Elefant – du entscheidest.' },
+  mond: { title: 'Von der Erde zum Mond', author: 'Jules Verne', year: 1865, topic: 'c6_technik', floor: '3', need: 440, color: '#4a5d7a',
+    teaser: 'Der Kanonen-Club schießt zum Mond. Du bestimmst Ladung und Zeitpunkt.' },
+  ada: { title: 'Die Analytische Maschine', author: 'Ada Lovelace', year: 1843, topic: 'c6_it', floor: '3', need: 540, color: '#9b5d8f',
+    teaser: 'Programmiere Babbages Rechenmaschine mit Lochkarten – bis sie Musik macht.' },
 });
-const WORLD_IDS = Object.freeze(['moby', 'alice']);
+const WORLD_IDS = Object.freeze(['haensel', 'moby', 'alice', 'turing', 'gulliver', 'nuss', 'reise', 'mond', 'ada']);
 
 const BADGES = deepFreeze([
   { id: 'erstes', name: 'Erstes Buch', desc: 'Das erste Buch richtig zurückgestellt.' },
@@ -1309,6 +1337,8 @@ const BADGES = deepFreeze([
   { id: 'entdeck', name: 'Entdeckungsreise', desc: 'Alle 6 Colleges besucht.' },
   { id: 'moby', name: 'Ausguck', desc: 'In „Moby Dick“ den weißen Wal gesichtet.' },
   { id: 'alice', name: 'Kaninchenbau', desc: 'In „Alice im Wunderland“ in den Kaninchenbau gefolgt.' },
+  { id: 'leseratte', name: 'Leseratte', desc: '3 Buchwelten erlebt.' },
+  { id: 'weltenbummler', name: 'Weltenbummler', desc: 'Alle 9 Buchwelten erlebt.' },
 ]);
 const BADGE_IDS = Object.freeze(BADGES.map((b) => b.id));
 
@@ -1326,7 +1356,7 @@ const NPCS = deepFreeze([
   { id: 'gruber', name: 'Herr Gruber', floor: '2', x: 27, y: 14, dir: 'down', role: 'event', event: 'food', sit: true, look: mkLook('short', 'white', 'light', '#8a9a5b', '#4a3f35', 'glasses') },
   { id: 'leser1', name: 'Leserin', floor: '2', x: 26, y: 5, dir: 'down', sit: true, look: mkLook('long', 'black', 'brown', '#f4a261', '#3d405b'), lines: ['Pssst … ich bin gerade beim spannendsten Kapitel!'] },
   { id: 'reise', name: 'Reisender', floor: '2', x: 35, y: 15, dir: 'left', wander: true, look: mkLook('short', 'red', 'light', '#2a6f97', '#5c4033'), lines: ['Ich plane eine Reise! Reiseführer stehen hier im College 2 bei „Länder & Reisen“.', 'Lokal, regional, global – von Wien bis ans andere Ende der Welt ist alles da.'] },
-  { id: 'foyer1', name: 'Besucherin', floor: '2', x: 6, y: 13, dir: 'down', wander: true, look: mkLook('long', 'brown', 'dark', '#e9c46a', '#264653'), lines: ['Kennst du den Lageplan? Mit [K] siehst du, wo welches Thema steht.', 'Meine Jacke ist an der Garderobe – gleich da unten.'] },
+  { id: 'foyer1', name: 'Besucherin', floor: '2', x: 6, y: 13, dir: 'down', wander: true, look: mkLook('long', 'brown', 'dark', '#e9c46a', '#264653'), lines: ['Kennst du den Lageplan? Mit [K] siehst du, wo welches Thema steht.', 'Mit [B] siehst du alle Bücherwelten. Ich spare gerade auf „Moby Dick“!', 'Meine Jacke ist an der Garderobe – gleich da unten.'] },
   { id: 'leser3', name: 'Leser', floor: '2', x: 50, y: 12, dir: 'down', sit: true, look: mkLook('short', 'grey', 'tan', '#5e548e', '#2b2d42', 'glasses'), lines: ['Philosophie, Psychologie, Recht … im College 3 könnte ich stundenlang stöbern.'] },
   { id: 'gang2', name: 'Student', floor: '2', x: 52, y: 10, dir: 'down', wander: true, look: mkLook('short', 'blonde', 'light', '#b56576', '#22223b'), lines: ['Hast du gewusst, dass es im College 3 eine „Bibliothek für Frauen und Männer“ gibt?'] },
   // --- 3. OG
@@ -1398,6 +1428,7 @@ const NOVAK_TIPS = deepFreeze([
   'Kennst du schon das 3. OG? Mit dem Lift oder über die Treppen kommst du hinauf.',
   'Auf dem Lageplan [K] siehst du alle Colleges und ihre Themen.',
   'An den Info-Theken gibt es Suchaufträge und Quizfragen – die bringen Punkte!',
+  'Mit [B] öffnest du die Bücherliste. Dort steht, ab wie vielen ★ sich welche Buchwelt öffnet.',
 ]);
 
 const OBJECT_TEXT = deepFreeze({
@@ -1436,6 +1467,8 @@ const Sound = (() => {
   let nextT = 0;
   let timer = null;
   let amb = null;
+  let songStart = null;
+  let startPending = false;
 
   const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
   function freq(name) {
@@ -1584,7 +1617,17 @@ const Sound = (() => {
   const V4 = {
     F: 'F3+A3+C4', Am: 'A3+C4+E4', Bb: 'Bb3+D4+F4', C: 'C4+E4+G4', Dm: 'D4+F4+A4',
     Gm: 'G3+Bb3+D4', A: 'A3+C#4+E4', G: 'G3+B3+D4', Em: 'E4+G4+B4', D: 'D4+F#4+A4', A7: 'A3+C#4+G4',
+    E: 'E3+G#3+B3', Bm: 'B3+D4+F#4',
   };
+
+  // Einzelne hohe Glockentöne zu Taktbeginn (jeder n-te Takt)
+  function bellTrack(bars, perBar, every, tops) {
+    const out = [];
+    bars.forEach((name, i) => {
+      for (let k = 0; k < perBar; k++) out.push(k === 0 && i % every === 0 ? tops[name] : '.');
+    });
+    return out.join(' ');
+  }
 
   function arpTrack(bars, perBar) {
     const out = [];
@@ -1597,6 +1640,14 @@ const Sound = (() => {
   }
 
   const libBars = ['F', 'Am', 'Bb', 'C', 'F', 'Dm', 'Gm', 'F', 'Dm', 'Am', 'Bb', 'F', 'Gm', 'Am', 'Bb', 'C'];
+  const forestBars = ['Am', 'F', 'G', 'Am', 'Dm', 'Am', 'E', 'Am', 'F', 'C', 'G', 'Em', 'Dm', 'Am', 'E', 'Am'];
+  const labBars = ['Am', 'F', 'C', 'G', 'Am', 'F', 'Dm', 'E'];
+  const lilliBars = ['D', 'G', 'A', 'D', 'Bm', 'G', 'A', 'D'];
+  const marchBars = ['G', 'G', 'D', 'D', 'G', 'C', 'D', 'G', 'Em', 'C', 'D', 'G', 'C', 'G', 'D', 'G'];
+  const galopBars = ['C', 'G', 'C', 'G', 'C', 'F', 'G', 'C', 'Am', 'Dm', 'G', 'C', 'F', 'C', 'G', 'C'];
+  const spaceBars = ['C', 'Am', 'F', 'G', 'C', 'Em', 'F', 'G'];
+  const engineBars = ['G', 'D', 'G', 'C', 'G', 'Am', 'D', 'G', 'Em', 'C', 'G', 'D', 'C', 'G', 'D', 'G'];
+
   const SONGS = {
     library: {
       bpm: 84, spb: 2,
@@ -1638,6 +1689,99 @@ const Sound = (() => {
         { inst: 'chord', vol: 0.02, notes: chordTrack(['G', 'C', 'D', 'G', 'G', 'Em', 'A7', 'D', 'G', 'C', 'Am', 'D', 'G', 'Em', 'D', 'G'], 3, '.xx', Object.assign({ Am: 'A3+C4+E4' }, V4)) },
       ],
     },
+    // Hänsel und Gretel: leises Wiegenlied im Mondlicht (3/4)
+    forest: {
+      bpm: 84, spb: 2,
+      tracks: [
+        { inst: 'soft', vol: 0.075, notes:
+          'A4 - C5 - E5 - F5 - E5 - C5 - D5 - - - B4 - C5 - A4 - - - ' +
+          'D5 - F5 - A5 - G5 - E5 - C5 - B4 - G#4 - E4 - A4 - - - . . ' +
+          'A4 - C5 - F5 - E5 - D5 - C5 - B4 - D5 - G5 - G5 - F5 - E5 - ' +
+          'F5 - E5 - D5 - C5 - B4 - A4 - G#4 - B4 - E5 - A4 - - - . .' },
+        { inst: 'bass', vol: 0.13, notes: chordTrack(forestBars, 6, 'b.....', V4) },
+        { inst: 'pluck', vol: 0.05, notes: chordTrack(forestBars, 6, '..x.x.', V4) },
+        { inst: 'bell', vol: 0.03, notes: bellTrack(forestBars, 6, 2, { Am: 'E6', F: 'C6', G: 'D6', Em: 'B5', Dm: 'A5', E: 'B5', C: 'G5' }) },
+      ],
+    },
+    // Turing: Fernschreiber-Takt und leise Pulswellen
+    lab: {
+      bpm: 104, spb: 4,
+      tracks: [
+        { inst: 'soft', vol: 0.06, notes:
+          'E5 - - - - - - - D5 - - - C5 - - - A4 - - - - - - - - - - - . . . . ' +
+          'G4 - - - C5 - - - E5 - - - - - - - D5 - - - - - - - - - - - . . . . ' +
+          'E5 - - - A5 - - - G5 - - - E5 - - - F5 - - - - - - - E5 - - - C5 - - - ' +
+          'D5 - - - - - - - F5 - - - - - - - E5 - - - - - - - G#4 - - - B4 - - -' },
+        { inst: 'arp', vol: 0.028, notes: arpTrack(labBars, 16) },
+        { inst: 'bass', vol: 0.14, notes: chordTrack(labBars, 16, 'b.......b...b...', V4) },
+        { inst: 'H', vol: 0.06, notes: 'H . . H . . H . H . . H . . H . '.repeat(8) },
+      ],
+    },
+    // Gulliver: kleiner Jig für die Liliputaner (6/8)
+    lilliput: {
+      bpm: 104, spb: 3,
+      tracks: [
+        { inst: 'lead', vol: 0.05, notes:
+          'D5 - F#5 A5 - F#5 B5 - A5 G5 - E5 C#5 - E5 A5 - E5 F#5 - E5 D5 - - ' +
+          'D5 - F#5 B5 - A5 G5 - F#5 E5 - D5 C#5 D5 E5 A4 - C#5 D5 - - D5 . .' },
+        { inst: 'bass', vol: 0.16, notes: chordTrack(lilliBars, 6, 'b..b..', V4) },
+        { inst: 'pluck', vol: 0.05, notes: chordTrack(lilliBars, 6, '..x..x', V4) },
+        { inst: 'H', vol: 0.05, notes: 'H . . H . . '.repeat(8) },
+      ],
+    },
+    // Nussknacker: eigener Zinnsoldaten-Marsch (4/4)
+    march: {
+      bpm: 116, spb: 2,
+      tracks: [
+        { inst: 'lead', vol: 0.06, notes:
+          'D5 - G5 - G5 A5 B5 - G5 - D5 - B4 - G4 - A4 - D5 - D5 E5 F#5 - A5 - - - F#5 - D5 - ' +
+          'B5 - G5 - B5 - D6 - C6 - B5 - A5 - G5 - F#5 - A5 - E5 - F#5 - G5 - D5 - G5 - . . ' +
+          'E5 - G5 - B5 - G5 - E5 - C5 - E5 G5 C6 - D6 - C6 - B5 - A5 - B5 - G5 - D5 - . . ' +
+          'E5 - E5 F#5 G5 - E5 - D5 - D5 E5 D5 - B4 - A4 - D5 - F#5 - A5 - G5 - - - G4 - . .' },
+        { inst: 'bass', vol: 0.16, notes: chordTrack(marchBars, 8, 'b...b...', V4) },
+        { inst: 'chord', vol: 0.025, notes: chordTrack(marchBars, 8, '..x...x.', V4) },
+        { inst: 'K', vol: 0.3, notes: 'K . . . K . . . '.repeat(16) },
+        { inst: 'S', vol: 0.1, notes: '. . S . . . S . '.repeat(15) + '. . S . S S S S' },
+      ],
+    },
+    // 80 Tage: flotter Galopp (2/4)
+    galop: {
+      bpm: 148, spb: 2,
+      tracks: [
+        { inst: 'lead', vol: 0.05, notes:
+          'E5 G5 C6 G5 D5 G5 B5 G5 E5 G5 C6 E6 D6 - B5 - C6 B5 A5 G5 F5 A5 C6 A5 G5 F5 E5 D5 C5 - . . ' +
+          'A5 G5 E5 C5 D5 F5 A5 F5 G5 B5 D6 B5 C6 - G5 - A5 F5 C5 F5 G5 E5 C5 E5 D5 G5 B5 D6 C6 - . .' },
+        { inst: 'bass', vol: 0.16, notes: chordTrack(galopBars, 4, 'b...', V4) },
+        { inst: 'chord', vol: 0.025, notes: chordTrack(galopBars, 4, '..x.', V4) },
+        { inst: 'K', vol: 0.25, notes: 'K . . . '.repeat(16) },
+        { inst: 'S', vol: 0.08, notes: '. . S . '.repeat(16) },
+      ],
+    },
+    // Von der Erde zum Mond: weite Fanfare über Glitzer-Arpeggien
+    space: {
+      bpm: 92, spb: 4,
+      tracks: [
+        { inst: 'soft', vol: 0.07, notes:
+          'C5 - - - G4 - - - C5 - - - E5 - - - G5 - - - - - - - E5 - - - C5 - - - ' +
+          'F5 - - - A5 - - - C6 - - - A5 - - - G5 - - - - - - - - - - - . . . . ' +
+          'E5 - - - G5 - - - C6 - - - G5 - - - B5 - - - - - - - G5 - - - E5 - - - ' +
+          'A5 - - - C6 - - - F6 - - - C6 - - - D6 - - - B5 - - - G5 - - - D5 - - -' },
+        { inst: 'arp', vol: 0.025, notes: arpTrack(spaceBars, 16) },
+        { inst: 'bass', vol: 0.15, notes: chordTrack(spaceBars, 16, 'b.......b.......', V4) },
+      ],
+    },
+    // Ada Lovelace: Spieluhr mit Uhrwerk-Ticken (3/4)
+    engine: {
+      bpm: 132, spb: 2,
+      tracks: [
+        { inst: 'bell', vol: 0.06, notes:
+          'D5 - G5 - B5 - A5 - F#5 - D5 - G5 - B5 - D6 - E6 - - - C6 - B5 - G5 - D5 - C6 - A5 - E5 - F#5 - A5 - D6 - G5 - - - . . ' +
+          'G5 - B5 - E6 - E6 - C6 - G5 - D6 - B5 - G5 - F#5 - A5 - D6 - C6 - E6 - G5 - B5 - D6 - G5 - A5 - F#5 - E5 - G5 - - - . .' },
+        { inst: 'bass', vol: 0.13, notes: chordTrack(engineBars, 6, 'b.....', V4) },
+        { inst: 'pluck', vol: 0.05, notes: chordTrack(engineBars, 6, '..x.x.', V4) },
+        { inst: 'H', vol: 0.05, notes: 'H . H . H . '.repeat(16) },
+      ],
+    },
   };
 
   for (const s of Object.values(SONGS)) {
@@ -1669,25 +1813,47 @@ const Sound = (() => {
 
   function schedule() {
     if (!ctx || !song || ctx.state !== 'running') return;
-    if (nextT < ctx.currentTime - 0.2) nextT = ctx.currentTime + 0.05;
+    if (nextT < ctx.currentTime - 0.2) {
+      const nt = ctx.currentTime + 0.05;
+      if (songStart !== null) songStart += nt - nextT;
+      nextT = nt;
+    }
     while (nextT < ctx.currentTime + 0.15) {
+      if (startPending && step === 0) {
+        songStart = nextT;
+        startPending = false;
+      }
       scheduleStep(song, step, nextT);
       nextT += song.stepDur;
       step = (step + 1) % song.len;
     }
   }
 
-  function play(id) {
-    if (songId === id) return;
+  function play(id, restart) {
+    if (songId === id && !restart) return;
     songId = id;
     song = SONGS[id] || null;
     step = 0;
+    songStart = null;
+    startPending = true;
     if (ctx) nextT = ctx.currentTime + 0.12;
   }
 
   function stop() {
     song = null;
     songId = null;
+    songStart = null;
+  }
+
+  // Sekunden seit Schritt 0 des laufenden Liedes (Audio-Uhr) – für das Rhythmusspiel
+  function songTime() {
+    if (!ctx || ctx.state !== 'running' || songStart === null || !song) return null;
+    return ctx.currentTime - songStart - (ctx.outputLatency || ctx.baseLatency || 0);
+  }
+
+  function songInfo(id) {
+    const sg = SONGS[id];
+    return sg ? { stepDur: sg.stepDur, len: sg.len, tracks: sg.tracks.map((tr) => tr.tokens.slice()) } : null;
   }
 
   // Meeresrauschen für Moby Dick
@@ -1744,6 +1910,19 @@ const Sound = (() => {
     badge: (t) => [784, 988, 1175, 1568].forEach((f, i) => osc('triangle', f, t + i * 0.08, 0.12, 0.1, sfxBus)),
     door: (t) => { noise(t, 0.25, 0.08, sfxBus, 'bandpass', 500, 1.2, 900); },
     step: (t) => noise(t, 0.03, 0.03, sfxBus, 'lowpass', 500),
+    owl: (t) => { osc('sine', 440, t, 0.22, 0.07, sfxBus, { slide: 380 }); osc('sine', 410, t + 0.32, 0.45, 0.07, sfxBus, { slide: 350, vib: true }); },
+    pebble: (t) => { osc('sine', 2093, t, 0.05, 0.05, sfxBus, { release: 0.2 }); osc('sine', 3136, t + 0.04, 0.08, 0.035, sfxBus, { release: 0.25 }); },
+    type: (t) => { noise(t, 0.025, 0.1, sfxBus, 'bandpass', 3200, 2); osc('square', 140, t, 0.02, 0.02, sfxBus, { lp: 900, release: 0.02 }); },
+    bell: (t) => { osc('sine', 1760, t, 0.4, 0.06, sfxBus, { sustain: 0.3, release: 0.5 }); osc('sine', 2637, t, 0.2, 0.03, sfxBus, { release: 0.3 }); },
+    crack: (t) => { noise(t, 0.07, 0.25, sfxBus, 'bandpass', 1900, 1.5); osc('square', 320, t, 0.03, 0.04, sfxBus, { slide: 120, lp: 1500 }); },
+    squeak: (t) => osc('square', 1700, t, 0.09, 0.035, sfxBus, { slide: 2500, lp: 4000 }),
+    arrow: (t) => noise(t, 0.14, 0.12, sfxBus, 'highpass', 3000, 0.8, 6000),
+    boom: (t) => { noise(t, 1.4, 0.4, sfxBus, 'lowpass', 500, 0.7, 60); osc('sine', 90, t, 0.6, 0.3, sfxBus, { slide: 28 }); },
+    whistle: (t) => { osc('square', 880, t, 0.55, 0.035, sfxBus, { lp: 2200, vib: true }); osc('square', 1109, t, 0.55, 0.03, sfxBus, { lp: 2200 }); },
+    gear: (t) => { for (let i = 0; i < 3; i++) noise(t + i * 0.07, 0.04, 0.12, sfxBus, 'bandpass', 900 + i * 300, 3); },
+    punch: (t) => { noise(t, 0.03, 0.2, sfxBus, 'bandpass', 2500, 2); osc('square', 520, t, 0.025, 0.04, sfxBus, { lp: 2000 }); },
+    cheer: (t) => { for (let i = 0; i < 7; i++) osc('square', 1400 + Math.random() * 900, t + i * 0.05, 0.07, 0.02, sfxBus, { slide: 2400, lp: 4000 }); },
+    rope: (t) => noise(t, 0.2, 0.1, sfxBus, 'bandpass', 700, 1.2, 1400),
   };
 
   function sfx(name) {
@@ -1762,7 +1941,7 @@ const Sound = (() => {
   }
 
   return {
-    init, resume, suspend, play, stop, sfx, ambience, setMusic, setSfx,
+    init, resume, suspend, play, stop, sfx, ambience, setMusic, setSfx, songTime, songInfo,
     get musicOn() { return musicOn; },
     get sfxOn() { return sfxOn; },
     get ready() { return !!ctx; },
@@ -1906,7 +2085,7 @@ const Input = (() => {
     ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
     KeyE: 'act', Enter: 'act', NumpadEnter: 'act', Space: 'jump',
     ShiftLeft: 'run', ShiftRight: 'run',
-    KeyK: 'map', KeyM: 'music', Escape: 'menu', KeyP: 'menu',
+    KeyK: 'map', KeyB: 'books', KeyM: 'music', Escape: 'menu', KeyP: 'menu',
   };
 
   function press(b) {
@@ -1939,7 +2118,7 @@ const Input = (() => {
     window.addEventListener('blur', clear);
   }
 
-  // Touch/Maus-Knöpfe: data-btn="up|down|left|right|act|run|map|menu|music"
+  // Touch/Maus-Knöpfe: data-btn="up|down|left|right|act|run|map|books|menu|music"
   function bindButtons(root) {
     for (const el of root.querySelectorAll('[data-btn]')) {
       const names = String(el.dataset.btn).split(' ').filter((n) => /^[a-z]+$/.test(n));
@@ -2225,6 +2404,19 @@ function drawBubble(g, x, y, text, color = '#2b1d1f') {
   Font.draw(g, text, bx + 3, by + 1, color);
 }
 
+// Glitzer-Stern (p = 0…1 Helligkeit), für Regale und Bücherliste
+function drawTwinkle(g, x, y, p, col = '#ffd977') {
+  if (p <= 0.05) return;
+  x = Math.round(x);
+  y = Math.round(y);
+  const a = g.globalAlpha;
+  g.globalAlpha = a * Math.min(1, p * 1.4);
+  rect(g, x, y, 1, 1, '#ffffff');
+  if (p > 0.35) { rect(g, x - 1, y, 3, 1, col); rect(g, x, y - 1, 1, 3, col); rect(g, x, y, 1, 1, '#ffffff'); }
+  if (p > 0.8) { rect(g, x - 2, y, 1, 1, col); rect(g, x + 2, y, 1, 1, col); rect(g, x, y - 2, 1, 1, col); rect(g, x, y + 2, 1, 1, col); }
+  g.globalAlpha = a;
+}
+
 // ===================================================================
 // Bücherei: Karten, Objekte, Figuren, Kollision, Interaktion, Mechanik
 // ===================================================================
@@ -2284,9 +2476,8 @@ function buildFloor(id) {
         for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) used.add((y + dy) * F.w + x + dx);
         const col = COLLEGES[TOPICS[topic].college].color;
         const img = sprite(32, 32, (g) => drawShelf(g, 0, 0, shelfKind(topic), col, x * 131 + y * 17 + id.charCodeAt(0)));
-        let world = null;
-        for (const wid of WORLD_IDS) if (WORLDS[wid].topic === topic && WORLDS[wid].floor === id) world = wid;
-        F.shelves.push(mk('shelf', ch, x, y, 2, 2, img, 0, { topic, world }));
+        const worlds = WORLD_IDS.filter((wid) => WORLDS[wid].topic === topic && WORLDS[wid].floor === id);
+        F.shelves.push(mk('shelf', ch, x, y, 2, 2, img, 0, { topic, worlds }));
       } else if (ch === 'I' && F.raw(x - 1, y) !== 'I') {
         used.add(i); used.add(i + 1); used.add(i + 2);
         mk('info', ch, x, y, 3, 1, sprite(48, 22, (g) => drawInfoDesk(g, 0, 0)), -6, { npcAt: [x + 1, y - 1] });
@@ -2457,6 +2648,7 @@ const Library = (() => {
   let time = 0;
   let onOpenMap = null;
   let onStartWorld = null;
+  const nearNoted = new Set();
 
   function init(hooks) {
     onOpenMap = hooks.openMap;
@@ -2530,6 +2722,8 @@ const Library = (() => {
     if (!boxFree(player, player.x, player.y)) enterFloor('2', 5 * TS + 8, 8 * TS + 14, 'right');
     noise = 0;
     Sound.play('library');
+    // Ältere Spielstände: inzwischen erreichte Buchwelten gleich melden
+    if (S.tutorial > 0) checkUnlocks();
   }
 
   function applyEventState() {
@@ -2551,7 +2745,19 @@ const Library = (() => {
     if (label) Toast.show(txt + '  ' + label, n > 0 ? UI_COL.good : UI_COL.bad);
     checkUnlocks();
     checkBadges();
+    noteNextWorld();
     requestSave();
+  }
+
+  // Kurz vor dem Ziel: einmal Bescheid geben, welche Buchwelt bald aufgeht
+  function noteNextWorld() {
+    const id = WORLD_IDS.find((w) => !worldUnlocked(w));
+    if (!id || nearNoted.has(id)) return;
+    const left = WORLDS[id].need - S.pts;
+    if (left > 0 && left <= 10) {
+      nearNoted.add(id);
+      Toast.show('Noch ' + left + ' ★ bis „' + WORLDS[id].title + '“ – siehe Bücherliste [B]', UI_COL.accent);
+    }
   }
 
   function worldUnlocked(id) {
@@ -2565,7 +2771,7 @@ const Library = (() => {
         const w = WORLDS[id];
         const col = COLLEGES[TOPICS[w.topic].college];
         Sound.sfx('unlock');
-        Banner.show('Neue Buchwelt: „' + w.title + '“', 'College ' + col.num + ' · Regal „' + TOPICS[w.topic].name + '“', col.color, 2);
+        Banner.show('Neue Buchwelt: „' + w.title + '“', FLOOR_NAMES[w.floor] + ' · College ' + col.num + ' · „' + TOPICS[w.topic].name + '“', col.color, 2);
       }
     }
   }
@@ -2576,6 +2782,7 @@ const Library = (() => {
       erstes: st.returns >= 1, sortier: st.returns >= 8, spuer: S.searchDone.length >= 3,
       quiz: S.quizDone.length >= 5, ruhe: S.eventsDone.length >= 3, entdeck: S.visited.length >= 6,
       moby: S.worldsDone.includes('moby'), alice: S.worldsDone.includes('alice'),
+      leseratte: S.worldsDone.length >= 3, weltenbummler: WORLD_IDS.every((w) => S.worldsDone.includes(w)),
     };
     for (const b of BADGES) {
       if (rules[b.id] && !S.badges.includes(b.id)) {
@@ -2650,7 +2857,8 @@ const Library = (() => {
         Dialog.open([
           narr('Perfekt! „' + book.title + '“ steht wieder am richtigen Platz.'),
           npcPage(nov.def, 'Super gemacht! (Frau Novak winkt von der Rückgabe.) Am Rückgabewagen warten noch mehr Bücher – auch einer im 3. OG.'),
-          npcPage(nov.def, 'An den Info-Theken gibt es Suchaufträge und Quizfragen. Und wenn du 30 ★ sammelst, öffnet sich ein ganz besonderes Buch …'),
+          npcPage(nov.def, 'An den Info-Theken gibt es Suchaufträge und Quizfragen. Und ab ' + WORLDS[WORLD_IDS[0]].need + ' ★ öffnet sich das erste Buch, in das du hineinspringen kannst!'),
+          npcPage(nov.def, 'Mit [B] siehst du alle Bücherwelten – und wie viele ★ du für jede brauchst.'),
         ]);
       }
     } else {
@@ -2900,22 +3108,48 @@ const Library = (() => {
         return;
       }
     }
-    if (o.world) {
-      const w = WORLDS[o.world];
-      if (worldUnlocked(o.world)) {
+    if (o.worlds.length === 1) {
+      const id = o.worlds[0];
+      const w = WORLDS[id];
+      const by = w.by || w.author;
+      if (S.worldsDone.includes(id)) {
         Dialog.open([
-          narr('Regal „' + topic.name + '“. Ein Buch leuchtet: „' + w.title + '“ von ' + w.author + ' (' + w.year + ').'),
+          narr('Regal „' + topic.name + '“. „' + w.title + '“ von ' + by + ' glitzert – diese Geschichte hast du schon erlebt.'),
+          Object.assign(narr('Noch einmal eintauchen? (Punkte gibt es nur beim ersten Mal.)'), {
+            choices: [
+              { t: 'Ja, nochmal!', fn: () => onStartWorld(id) },
+              { t: 'Später', fn: () => {} },
+            ],
+          }),
+        ]);
+      } else if (worldUnlocked(id)) {
+        Dialog.open([
+          narr('Regal „' + topic.name + '“. Ein Buch leuchtet: „' + w.title + '“ von ' + by + ' (' + w.year + ').'),
           Object.assign(narr('Möchtest du in die Geschichte eintauchen?'), {
             choices: [
-              { t: 'Eintauchen!', fn: () => onStartWorld(o.world) },
+              { t: 'Eintauchen!', fn: () => onStartWorld(id) },
               { t: 'Später', fn: () => {} },
             ],
           }),
         ]);
       } else {
-        Dialog.open([narr('Regal „' + topic.name + '“. Ein Buch schimmert geheimnisvoll: „' + w.title + '“ von ' + w.author + '.'),
+        Dialog.open([narr('Regal „' + topic.name + '“. Ein Buch schimmert geheimnisvoll: „' + w.title + '“ von ' + by + '.'),
           narr('Sammle ' + w.need + ' ★, um in seine Welt einzutauchen. Du hast ' + S.pts + ' ★.')]);
       }
+      return;
+    }
+    if (o.worlds.length > 1) {
+      const choices = o.worlds.map((id) => {
+        const w = WORLDS[id];
+        const ok = worldUnlocked(id);
+        const tag = S.worldsDone.includes(id) ? ' ✓' : ok ? '' : ' – ab ' + w.need + ' ★';
+        return {
+          t: '„' + w.title + '“ (' + w.author + ')' + tag,
+          fn: ok ? () => onStartWorld(id) : () => Dialog.open([narr('„' + w.title + '“ öffnet sich ab ' + w.need + ' ★. Du hast ' + S.pts + ' ★.')]),
+        };
+      });
+      choices.push({ t: 'Später', fn: () => {} });
+      Dialog.open([Object.assign(narr('Regal „' + topic.name + '“. Hier stehen zwei besondere Bücher. Welches schlägst du auf?'), { choices })]);
       return;
     }
     Dialog.open([narr('Regal „' + topic.name + '“ – College ' + col.num + ' · ' + col.name + '.')]);
@@ -3056,8 +3290,8 @@ const Library = (() => {
     for (const s of sparks) s.t += dt;
     sparks = sparks.filter((s) => s.t < s.life);
     for (const sh of F.shelves) {
-      if (sh.world && worldUnlocked(sh.world) && !S.worldsDone.includes(sh.world) && Math.random() < dt * 6) {
-        sparks.push({ x: sh.px + 4 + Math.random() * 24, y: sh.py + 4 + Math.random() * 24, t: 0, life: 0.8, col: '#fff7c2' });
+      if (shelfState(sh).done && Math.random() < dt * 12) {
+        sparks.push({ x: sh.px + 2 + Math.random() * 28, y: sh.py + 2 + Math.random() * 28, t: 0, life: 0.5 + Math.random() * 0.5, col: Math.random() < 0.5 ? '#ffd977' : '#fff7c2', tw: true });
       }
     }
 
@@ -3123,6 +3357,25 @@ const Library = (() => {
     }
   }
 
+  // Zustand eines Regals mit Buchwelt(en): bereit (leuchtet, ★) / erlebt (glitzert)
+  function shelfState(sh) {
+    let ready = false;
+    let done = false;
+    for (const id of sh.worlds) {
+      if (S.worldsDone.includes(id)) done = true;
+      else if (worldUnlocked(id)) ready = true;
+    }
+    return { ready, done };
+  }
+
+  function shelfFor(id) {
+    const w = WORLDS[id];
+    const F2 = floors[w.floor];
+    if (!F2) return null;
+    const sh = F2.shelves.find((x) => x.worlds.includes(id));
+    return sh ? { floor: w.floor, shelf: sh } : null;
+  }
+
   // --- Zeichnen ------------------------------------------------------
   function drawActor(g, a, ox, oy) {
     const frames = a.spr[a.dir];
@@ -3175,7 +3428,7 @@ const Library = (() => {
     }
     // Leuchtende Buchwelt-Regale
     for (const sh of F.shelves) {
-      if (sh.world && worldUnlocked(sh.world) && !S.worldsDone.includes(sh.world)) {
+      if (shelfState(sh).ready) {
         const a = 0.35 + 0.25 * Math.sin(time * 4);
         g.fillStyle = `rgba(255,240,170,${a})`;
         g.fillRect(sh.px + 3 - ox, sh.py + 5 - oy, 26, 1);
@@ -3185,6 +3438,12 @@ const Library = (() => {
     }
     for (const s of sparks) {
       const k = 1 - s.t / s.life;
+      if (s.tw) {
+        // Glitzern: kleiner Stern, der auf- und wieder abblendet
+        g.globalAlpha = 1;
+        drawTwinkle(g, s.x - ox, s.y - oy, Math.sin((s.t / s.life) * Math.PI), s.col);
+        continue;
+      }
       g.globalAlpha = k;
       rect(g, Math.round(s.x - ox), Math.round(s.y - oy - s.t * 10), 1, 1, s.col);
       if (k > 0.5) {
@@ -3230,7 +3489,7 @@ const Library = (() => {
       if (S.worldsDone.includes(id)) continue;
       const col = COLLEGES[TOPICS[w.topic].college];
       if (worldUnlocked(id)) return '„' + w.title + '“ wartet im College ' + col.num + ' (' + FLOOR_NAMES[col.floor] + '), Regal „' + TOPICS[w.topic].name + '“.';
-      return 'Sammle ' + w.need + ' ★ für die Buchwelt „' + w.title + '“.';
+      return 'Sammle ' + w.need + ' ★ für „' + w.title + '“ – alle Buchwelten: [B]';
     }
     return 'Alle Buchwelten erlebt! Sammle weiter Punkte und Abzeichen.';
   }
@@ -3295,7 +3554,7 @@ const Library = (() => {
   }
 
   return {
-    init, start, update, draw, persist, addPoints, checkBadges, requestSave, miniInfo,
+    init, start, update, draw, persist, addPoints, checkBadges, requestSave, miniInfo, worldUnlocked, shelfFor,
     get floor() { return F; },
     get player() { return player; },
     setPlayer(x, y, dir) { player.x = x; player.y = y; if (dir) player.dir = dir; snapCamera(); },
@@ -3380,6 +3639,59 @@ const StoryCard = (() => {
   return { show, update, draw, close, active: () => !!pages };
 })();
 
+// --- Gemeinsame Helfer für Buchwelten ------------------------------
+// Kopfleiste: Titel links, Zähler rechts (optional mit kleinem Bild)
+function drawWorldHud(g, title, right, icon) {
+  const w = Font.measure(title) + 14;
+  drawPanel(g, 4, 4, w, 15);
+  Font.draw(g, title, 10, 6, '#ffd977');
+  if (right) {
+    const iw = icon ? icon.width + 3 : 0;
+    const rw = Font.measure(right) + 14 + iw;
+    drawPanel(g, VIEW_W - rw - 4, 4, rw, 15);
+    let x = VIEW_W - rw + 3;
+    if (icon) {
+      g.drawImage(icon, x, 4 + Math.round((15 - icon.height) / 2));
+      x += iw;
+    }
+    Font.draw(g, right, x, 6, UI_COL.text);
+  }
+}
+
+// Kurze Meldung (unten oder an fester Höhe)
+function drawWorldMsg(g, text, y) {
+  const lines = Font.wrap(text, 330);
+  const h = lines.length * Font.LINE + 6;
+  const yy = y === undefined ? VIEW_H - h - 6 : y;
+  drawPanel(g, 22, yy, 340, h);
+  lines.forEach((l, i) => Font.draw(g, l, 30, yy + 3 + i * Font.LINE, UI_COL.text));
+}
+
+function rewardLine(first, pts) {
+  return first ? '\n\n+' + pts + ' ★' : '';
+}
+
+// Großes Emblem aus der Bücherliste als Bild auf der Buchseite
+function emblemIcon(id, size = 48) {
+  return (g, x, y) => g.drawImage(BOOK_EMBLEMS[id].c, Math.round(x - size / 2), Math.round(y - size * 0.62), size, size);
+}
+
+// Sternenhimmel (gleichbleibend, leicht funkelnd)
+function drawStars(g, seed, n, t, x0 = 0, y0 = 0, w = VIEW_W, h = VIEW_H) {
+  const r = makeRng(seed);
+  for (let i = 0; i < n; i++) {
+    const x = x0 + Math.floor(r() * w);
+    const y = y0 + Math.floor(r() * h);
+    const tw = 0.5 + 0.5 * Math.sin(t * (1 + r() * 2) + i);
+    g.globalAlpha = 0.35 + 0.65 * tw * r();
+    rect(g, x, y, 1, 1, r() < 0.15 ? '#ffe9a8' : '#ffffff');
+  }
+  g.globalAlpha = 1;
+}
+
+// ===================================================================
+// Buchwelt: Moby Dick – Ausguck auf der Pequod
+// ===================================================================
 // --- Meeres-Sprites --------------------------------------------------
 function whaleInside(x, y) {
   if (x >= 1 && x <= 17 && y >= 3 && y <= 15) return !(x <= 2 && (y <= 4 || y >= 14));
@@ -4435,6 +4747,2809 @@ const AliceWorld = (() => {
 })();
 
 // ===================================================================
+// Buchwelt: Hänsel und Gretel – im Mondlicht den Kieselsteinen folgen
+// ===================================================================
+const HaenselWorld = (() => {
+  const CW = 12;
+  const CH = 7;
+  const MW = CW * 3 + 1;
+  const MH = CH * 3 + 1;
+  const HOUSE = { tx: 1, ty: 1, tw: 3, th: 2 };
+  let grid = null;
+  let layer = null;
+  let dark = null;
+  let dg = null;
+  let pathTiles = [];
+  let candy = null;
+  let phase = 'intro';
+  let t = 0;
+  let p = null;
+  let gretel = null;
+  let trail = [];
+  let pebbles = [];
+  let found = 0;
+  let msg = null;
+  let camX = 0;
+  let camY = 0;
+  let owl = null;
+  let owlT = 7;
+  let flies = [];
+  let homeT = 0;
+  let darkSaid = false;
+  let candySaid = false;
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+
+  const looks = {
+    haensel: mkLook('short', 'blonde', 'light', '#6b8f3a', '#5c4033'),
+    gretel: mkLook('long', 'blonde', 'light', '#b8453a', '#7a2f2a'),
+    vater: mkLook('short', 'brown', 'light', '#7a5a3a', '#4a3a2a', 'beard'),
+  };
+  const HOME = { x: 2 * TS + 8, y: 3 * TS + 10 };
+  const WINDOW = { x: HOUSE.tx * TS + 11, y: HOUSE.ty * TS + 17 };
+
+  const solid = (tx, ty) => tx < 0 || ty < 0 || tx >= MW || ty >= MH || grid[ty * MW + tx] !== 0;
+
+  // --- Wald (Irrgarten mit 2 Kacheln breiten Wegen) ------------------
+  function buildMaze() {
+    const r = makeRng(1812);
+    grid = new Uint8Array(MW * MH).fill(1);
+    const open = (x, y) => { grid[y * MW + x] = 0; };
+    const cell = (cx, cy) => { for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) open(cx * 3 + 1 + dx, cy * 3 + 1 + dy); };
+    const between = (ax, ay, bx, by) => {
+      if (ax !== bx) { const wx = Math.max(ax, bx) * 3; for (let dy = 0; dy < 2; dy++) open(wx, ay * 3 + 1 + dy); }
+      else { const wy = Math.max(ay, by) * 3; for (let dx = 0; dx < 2; dx++) open(ax * 3 + 1 + dx, wy); }
+    };
+    const seen = new Uint8Array(CW * CH);
+    const stack = [[CW - 1, CH - 1]];
+    seen[CW * CH - 1] = 1;
+    cell(CW - 1, CH - 1);
+    while (stack.length) {
+      const [cx, cy] = stack[stack.length - 1];
+      const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(([dx, dy]) => [cx + dx, cy + dy])
+        .filter(([x, y]) => x >= 0 && y >= 0 && x < CW && y < CH && !seen[y * CW + x]);
+      if (!nb.length) { stack.pop(); continue; }
+      const [nx, ny] = nb[Math.floor(r() * nb.length)];
+      seen[ny * CW + nx] = 1;
+      cell(nx, ny);
+      between(cx, cy, nx, ny);
+      stack.push([nx, ny]);
+    }
+    for (let k = 0; k < 8; k++) {
+      const cx = Math.floor(r() * (CW - 1));
+      const cy = Math.floor(r() * (CH - 1));
+      if (r() < 0.5) between(cx, cy, cx, cy + 1); else between(cx, cy, cx + 1, cy);
+    }
+    // Lichtung mit dem Haus des Holzhackers
+    for (let y = 1; y <= 5; y++) for (let x = 1; x <= 5; x++) open(x, y);
+    for (let y = HOUSE.ty; y < HOUSE.ty + HOUSE.th; y++) for (let x = HOUSE.tx; x < HOUSE.tx + HOUSE.tw; x++) grid[y * MW + x] = 2;
+  }
+
+  function bfs(starts) {
+    const dist = new Int32Array(MW * MH).fill(-1);
+    const prev = new Int32Array(MW * MH).fill(-1);
+    const q = [];
+    for (const [x, y] of starts) { dist[y * MW + x] = 0; q.push(y * MW + x); }
+    for (let qi = 0; qi < q.length; qi++) {
+      const i = q[qi];
+      const x = i % MW;
+      const y = (i - x) / MW;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (solid(nx, ny)) continue;
+        const j = ny * MW + nx;
+        if (dist[j] >= 0) continue;
+        dist[j] = dist[i] + 1;
+        prev[j] = i;
+        q.push(j);
+      }
+    }
+    return { dist, prev };
+  }
+
+  function planPath() {
+    const start = [(CW - 1) * 3 + 1, (CH - 1) * 3 + 2];
+    const { prev } = bfs([start]);
+    const goal = Math.floor(HOME.y / TS) * MW + Math.floor(HOME.x / TS);
+    pathTiles = [];
+    for (let i = goal; i >= 0; i = prev[i]) pathTiles.push([i % MW, Math.floor(i / MW)]);
+    pathTiles.reverse();
+    // Knusperhäuschen: die Sackgasse, die am weitesten vom Heimweg entfernt liegt
+    const away = bfs(pathTiles).dist;
+    let best = null;
+    for (let cy = 0; cy < CH; cy++) {
+      for (let cx = 0; cx < CW; cx++) {
+        if (cx < 2 && cy < 2) continue;
+        const x = cx * 3 + 1;
+        const y = cy * 3 + 1;
+        let exits = 0;
+        if (!solid(x - 1, y)) exits++;
+        if (!solid(x + 2, y)) exits++;
+        if (!solid(x, y - 1)) exits++;
+        if (!solid(x, y + 2)) exits++;
+        const d = away[y * MW + x];
+        const far = Math.hypot(x - start[0], y - start[1]) > 14;
+        if (exits === 1 && d > 0 && far && (!best || d > best.d)) best = { cx, cy, d };
+      }
+    }
+    candy = best ? { tx: best.cx * 3 + 1, ty: best.cy * 3 + 1 } : null;
+    if (candy) { grid[candy.ty * MW + candy.tx] = 2; grid[candy.ty * MW + candy.tx + 1] = 2; }
+  }
+
+  function renderLayer() {
+    const c = makeCanvas(MW * TS, MH * TS);
+    const g = c.getContext('2d');
+    const r = makeRng(77);
+    rect(g, 0, 0, c.width, c.height, '#1b2a21');
+    for (let i = 0; i < 2600; i++) {
+      rect(g, Math.floor(r() * c.width), Math.floor(r() * c.height), 1 + Math.floor(r() * 2), 1, pick(['#22352a', '#16231b', '#2c3a22', '#3b3420'], r));
+    }
+    for (let ty = 0; ty < MH; ty++) {
+      for (let tx = 0; tx < MW; tx++) {
+        if (grid[ty * MW + tx] !== 1) continue;
+        const x = tx * TS;
+        const y = ty * TS;
+        const kind = r();
+        rect(g, x + 6, y + 9, 4, 7, '#3a2618');
+        rect(g, x + 6, y + 9, 1, 7, '#4d3420');
+        if (kind < 0.35) {
+          // Tanne
+          for (let k = 0; k < 3; k++) {
+            const w = 6 + k * 3;
+            const yy = y - 1 + k * 4;
+            for (let j = 0; j < 4; j++) rect(g, x + 8 - Math.floor((w * (j + 1)) / 8), yy + j, Math.floor((w * (j + 1)) / 4), 1, j === 3 ? '#163522' : '#1f4a2c');
+          }
+          rect(g, x + 7, y - 2, 2, 2, '#2a5b3a');
+        } else {
+          const base = pick(['#1f4a2c', '#24563a', '#1d4330'], r);
+          for (let yy = -8; yy <= 8; yy++) {
+            for (let xx = -8; xx <= 8; xx++) {
+              const d = xx * xx + yy * yy;
+              if (d > 64 + Math.floor(r() * 6)) continue;
+              let col = base;
+              if (xx + yy < -6) col = shade(base, 0.22);
+              else if (xx + yy > 7) col = shade(base, -0.28);
+              px(g, x + 8 + xx, y + 5 + yy, col);
+            }
+          }
+          for (let k = 0; k < 4; k++) px(g, x + 3 + Math.floor(r() * 10), y + Math.floor(r() * 8), shade(base, 0.35));
+        }
+      }
+    }
+    // Haus des Holzhackers
+    const hx = HOUSE.tx * TS;
+    const hy = HOUSE.ty * TS;
+    rect(g, hx + 2, hy + 6, 44, 26, '#2b1d1f');
+    rect(g, hx + 3, hy + 7, 42, 24, '#9c7344');
+    for (let i = 0; i < 6; i++) rect(g, hx + 3, hy + 9 + i * 4, 42, 1, '#7d5a33');
+    for (let i = 0; i < 12; i++) rect(g, hx + 24 - i * 2 - 2, hy - 6 + i, 4 + i * 4, 1, i % 3 === 0 ? '#5e2a1f' : '#7a3b2a');
+    rect(g, hx + 31, hy - 8, 5, 8, '#5a4a44');
+    rect(g, hx + 19, hy + 18, 10, 13, '#4a2c1a');
+    rect(g, hx + 27, hy + 24, 1, 2, '#d9b24a');
+    rect(g, hx + 7, hy + 13, 9, 8, '#2b1d1f');
+    rect(g, hx + 8, hy + 14, 7, 6, '#ffd977');
+    rect(g, hx + 11, hy + 14, 1, 6, '#8a5a32');
+    rect(g, hx + 8, hy + 16, 7, 1, '#8a5a32');
+    // Knusperhäuschen in einer Sackgasse
+    if (candy) {
+      const x = candy.tx * TS;
+      const y = candy.ty * TS - 6;
+      rect(g, x + 1, y + 8, 30, 22, '#2b1d1f');
+      rect(g, x + 2, y + 9, 28, 20, '#b5713a');
+      for (let i = 0; i < 4; i++) rect(g, x + 2, y + 12 + i * 5, 28, 1, '#fbf3e4');
+      for (let i = 0; i < 9; i++) rect(g, x + 16 - i * 2 - 1, y + i, 2 + i * 4, 1, '#fbf3e4');
+      for (const [cx2, cy2, col] of [[9, 5, '#e0115f'], [16, 2, '#3b8f5a'], [22, 6, '#2f6fb0'], [12, 7, '#f5cf4f']]) rect(g, x + cx2, y + cy2, 2, 2, col);
+      rect(g, x + 12, y + 20, 8, 9, '#6e3b1d');
+      rect(g, x + 5, y + 16, 5, 5, '#f7b6c8');
+      rect(g, x + 22, y + 16, 5, 5, '#f7b6c8');
+    }
+    return c;
+  }
+
+  function placeThings() {
+    pebbles = [];
+    const r = makeRng(5);
+    const stepN = Math.max(3, Math.round(pathTiles.length / 30));
+    for (let i = 3; i < pathTiles.length - 3; i += stepN) {
+      const [tx, ty] = pathTiles[i];
+      pebbles.push({ x: tx * TS + 6 + Math.floor(r() * 5), y: ty * TS + 7 + Math.floor(r() * 5), got: false, s: Math.floor(r() * 3) });
+    }
+    flies = [];
+    for (let k = 0; k < 9; k++) {
+      const [tx, ty] = pathTiles[Math.floor(r() * pathTiles.length)];
+      const bx = tx * TS + 8 + (r() - 0.5) * 30;
+      const by = ty * TS + 8 + (r() - 0.5) * 30;
+      flies.push({ bx, by, x: bx, y: by, ph: r() * 10 });
+    }
+  }
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    if (!grid) {
+      buildMaze();
+      planPath();
+      layer = renderLayer();
+      dark = makeCanvas(VIEW_W, VIEW_H);
+      dg = dark.getContext('2d');
+    }
+    placeThings();
+    phase = 'intro';
+    t = 0;
+    found = 0;
+    msg = null;
+    owl = null;
+    owlT = 7;
+    homeT = 0;
+    darkSaid = false;
+    candySaid = false;
+    result = null;
+    const [sx, sy] = pathTiles[0];
+    p = { x: sx * TS + 8, y: sy * TS + 12, dir: 'up', anim: 0, moving: false, spr: charSprites(looks.haensel) };
+    gretel = { x: p.x + 10, y: p.y, dir: 'up', anim: 0, moving: false, spr: charSprites(looks.gretel) };
+    trail = [];
+    snapCam();
+    Sound.play('forest');
+    const icon = emblemIcon('haensel');
+    StoryCard.show([
+      { title: 'Hänsel und Gretel', sub: 'Brüder Grimm · 1812', icon, text: 'Vor einem großen Wald wohnt ein armer Holzhacker mit seinen Kindern Hänsel und Gretel. Das Brot reicht nicht mehr für alle. Da beschließt die Stiefmutter: Die Kinder bleiben im Wald.\n\nHänsel hat alles gehört. In der Nacht schleicht er hinaus und steckt sich die Taschen voll weißer Kieselsteine.' },
+      { title: 'Hänsel und Gretel', sub: 'Nachts im Wald', icon, text: 'Auf dem Weg in den Wald hat Hänsel heimlich einen Stein nach dem anderen fallen lassen. Jetzt ist es Nacht, und die Kinder sind allein.\n\n„Wart nur, Gretel, bis der Mond aufgeht“, sagt Hänsel.\n\n↑↓←→ gehen · Folge den Kieselsteinen nach Hause!' },
+    ], () => {
+      phase = 'walk';
+      msg = { text: 'Die Kieselsteine schimmern im Mondlicht. Verschwindet der Mond hinter Wolken, wird es dunkel – dann kurz warten!', t: 6 };
+    });
+  }
+
+  function snapCam() {
+    camX = clamp(Math.round(p.x - VIEW_W / 2), 0, MW * TS - VIEW_W);
+    camY = clamp(Math.round(p.y - 8 - VIEW_H / 2), 0, MH * TS - VIEW_H);
+  }
+
+  function moon() {
+    return clamp(0.62 + 0.4 * Math.sin(t * 0.3) + 0.12 * Math.sin(t * 1.07), 0.1, 1);
+  }
+
+  function free(x, y) {
+    for (const [ax, ay] of [[x - 4, y - 5], [x + 3, y - 5], [x - 4, y - 1], [x + 3, y - 1]]) {
+      if (solid(Math.floor(ax / TS), Math.floor(ay / TS))) return false;
+    }
+    return true;
+  }
+
+  function update(dt) {
+    t += dt;
+    for (const f of flies) {
+      f.x = f.bx + Math.sin(t * 0.7 + f.ph) * 14;
+      f.y = f.by + Math.cos(t * 0.9 + f.ph * 1.3) * 9;
+    }
+    if (StoryCard.update(dt)) return;
+    if (msg) {
+      msg.t -= dt;
+      if (msg.t <= 0) msg = null;
+    }
+    if (phase === 'walk') updateWalk(dt);
+    else if (phase === 'home') updateHome(dt);
+  }
+
+  function updateWalk(dt) {
+    let mx = 0;
+    let my = 0;
+    if (Input.down('left')) mx -= 1;
+    if (Input.down('right')) mx += 1;
+    if (Input.down('up')) my -= 1;
+    if (Input.down('down')) my += 1;
+    p.moving = false;
+    if (mx || my) {
+      const sp = (Input.down('run') ? 82 : 58) * dt;
+      const len = Math.hypot(mx, my);
+      const vx = (mx / len) * sp;
+      const vy = (my / len) * sp;
+      if (Math.abs(mx) >= Math.abs(my)) p.dir = mx < 0 ? 'left' : 'right';
+      else p.dir = my < 0 ? 'up' : 'down';
+      if (vx && free(p.x + vx, p.y)) { p.x += vx; p.moving = true; }
+      if (vy && free(p.x, p.y + vy)) { p.y += vy; p.moving = true; }
+      if (p.moving) {
+        p.anim += dt * 8;
+        trail.push({ x: p.x, y: p.y, dir: p.dir });
+        if (trail.length > 40) trail.shift();
+      }
+    }
+    // Gretel geht hinterher
+    gretel.moving = false;
+    if (trail.length > 14) {
+      const tgt = trail[trail.length - 14];
+      if (Math.hypot(tgt.x - gretel.x, tgt.y - gretel.y) > 0.5) {
+        gretel.moving = true;
+        gretel.anim += dt * 8;
+      }
+      gretel.x = tgt.x;
+      gretel.y = tgt.y;
+      gretel.dir = tgt.dir;
+    }
+    // Kieselsteine
+    for (const pb of pebbles) {
+      if (!pb.got && Math.abs(pb.x - p.x) < 10 && Math.abs(pb.y - (p.y - 3)) < 10) {
+        pb.got = true;
+        found++;
+        Sound.sfx('pebble');
+      }
+    }
+    const m = moon();
+    if (m < 0.25 && !darkSaid) {
+      darkSaid = true;
+      msg = { text: 'Gretel: „Ich seh fast nichts mehr!“ – Hänsel: „Gleich kommt der Mond wieder hinter den Wolken hervor.“', t: 5 };
+    }
+    if (candy && !candySaid && Math.hypot(p.x - (candy.tx * TS + 16), p.y - (candy.ty * TS + 20)) < 34) {
+      candySaid = true;
+      msg = { text: 'Riecht es hier nach Lebkuchen? Ein Häuschen aus Brot und Zucker … Das gehört aber in einen anderen Teil des Märchens. Schnell weiter!', t: 6 };
+      Sound.sfx('bell');
+    }
+    // Uhu
+    owlT -= dt;
+    if (owlT <= 0) {
+      owlT = 10 + Math.random() * 6;
+      const cands = [];
+      for (let ty = Math.floor(camY / TS); ty < Math.floor((camY + VIEW_H) / TS); ty++) {
+        for (let tx = Math.floor(camX / TS); tx < Math.floor((camX + VIEW_W) / TS); tx++) {
+          if (grid[ty * MW + tx] === 1 && Math.hypot(tx * TS - p.x, ty * TS - p.y) > 60) cands.push([tx, ty]);
+        }
+      }
+      if (cands.length) {
+        const [tx, ty] = cands[Math.floor(Math.random() * cands.length)];
+        owl = { x: tx * TS + 8, y: ty * TS + 4, t: 2.6 };
+        Sound.sfx('owl');
+      }
+    }
+    if (owl) {
+      owl.t -= dt;
+      if (owl.t <= 0) owl = null;
+    }
+    // Daheim?
+    if (Math.hypot(p.x - HOME.x, p.y - HOME.y) < 14) {
+      phase = 'home';
+      homeT = 0;
+      p.moving = false;
+      gretel.moving = false;
+      p.dir = 'up';
+      Sound.sfx('door');
+    }
+    followCam(dt);
+  }
+
+  function followCam(dt) {
+    const tx = clamp(Math.round(p.x - VIEW_W / 2), 0, MW * TS - VIEW_W);
+    const ty = clamp(Math.round(p.y - 8 - VIEW_H / 2), 0, MH * TS - VIEW_H);
+    camX += (tx - camX) * Math.min(1, dt * 8);
+    camY += (ty - camY) * Math.min(1, dt * 8);
+  }
+
+  function updateHome(dt) {
+    homeT += dt;
+    if (homeT > 1.2 && homeT - dt <= 1.2) {
+      msg = { text: 'Der Vater reißt die Tür auf: „Hänsel! Gretel! Da seid ihr ja!“', t: 4 };
+      Sound.sfx('talk');
+    }
+    followCam(dt);
+    if (homeT > 4.6) {
+      phase = 'outro';
+      const total = pebbles.length;
+      const pts = 20 + Math.round((10 * found) / Math.max(1, total));
+      result = { world: 'haensel', pts };
+      const icon = emblemIcon('haensel');
+      StoryCard.show([
+        { title: 'Zuhause!', sub: 'Hänsel und Gretel', icon, text: 'Als der Morgen dämmert, stehen Hänsel und Gretel vor ihrem Haus. Der Vater schließt sie überglücklich in die Arme – er hatte keine ruhige Minute mehr.\n\nDu hast ' + found + ' von ' + total + ' Kieselsteinen gefunden.' },
+        { title: 'Wie geht es weiter?', sub: 'Brüder Grimm', icon, text: 'Bald ist das Brot wieder knapp. Diesmal hat Hänsel nur Brotkrumen dabei – und die Vögel picken sie auf. Wer dann tief im Wald in einem Häuschen aus Brot und Zucker wohnt? Lies selbst!\n\nMärchen wie dieses findest du bei den Bilderbüchern im Kirango.' + rewardLine(firstTime, pts) },
+      ], () => onExit(result));
+    }
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function drawActor(g, a, ox, oy) {
+    const frames = a.spr[a.dir];
+    const f = a.moving ? frames[Math.floor(a.anim) % 4] : frames[0];
+    const x = Math.round(a.x - 8 - ox);
+    const y = Math.round(a.y - 15 - oy);
+    g.fillStyle = 'rgba(0,0,0,0.3)';
+    g.fillRect(x + 4, Math.round(a.y - oy) - 2, 8, 2);
+    g.drawImage(f, x, y);
+  }
+
+  function hole(x, y, r, a = 1) {
+    const gr = dg.createRadialGradient(x, y, r * 0.2, x, y, r);
+    gr.addColorStop(0, 'rgba(0,0,0,' + a + ')');
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    dg.fillStyle = gr;
+    dg.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    const ox = Math.round(camX);
+    const oy = Math.round(camY);
+    const m = moon();
+    g.drawImage(layer, ox, oy, VIEW_W, VIEW_H, 0, 0, VIEW_W, VIEW_H);
+    for (const pb of pebbles) {
+      if (pb.got) continue;
+      const x = Math.round(pb.x - ox);
+      const y = Math.round(pb.y - oy);
+      if (x < -4 || y < -4 || x > VIEW_W + 4 || y > VIEW_H + 4) continue;
+      rect(g, x - 1, y, 3 + (pb.s === 2 ? 1 : 0), 2, '#c9c6bd');
+      rect(g, x - 1, y, 1, 1, '#ffffff');
+    }
+    const actors = [gretel, p].slice().sort((a, b) => a.y - b.y);
+    for (const a of actors) drawActor(g, a, ox, oy);
+    if (phase === 'home' && homeT > 1.0) {
+      const vs = charSprites(looks.vater);
+      g.drawImage(vs.down[0], Math.round(2 * TS + 1 - ox), Math.round(2 * TS + 3 - oy));
+    }
+    // Dunkelheit (am Ende dämmert es)
+    const dawn = phase === 'home' ? clamp(homeT / 3, 0, 1) : 0;
+    dg.globalCompositeOperation = 'source-over';
+    dg.clearRect(0, 0, VIEW_W, VIEW_H);
+    dg.fillStyle = 'rgba(5,7,20,' + ((0.97 - 0.13 * m) * (1 - dawn * 0.85)) + ')';
+    dg.fillRect(0, 0, VIEW_W, VIEW_H);
+    dg.globalCompositeOperation = 'destination-out';
+    hole(p.x - ox, p.y - 8 - oy, 30 + 46 * m);
+    hole(WINDOW.x - ox, WINDOW.y - oy, 52, 0.9);
+    for (const f of flies) hole(f.x - ox, f.y - oy, 8, 0.7);
+    dg.globalCompositeOperation = 'source-over';
+    if (dawn > 0) {
+      dg.fillStyle = 'rgba(255,170,120,' + (0.12 * dawn) + ')';
+      dg.fillRect(0, 0, VIEW_W, VIEW_H);
+    }
+    g.drawImage(dark, 0, 0);
+    // Kieselsteine schimmern im Mondlicht auch in der Dunkelheit
+    const range = 70 + 170 * m;
+    pebbles.forEach((pb, i) => {
+      if (pb.got) return;
+      const d = Math.hypot(pb.x - p.x, pb.y - p.y);
+      const a = m * clamp(1 - d / range, 0, 1) * (0.7 + 0.3 * Math.sin(t * 3 + i * 1.7));
+      if (a <= 0.03) return;
+      g.globalAlpha = a;
+      const x = Math.round(pb.x - ox);
+      const y = Math.round(pb.y - oy);
+      rect(g, x - 1, y, 3, 2, '#f4f2ff');
+      if (a > 0.5) { rect(g, x, y - 1, 1, 4, '#dfe6ff'); rect(g, x - 2, y + 0, 5, 1, '#dfe6ff'); }
+      g.globalAlpha = 1;
+    });
+    // Glühwürmchen
+    for (const f of flies) {
+      const a = 0.5 + 0.5 * Math.sin(t * 4 + f.ph * 3);
+      g.globalAlpha = a;
+      rect(g, Math.round(f.x - ox), Math.round(f.y - oy), 1, 1, '#e6ff8a');
+      g.globalAlpha = 1;
+    }
+    if (owl && Math.floor(owl.t * 5) % 7 !== 0) {
+      const x = Math.round(owl.x - ox);
+      const y = Math.round(owl.y - oy);
+      rect(g, x - 3, y, 2, 2, '#ffd23f');
+      rect(g, x + 2, y, 2, 2, '#ffd23f');
+    }
+    // HUD mit Mond
+    drawWorldHud(g, 'Hänsel und Gretel', found + ' / ' + pebbles.length, PEBBLE_ICON);
+    const mx = 192;
+    for (let yy = -5; yy <= 5; yy++) for (let xx = -5; xx <= 5; xx++) {
+      if (xx * xx + yy * yy <= 25) px(g, mx + xx, 11 + yy, xx * xx + yy * yy > 16 ? '#c9c3a6' : '#fff6cf');
+    }
+    g.globalAlpha = clamp(1 - m, 0, 0.9);
+    rect(g, mx - 9, 8, 18, 4, '#5b6378');
+    rect(g, mx - 7, 12, 14, 3, '#4a5166');
+    g.globalAlpha = 1;
+    if (msg) drawWorldMsg(g, msg.text, 24);
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  const PEBBLE_ICON = buildSprite(['.kkk.', 'kWWgk', 'kWggk', '.kkk.']);
+
+  return {
+    enter, update, draw,
+    debug: () => ({ phase, p, pebbles, found, home: HOME, path: pathTiles, candy }),
+  };
+})();
+
+// ===================================================================
+// Buchwelt: Alan Turing – „Können Maschinen denken?“ (1950)
+// Das Imitationsspiel: Wer am Fernschreiber ist Mensch, wer Maschine?
+// ===================================================================
+const TuringWorld = (() => {
+  const ROUNDS = [
+    {
+      intro: 'Hinter Tür A und Tür B steht je ein Fernschreiber. An einem tippt ein Mensch, am anderen antwortet unsere Rechenmaschine. Stell zwei Fragen – dann rate!',
+      qs: [
+        { q: 'Was ist 34957 plus 70764?', human: 'Puh. Moment … ich brauch Papier … 105.721? Ohne Gewähr!', hd: 2.6, machine: '105721', md: 0.15 },
+        { q: 'Magst du lieber Sommer oder Winter?', human: 'Winter! Schnee, heißer Tee und ein gutes Buch.', hd: 1.2, machine: 'Sommer. Im Sommer ist es warm.', md: 0.3 },
+        { q: 'Schreib mir ein Gedicht über eine Brücke.', human: 'Eine Brücke, die ist lang … mehr fällt mir nicht ein, sorry!', hd: 2.0, machine: 'Da muss ich passen. Gedichte konnte ich noch nie.', md: 0.4 },
+      ],
+      explain: 'Verraten hat sie das Tempo: Eine Rechenaufgabe löst die Maschine in einem Wimpernschlag. Und ihre Antworten sind kurz und ein bisschen steif.',
+    },
+    {
+      intro: 'Jetzt wird es schwieriger. Ich habe der Maschine beigebracht, sich zu tarnen: Sie lässt sich Zeit – und baut absichtlich Fehler ein.',
+      qs: [
+        { q: 'Was ist 34957 plus 70764?', human: '105.721. Ich bin Buchhalterin, das kann ich im Schlaf.', hd: 1.6, machine: '… 105621', md: 3.0 },
+        { q: 'Was hast du heute gefrühstückt?', human: 'Nichts – ich hab verschlafen. Mein Magen knurrt!', hd: 1.0, machine: 'Ein Butterbrot. Ein Butterbrot. Ein Butterbrot mit Marmelade.', md: 0.6 },
+        { q: 'Wie ist das Wetter bei dir?', human: 'Grau. Typisch Manchester – es nieselt schon wieder.', hd: 1.1, machine: 'Das Wetter ist angenehm.', md: 0.5 },
+      ],
+      explain: 'Rechnen half diesmal nicht: Die Maschine hat gezögert und sich verrechnet – wie ein Mensch. Verraten haben sie die seltsam wiederholten, allgemeinen Antworten.',
+    },
+    {
+      intro: 'Letzte Runde. Das ist meine beste Maschine. Achte darauf, wer wirklich etwas erlebt hat.',
+      qs: [
+        { q: 'Was hat dich zuletzt zum Lachen gebracht?', human: 'Mein Hund ist in eine Pfütze gesprungen und hat dann beleidigt geschaut, als wär es meine Schuld!', hd: 1.4, machine: 'Ein Witz. Er war sehr lustig. Ich habe sehr gelacht.', md: 0.8 },
+        { q: 'Erzähl von deinem liebsten Ort.', human: 'Der Dachboden bei meiner Oma. Dort roch es nach alten Büchern und Lavendel.', hd: 1.5, machine: 'Mein liebster Ort ist ein schöner Ort, an dem ich gerne bin.', md: 0.9 },
+        { q: 'Bist du eine Maschine?', human: 'Nein! Was für eine Frage. Bist DU eine?', hd: 0.9, machine: 'Nein. Ich bin ein ganz normaler Mensch mit ganz normalen Hobbys.', md: 0.8 },
+      ],
+      explain: 'Sie klang freundlich, aber ihre Antworten waren leer: keine Erinnerungen, keine Gerüche, kein Hund in der Pfütze. Echte Erlebnisse lassen sich schwer fälschen.',
+    },
+  ];
+  const TURING = { name: 'Alan Turing', look: mkLook('short', 'black', 'light', '#6b5a45', '#3d3a35') };
+  const CPS = 30;
+  const DOOR_X = { A: 258, B: 318 };
+
+  let phase = 'intro';
+  let t = 0;
+  let round = 0;
+  let machine = 'A';
+  let asked = [];
+  let sel = 0;
+  let guess = 'A';
+  let paper = [];
+  let job = null;
+  let correct = 0;
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    phase = 'intro';
+    t = 0;
+    round = 0;
+    correct = 0;
+    result = null;
+    Sound.play('lab');
+    const icon = emblemIcon('turing');
+    StoryCard.show([
+      { title: 'Können Maschinen denken?', sub: 'Alan Turing · 1950', icon, text: 'Manchester, 1950. Der Mathematiker Alan Turing arbeitet an einem der ersten Computer der Welt. Eine Frage lässt ihn nicht los: Können Maschinen denken?\n\nStatt endlos darüber zu streiten, erfindet er ein Spiel.' },
+      { title: 'Das Imitationsspiel', sub: 'Mensch oder Maschine?', icon, text: 'Hinter zwei Türen stehen Fernschreiber. An einem tippt ein Mensch, am anderen antwortet eine Maschine. Du stellst Fragen – nur schriftlich.\n\nKannst du herausfinden, wer die Maschine ist?\n\n↑↓ Frage wählen · E fragen · ←→ Tür wählen' },
+    ], () => startRound());
+  }
+
+  function startRound() {
+    const R = ROUNDS[round];
+    machine = Math.random() < 0.5 ? 'A' : 'B';
+    asked = [];
+    sel = 0;
+    guess = 'A';
+    paper = [];
+    job = null;
+    phase = 'talk';
+    Dialog.open([npcPage(TURING, (round === 0 ? '' : 'Neues Papier, neue Runde! ') + R.intro)], () => { phase = 'ask'; });
+  }
+
+  function openQuestions() {
+    return ROUNDS[round].qs.map((q, i) => i).filter((i) => !asked.includes(i));
+  }
+
+  function ask(i) {
+    const q = ROUNDS[round].qs[i];
+    asked.push(i);
+    const ans = (side) => (side === machine ? { text: q.machine, delay: q.md } : { text: q.human, delay: q.hd });
+    job = { steps: [
+      { who: 'Du', text: q.q, delay: 0.2 },
+      Object.assign({ who: 'A' }, ans('A')),
+      Object.assign({ who: 'B' }, ans('B')),
+    ], i: 0, wait: 0.2, shown: 0, line: null };
+    phase = 'typing';
+    sel = 0;
+  }
+
+  function update(dt) {
+    t += dt;
+    if (StoryCard.update(dt)) return;
+    if (phase === 'ask') {
+      const open = openQuestions();
+      if (Input.hit('up')) { sel = (sel + open.length - 1) % open.length; Sound.sfx('blip'); }
+      if (Input.hit('down')) { sel = (sel + 1) % open.length; Sound.sfx('blip'); }
+      if (Input.confirm()) { Sound.sfx('select'); ask(open[sel]); }
+    } else if (phase === 'typing') {
+      updateTyping(dt);
+    } else if (phase === 'guess') {
+      if (Input.hit('left')) { guess = 'A'; Sound.sfx('blip'); }
+      if (Input.hit('right')) { guess = 'B'; Sound.sfx('blip'); }
+      if (Input.confirm()) decide();
+    }
+  }
+
+  function updateTyping(dt) {
+    const st = job.steps[job.i];
+    if (!job.line) {
+      job.wait -= dt;
+      if (job.wait > 0) return;
+      job.line = { who: st.who, text: st.text, shown: 0 };
+      paper.push(job.line);
+    }
+    const fast = Input.down('act') || Input.down('jump') ? 4 : 1;
+    const before = Math.floor(job.line.shown);
+    job.line.shown = Math.min(st.text.length, job.line.shown + dt * CPS * fast);
+    if (Math.floor(job.line.shown) !== before && Math.floor(job.line.shown) % 2 === 0) Sound.sfx('type');
+    if (job.line.shown >= st.text.length) {
+      job.i++;
+      job.line = null;
+      if (job.i >= job.steps.length) {
+        job = null;
+        if (asked.length >= 2) {
+          phase = 'guess';
+        } else {
+          phase = 'ask';
+        }
+        return;
+      }
+      job.wait = job.steps[job.i].delay;
+    }
+  }
+
+  function decide() {
+    const ok = guess === machine;
+    if (ok) correct++;
+    Sound.sfx(ok ? 'correct' : 'wrong');
+    phase = 'talk';
+    const head = ok ? 'Richtig erkannt! Die Maschine war ' + machine + '. ' : 'Knapp daneben – die Maschine war ' + machine + '. ';
+    Dialog.open([npcPage(TURING, head + ROUNDS[round].explain)], () => {
+      round++;
+      if (round < ROUNDS.length) startRound();
+      else finish();
+    });
+  }
+
+  function finish() {
+    phase = 'outro';
+    const pts = 20 + Math.round((10 * correct) / ROUNDS.length);
+    result = { world: 'turing', pts };
+    const icon = emblemIcon('turing');
+    StoryCard.show([
+      { title: 'Das Imitationsspiel', sub: 'Alan Turing · 1950', icon, text: 'Du hast ' + correct + ' von ' + ROUNDS.length + ' Maschinen entlarvt.\n\nTuring schrieb 1950, er rechne damit, dass Computer um das Jahr 2000 so gut antworten, dass man nach fünf Minuten Fragen in fast jedem dritten Fall falsch rät.' },
+      { title: 'Und heute?', sub: 'Können Maschinen denken?', icon, text: 'Heute plaudern wir täglich mit Maschinen: Sprachassistenten, KI-Chatbots, automatisch geschriebene Texte. Oft merkt man es gar nicht.\n\nDarum lohnt sich, was Bibliotheken seit jeher können: Quellen prüfen, nachfragen, vergleichen. Bücher über Informatik und KI findest du im Know How.' + rewardLine(firstTime, pts) },
+    ], () => onExit(result));
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function drawRoom(g) {
+    rect(g, 0, 0, VIEW_W, 132, '#2d4436');
+    for (let x = 0; x < VIEW_W; x += 24) rect(g, x, 0, 1, 132, '#29402f');
+    rect(g, 0, 124, VIEW_W, 8, '#4a3526');
+    rect(g, 0, 132, VIEW_W, VIEW_H - 132, '#6b4a30');
+    for (let y = 136; y < VIEW_H; y += 7) rect(g, 0, y, VIEW_W, 1, '#5a3d27');
+    // Kabel von den Türen zum Fernschreiber
+    rect(g, 120, 142, 150, 1, '#1d1a22');
+    rect(g, 120, 146, 210, 1, '#1d1a22');
+    for (const side of ['A', 'B']) drawDoor(g, side);
+  }
+
+  function drawDoor(g, side) {
+    const x = DOOR_X[side];
+    const typing = job && job.line && job.line.who === side;
+    const thinking = job && !job.line && job.steps[job.i] && job.steps[job.i].who === side;
+    rect(g, x - 3, 30, 52, 102, '#3b2a20');
+    rect(g, x, 34, 46, 98, '#7a4f2e');
+    rect(g, x + 4, 40, 38, 36, '#6b4428');
+    rect(g, x + 4, 82, 38, 44, '#6b4428');
+    rect(g, x + 38, 84, 3, 3, '#d9b24a');
+    rect(g, x + 14, 46, 18, 22, '#efe3c2');
+    Font.draw(g, side, x + 18, 48, '#3b2a20', 2);
+    // Lampe
+    const lit = typing || (thinking && Math.floor(t * 6) % 2 === 0);
+    rect(g, x + 19, 21, 8, 6, PAL.k);
+    rect(g, x + 20, 22, 6, 4, lit ? (side === 'A' ? '#ff6b5b' : '#6fb7ff') : '#4a3a3a');
+    if (phase === 'guess' && guess === side) {
+      const a = 0.5 + 0.5 * Math.sin(t * 6);
+      g.strokeStyle = 'rgba(255,217,119,' + a + ')';
+      g.lineWidth = 2;
+      g.strokeRect(x - 5, 28, 56, 106);
+      Font.drawCentered(g, '↓', x + 23, 9 + Math.round(Math.sin(t * 5) * 2), '#ffd977');
+    }
+  }
+
+  function drawPaper(g) {
+    rect(g, 12, 6, 228, 118, 'rgba(0,0,0,0.25)');
+    rect(g, 10, 4, 228, 118, '#f6f1e1');
+    for (let y = 16; y < 120; y += 11) rect(g, 12, y, 224, 1, '#e8e0cc');
+    rect(g, 10, 4, 228, 2, '#e2d8c0');
+    // Fernschreiber
+    rect(g, 4, 118, 240, 30, PAL.k);
+    rect(g, 5, 119, 238, 28, '#d8d2bf');
+    rect(g, 5, 119, 238, 4, '#3a3a3a');
+    for (let i = 0; i < 14; i++) {
+      rect(g, 14 + i * 16, 128, 11, 6, '#2b2b2b');
+      rect(g, 15 + i * 16, 129, 9, 3, '#5a5a5a');
+    }
+    for (let i = 0; i < 12; i++) rect(g, 22 + i * 16, 137, 11, 6, '#2b2b2b');
+    // Text
+    const lines = [];
+    for (const ln of paper) {
+      const label = ln.who === 'Du' ? 'Du: ' : ln.who + ': ';
+      const txt = label + ln.text.slice(0, Math.floor(ln.shown));
+      Font.wrap(txt, 214).forEach((l, i) => lines.push({ l, who: ln.who, first: i === 0 }));
+    }
+    const max = 10;
+    const vis = lines.slice(-max);
+    vis.forEach((o, i) => {
+      const y = 7 + i * 11;
+      const col = o.who === 'Du' ? '#6a3f8f' : o.who === 'A' ? '#9b3a30' : '#2a5b95';
+      if (o.first) {
+        const lab = o.who + ':';
+        Font.draw(g, lab, 16, y, col);
+        Font.draw(g, o.l.slice(lab.length), 16 + Font.measure(lab) + 1, y, '#2b2b3a');
+      } else {
+        Font.draw(g, o.l, 16, y, '#2b2b3a');
+      }
+    });
+    if (job && job.line && Math.floor(t * 4) % 2 === 0 && vis.length) {
+      const last = vis[vis.length - 1];
+      rect(g, 16 + Font.measure(last.l) + 1, 7 + (vis.length - 1) * 11 + 1, 4, 8, '#2b2b3a');
+    }
+  }
+
+  function drawPanelUi(g) {
+    if (Dialog.active()) return;
+    drawPanel(g, 6, 152, 372, 58);
+    const info = 'Runde ' + Math.min(round + 1, ROUNDS.length) + '/' + ROUNDS.length + ' · ✓ ' + correct;
+    Font.draw(g, info, 372 - Font.measure(info), 156, UI_COL.dim);
+    if (phase === 'ask') {
+      Font.draw(g, 'Deine Frage an A und B (' + (asked.length + 1) + ' von 2):', 14, 156, UI_COL.title);
+      const open = openQuestions();
+      drawMenuList(g, open.map((i) => ROUNDS[round].qs[i].q), sel, 10, 170, 362);
+    } else if (phase === 'typing') {
+      const st = job ? job.steps[job.i] : null;
+      if (st && st.who !== 'Du') {
+        const dots = '.'.repeat(1 + (Math.floor(t * 3) % 3));
+        Font.draw(g, (job.line ? st.who + ' tippt' : st.who + ' denkt nach') + dots, 14, 160, st.who === 'A' ? '#ff8a7a' : '#7fb7ff');
+      } else {
+        Font.draw(g, 'Deine Frage wird übertragen …', 14, 160, UI_COL.text);
+      }
+      Font.draw(g, 'E gedrückt halten: schneller drucken', 14, 186, UI_COL.dim);
+    } else if (phase === 'guess') {
+      Font.draw(g, 'Wer ist die Maschine?', 14, 158, UI_COL.title);
+      Font.draw(g, '← Tür A', 40, 176, guess === 'A' ? '#ffd977' : UI_COL.dim, 1);
+      Font.draw(g, 'Tür B →', 280, 176, guess === 'B' ? '#ffd977' : UI_COL.dim, 1);
+      Font.drawCentered(g, 'E entscheiden', VIEW_W / 2, 194, UI_COL.dim);
+    }
+  }
+
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    drawRoom(g);
+    drawPaper(g);
+    const ts = charSprites(TURING.look);
+    g.drawImage(ts.down[0], 246, 134);
+    drawPanelUi(g);
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  return {
+    enter, update, draw,
+    debug: () => ({ phase, round, machine, asked: asked.slice(), correct, sel, guess }),
+  };
+})();
+
+// ===================================================================
+// Buchwelt: Gullivers Reisen – die Flotte von Blefuscu an Land ziehen
+// ===================================================================
+const GulliverWorld = (() => {
+  const W = 720;
+  const LILLI = 150;
+  const BLEF = 600;
+  const TIME = 90;
+  const SHIP_SPR = buildSprite([
+    '......kr.......', '......kkk......', '.....kwwwk.....', '....kwwwwwk....', '....kwwwwwk....',
+    '...kwwwwwwwk...', '......kk.......', 'kkkkkkkkkkkkkkk', '.kTTTTTTTTTTTk.', '..kTTTTTTTTTk..', '...kkkkkkkkk...',
+  ]);
+  const SHIP_ICON = buildSprite(['...kw...', '..kwww..', '.kwwwww.', 'kkkkkkkk', '.kTTTTk.', '..kkkk..']);
+  let bg = null;
+  let phase = 'intro';
+  let t = 0;
+  let gul = null;
+  let ships = [];
+  let folk = [];
+  let archers = [];
+  let arrows = [];
+  let delivered = 0;
+  let timeLeft = TIME;
+  let camX = 0;
+  let msg = null;
+  let said = {};
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+  const LOOK = mkLook('short', 'brown', 'light', '#2b4a7a', '#d9cdb0', 'glasses');
+
+  function depth(x) {
+    if (x < LILLI || x >= BLEF + 10) return 0;
+    if (x > 300 && x < 420) return 2;
+    return 1;
+  }
+
+  function buildBg() {
+    const c = makeCanvas(W, VIEW_H);
+    const g = c.getContext('2d');
+    const r = makeRng(1726);
+    for (let x = 0; x < W; x++) {
+      const d = depth(x);
+      const col = d === 0 ? '#e7cf92' : d === 1 ? '#3f8fbf' : '#2b6f9e';
+      rect(g, x, 0, 1, VIEW_H, col);
+    }
+    // Strandkanten
+    for (let y = 0; y < VIEW_H; y++) {
+      const w1 = 4 + Math.round(Math.sin(y * 0.15) * 2);
+      rect(g, LILLI - w1, y, w1, 1, '#d8bd7c');
+      rect(g, LILLI, y, 3, 1, '#a9d8ea');
+      rect(g, BLEF + 10, y, w1, 1, '#d8bd7c');
+      rect(g, BLEF + 7, y, 3, 1, '#a9d8ea');
+    }
+    for (let i = 0; i < 500; i++) {
+      const x = Math.floor(r() * W);
+      if (depth(x) === 0) rect(g, x, Math.floor(r() * VIEW_H), 1, 1, '#cdb377');
+    }
+    // Liliput: winzige Stadt mit Mauer
+    rect(g, 0, 0, 58, VIEW_H, '#b9a77a');
+    for (let y = 6; y < VIEW_H - 6; y += 14) {
+      for (let x = 4; x < 50; x += 12) {
+        const h = 5 + Math.floor(r() * 4);
+        rect(g, x, y + 8 - h, 9, h, pick(['#e8dcc0', '#d9c7a1', '#f0e6d0'], r));
+        rect(g, x - 1, y + 8 - h - 2, 11, 2, pick(['#b8453a', '#8f2d33', '#a0522d'], r));
+      }
+    }
+    rect(g, 56, 0, 3, VIEW_H, '#8a7a5a');
+    for (let y = 0; y < VIEW_H; y += 6) rect(g, 55, y, 5, 2, '#8a7a5a');
+    // Blefuscu: Hafen und Türme
+    rect(g, W - 60, 0, 60, VIEW_H, '#b3a58a');
+    for (let y = 10; y < VIEW_H - 10; y += 22) {
+      rect(g, W - 46, y, 10, 14, '#d9d2c0');
+      rect(g, W - 47, y - 3, 12, 3, '#3a5a8a');
+      rect(g, W - 26, y + 6, 14, 9, '#e8e0cc');
+      rect(g, W - 27, y + 4, 16, 2, '#3a5a8a');
+    }
+    rect(g, BLEF + 12, 100, 28, 4, '#7a5a3a');
+    return c;
+  }
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    if (!bg) bg = buildBg();
+    phase = 'intro';
+    t = 0;
+    delivered = 0;
+    timeLeft = TIME;
+    msg = null;
+    said = {};
+    result = null;
+    arrows = [];
+    gul = { x: 110, y: 120, dir: 'right', anim: 0, moving: false, stun: 0, spr: charSprites(LOOK) };
+    ships = [];
+    for (let col = 0; col < 3; col++) {
+      for (let row = 0; row < 4; row++) ships.push({ x: 478 + col * 34 + (row % 2) * 10, y: 34 + row * 44, hooked: false, done: false, bob: Math.random() * 6 });
+    }
+    const r = makeRng(9);
+    folk = [];
+    for (let i = 0; i < 11; i++) folk.push({ x: 70 + r() * 70, y: 14 + r() * 190, tx: 0, ty: 0, wait: r() * 2, jump: 0, col: pick(['#b8453a', '#2f6fb0', '#3b8f5a', '#7b52a6', '#e0b13c'], r) });
+    archers = [];
+    for (let i = 0; i < 5; i++) archers.push({ x: BLEF + 26 + (i % 2) * 8, y: 22 + i * 42, cd: 1 + i * 0.4 });
+    camX = 0;
+    Sound.play('lilliput');
+    const icon = emblemIcon('gulliver');
+    StoryCard.show([
+      { title: 'Gullivers Reisen', sub: 'Jonathan Swift · 1726', icon, text: 'Nach einem Schiffbruch erwacht der Schiffsarzt Lemuel Gulliver an einem fremden Strand – festgebunden mit hundert dünnen Fäden. Um ihn herum wuseln Menschen, kaum größer als ein Daumen.\n\nEr ist im Land Liliput.' },
+      { title: 'Gullivers Reisen', sub: 'Die Flotte von Blefuscu', icon, text: 'Liliput streitet mit der Nachbarinsel Blefuscu – darüber, an welchem Ende man ein Ei aufschlägt! Jetzt rüstet Blefuscu eine Flotte zum Angriff.\n\nGulliver watet hinüber und holt sich die Schiffe.\n\n↑↓←→ waten · E Schiff anhaken · Bring die Schiffe nach Liliput!' },
+    ], () => {
+      phase = 'play';
+      msg = { text: 'Wate hinüber nach Blefuscu (rechts). In der Mitte ist das Wasser tief – dort musst du schwimmen.', t: 5 };
+    });
+  }
+
+  function speed() {
+    const d = depth(gul.x);
+    const base = d === 0 ? 72 : d === 1 ? 54 : 36;
+    const n = ships.filter((s) => s.hooked).length;
+    return base * (1 - n * 0.022);
+  }
+
+  function update(dt) {
+    t += dt;
+    if (StoryCard.update(dt)) return;
+    if (msg) {
+      msg.t -= dt;
+      if (msg.t <= 0) msg = null;
+    }
+    if (phase !== 'play') return;
+    timeLeft -= dt;
+    // Bewegen
+    let mx = 0;
+    let my = 0;
+    if (Input.down('left')) mx -= 1;
+    if (Input.down('right')) mx += 1;
+    if (Input.down('up')) my -= 1;
+    if (Input.down('down')) my += 1;
+    gul.moving = false;
+    if (gul.stun > 0) gul.stun -= dt;
+    else if (mx || my) {
+      const len = Math.hypot(mx, my);
+      const sp = speed() * dt;
+      gul.x = clamp(gul.x + (mx / len) * sp, 70, BLEF + 40);
+      gul.y = clamp(gul.y + (my / len) * sp, 26, VIEW_H - 4);
+      gul.dir = Math.abs(mx) >= Math.abs(my) ? (mx < 0 ? 'left' : 'right') : my < 0 ? 'up' : 'down';
+      gul.moving = true;
+      gul.anim += dt * 6;
+    }
+    // Schiffe anhaken
+    if (Input.hit('act') || Input.hit('jump')) {
+      let best = null;
+      let bd = 30;
+      for (const s of ships) {
+        if (s.hooked || s.done) continue;
+        const d = Math.hypot(s.x - gul.x, s.y - (gul.y - 8));
+        if (d < bd) { bd = d; best = s; }
+      }
+      if (best) {
+        best.hooked = true;
+        Sound.sfx('rope');
+        if (!said.hook) {
+          said.hook = true;
+          msg = { text: 'Gulliver schneidet das Ankertau durch und befestigt einen Haken am Bug. Hol so viele, wie du schaffst!', t: 4 };
+        }
+      } else if (!said.near) {
+        said.near = true;
+        msg = { text: 'Stell dich direkt neben ein Schiff und drück E.', t: 3 };
+      }
+    }
+    // Angehakte Schiffe hängen wie an einem Seil hintereinander
+    let lead = { x: gul.x, y: gul.y - 6 };
+    for (const s of ships) {
+      if (!s.hooked) continue;
+      const dx = s.x - lead.x;
+      const dy = s.y - lead.y;
+      const d = Math.hypot(dx, dy) || 1;
+      if (d > 17) {
+        s.x = lead.x + (dx / d) * 17;
+        s.y = lead.y + (dy / d) * 17;
+      }
+      lead = s;
+    }
+    // Abliefern am Strand von Liliput
+    if (gul.x < LILLI - 6) {
+      const n = ships.filter((s) => s.hooked).length;
+      if (n) {
+        let i = delivered;
+        for (const s of ships) {
+          if (!s.hooked) continue;
+          s.hooked = false;
+          s.done = true;
+          s.x = LILLI + 8 + (i % 2) * 14;
+          s.y = 30 + Math.floor(i / 2) * 26;
+          i++;
+        }
+        delivered += n;
+        Sound.sfx('cheer');
+        for (const f of folk) f.jump = 0.8;
+        msg = { text: n === 1 ? 'Ein Schiff mehr für Liliput! Die Liliputaner jubeln.' : n + ' Schiffe auf einmal! Die Liliputaner jubeln.', t: 3 };
+      }
+    }
+    updateFolk(dt);
+    updateArrows(dt);
+    const target = clamp(Math.round(gul.x - VIEW_W / 2), 0, W - VIEW_W);
+    camX += (target - camX) * Math.min(1, dt * 5);
+    if (delivered >= ships.length || timeLeft <= 0) finish();
+  }
+
+  function updateFolk(dt) {
+    for (const f of folk) {
+      if (f.jump > 0) f.jump -= dt;
+      const d = Math.hypot(f.x - gul.x, f.y - gul.y);
+      if (d < 12) {
+        // ausweichen!
+        const ang = Math.atan2(f.y - gul.y, f.x - gul.x) || 0;
+        f.x = clamp(f.x + Math.cos(ang) * 60 * dt, 62, LILLI - 6);
+        f.y = clamp(f.y + Math.sin(ang) * 60 * dt, 10, VIEW_H - 6);
+        if (!f.squeak) {
+          f.squeak = true;
+          Sound.sfx('squeak');
+          if (!said.step) {
+            said.step = true;
+            msg = { text: '„He, pass doch auf, du Riese!“ – Vorsicht, wo du hintrittst.', t: 3 };
+          }
+        }
+        continue;
+      }
+      if (d > 24) f.squeak = false;
+      f.wait -= dt;
+      if (f.wait <= 0) {
+        f.tx = clamp(f.x + (Math.random() - 0.5) * 40, 62, LILLI - 8);
+        f.ty = clamp(f.y + (Math.random() - 0.5) * 40, 10, VIEW_H - 6);
+        f.wait = 1 + Math.random() * 2.5;
+      }
+      if (f.tx) {
+        f.x += clamp(f.tx - f.x, -10 * dt, 10 * dt);
+        f.y += clamp(f.ty - f.y, -10 * dt, 10 * dt);
+      }
+    }
+  }
+
+  function updateArrows(dt) {
+    for (const a of archers) {
+      a.cd -= dt;
+      if (a.cd <= 0) {
+        a.cd = 1.4 + Math.random() * 0.8;
+        if (Math.abs(gul.x - a.x) < 250) {
+          const ang = Math.atan2(gul.y - 22 - a.y, gul.x - a.x);
+          arrows.push({ x: a.x, y: a.y, vx: Math.cos(ang) * 120, vy: Math.sin(ang) * 120, life: 2.5 });
+          Sound.sfx('arrow');
+        }
+      }
+    }
+    for (const ar of arrows) {
+      ar.x += ar.vx * dt;
+      ar.y += ar.vy * dt;
+      ar.life -= dt;
+      if (Math.abs(ar.x - gul.x) < 8 && Math.abs(ar.y - (gul.y - 22)) < 9) {
+        ar.life = 0;
+        gul.stun = 0.35;
+        Sound.sfx('ouch');
+        if (!said.arrow) {
+          said.arrow = true;
+          msg = { text: 'Die Pfeile pieksen wie Nadeln – zum Glück schützt die Brille Gullivers Augen!', t: 4 };
+        }
+      }
+    }
+    arrows = arrows.filter((a) => a.life > 0);
+  }
+
+  function finish() {
+    phase = 'outro';
+    const pts = 20 + Math.round((10 * delivered) / ships.length);
+    result = { world: 'gulliver', pts };
+    const icon = emblemIcon('gulliver');
+    const head = delivered >= ships.length
+      ? 'Die ganze Flotte liegt am Strand von Liliput!'
+      : 'Die Sonne geht unter. ' + delivered + ' von ' + ships.length + ' Schiffen liegen am Strand von Liliput.';
+    StoryCard.show([
+      { title: 'Nardac!', sub: 'Gullivers Reisen', icon, text: head + ' Der Kaiser ernennt Gulliver zum Nardac – das ist der höchste Ehrentitel des Landes.\n\nÜbrigens: Der Eier-Streit lebt in der Informatik weiter. „Big-Endian“ und „Little-Endian“ heißen dort zwei Arten, Zahlen im Speicher abzulegen.' },
+      { title: 'Wie geht es weiter?', sub: 'Jonathan Swift', icon, text: 'Gulliver reist noch weiter: zu Riesen, auf eine fliegende Insel und zu sprechenden Pferden. Swift nimmt dabei die Mächtigen seiner Zeit aufs Korn.\n\nDarum steht diese Satire bei „Gesellschaft & Politik & Medien“ im College 3.' + rewardLine(firstTime, pts) },
+    ], () => onExit(result));
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    const ox = Math.round(camX);
+    g.drawImage(bg, ox, 0, VIEW_W, VIEW_H, 0, 0, VIEW_W, VIEW_H);
+    // Wellen
+    for (let i = 0; i < 70; i++) {
+      const r = makeRng(i * 13);
+      const x = LILLI + 6 + ((r() * (BLEF - LILLI - 12) + t * (6 + r() * 6)) % (BLEF - LILLI - 12));
+      const y = Math.floor(r() * VIEW_H);
+      if (x - ox < -8 || x - ox > VIEW_W) continue;
+      rect(g, Math.round(x - ox), y, 5, 1, 'rgba(255,255,255,0.35)');
+    }
+    // Liliputaner
+    for (const f of folk) {
+      const x = Math.round(f.x - ox);
+      const y = Math.round(f.y - (f.jump > 0 ? Math.abs(Math.sin(f.jump * 12)) * 3 : 0));
+      if (x < -4 || x > VIEW_W + 4) continue;
+      rect(g, x, y - 4, 2, 2, '#f5cba8');
+      rect(g, x, y - 2, 2, 2, f.col);
+      rect(g, x, y, 1, 1, '#3a2a26');
+      rect(g, x + 1, y, 1, 1, '#3a2a26');
+    }
+    // Schiffe
+    for (const s of ships) {
+      const bob = Math.round(Math.sin(t * 2 + s.bob) * 1);
+      g.drawImage(SHIP_SPR, Math.round(s.x - 7 - ox), Math.round(s.y - 8 + bob));
+    }
+    // Seile zu den angehakten Schiffen
+    g.strokeStyle = '#e8dcc0';
+    g.lineWidth = 1;
+    let prev = { x: gul.x, y: gul.y - 10 };
+    for (const s of ships) {
+      if (!s.hooked) continue;
+      g.beginPath();
+      g.moveTo(Math.round(prev.x - ox) + 0.5, Math.round(prev.y) + 0.5);
+      g.lineTo(Math.round(s.x - ox) + 0.5, Math.round(s.y) + 0.5);
+      g.stroke();
+      prev = s;
+    }
+    // Gulliver (doppelt so groß)
+    const frames = gul.spr[gul.dir];
+    const f = gul.moving ? frames[Math.floor(gul.anim) % 4] : frames[0];
+    const gx = Math.round(gul.x - 16 - ox);
+    const gy = Math.round(gul.y - 31);
+    const d = depth(gul.x);
+    if (d === 0) {
+      g.fillStyle = 'rgba(0,0,0,0.25)';
+      g.fillRect(gx + 8, Math.round(gul.y) - 3, 16, 3);
+    }
+    if (gul.stun > 0 && Math.floor(gul.stun * 20) % 2 === 0) g.globalAlpha = 0.6;
+    g.drawImage(f, gx, gy, 32, 32);
+    g.globalAlpha = 1;
+    if (d > 0) {
+      const cut = d === 1 ? 9 : 15;
+      g.fillStyle = d === 1 ? 'rgba(63,143,191,0.85)' : 'rgba(43,111,158,0.9)';
+      g.fillRect(gx, gy + 32 - cut, 32, cut + 1);
+      rect(g, gx + 2 + Math.round(Math.sin(t * 5) * 2), gy + 32 - cut, 28, 1, 'rgba(255,255,255,0.6)');
+    }
+    // Bogenschützen und Pfeile
+    for (const a of archers) {
+      const x = Math.round(a.x - ox);
+      rect(g, x, a.y - 4, 2, 2, '#f5cba8');
+      rect(g, x, a.y - 2, 2, 3, '#3a5a8a');
+      rect(g, x - 2, a.y - 3, 1, 4, '#7a5a3a');
+    }
+    for (const ar of arrows) {
+      const x = Math.round(ar.x - ox);
+      const y = Math.round(ar.y);
+      const l = Math.hypot(ar.vx, ar.vy);
+      rect(g, x, y, 1, 1, '#2b1d1f');
+      rect(g, Math.round(x - (ar.vx / l) * 3), Math.round(y - (ar.vy / l) * 3), 1, 1, '#8a6a4a');
+    }
+    // HUD
+    drawWorldHud(g, 'Gullivers Reisen', delivered + ' / ' + ships.length, SHIP_ICON);
+    const frac = clamp(timeLeft / TIME, 0, 1);
+    rect(g, 140, 9, 104, 5, '#2b2230');
+    rect(g, 141, 10, Math.round(102 * frac), 3, frac > 0.3 ? '#ffd24a' : '#ff8a5b');
+    for (let yy = -3; yy <= 3; yy++) for (let xx = -3; xx <= 3; xx++) if (xx * xx + yy * yy <= 9) px(g, 134 + xx, 11 + yy, '#ffd24a');
+    if (msg) drawWorldMsg(g, msg.text);
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  return {
+    enter, update, draw,
+    debug: () => ({ phase, gul, ships, delivered, timeLeft, setTime: (v) => { timeLeft = v; } }),
+  };
+})();
+
+// ===================================================================
+// Buchwelt: Nussknacker und Mausekönig – Nüsse knacken im Takt
+// ===================================================================
+const NussWorld = (() => {
+  const LANES = [156, 192, 228];
+  const HIT_Y = 168;
+  const SPEED = 92;
+  const LEAD = 2.4;
+  const ARROWS = ['←', '↑', '→'];
+  const SPR = {
+    nut: buildSprite([
+      '...kkkkkk...', '..kTtTtTtk..', '.kTtTkTtTtk.', 'kTtTtkTtTtTk', 'ktTtTkTtTtTk',
+      'kTtTtkTtTtTk', '.kTtTkTtTtk.', '..kTtTtTtk..', '...kkkkkk...',
+    ]),
+    half: buildSprite(['..kkk.', '.kTtTk', 'kTtTtk', 'ktTtTk', '.kTtk.', '..kk..']),
+    nutcracker: buildSprite([
+      '....kkkk....', '...kNNNNk...', '...kNNNNk...', '..kNNNNNNk..', '..kxxxxxxk..', '..kssssssk..',
+      '..kseskesk..', '..kssssssk..', '..kwwwwwwk..', '..kwkkkkwk..', '...kwwwwk...', '..krrrrrrk..',
+      '.krrxrrxrrk.', '.krrrxxrrrk.', '.ksrrrrrrsk.', '..kkkkkkkk..', '..kBBkkBBk..', '..kBBkkBBk..',
+      '..kBBkkBBk..', '.kkkk..kkkk.',
+    ]),
+    soldier: buildSprite([
+      '..kkkk..', '.kNNNNk.', '.kNNNNk.', '.kssssk.', '.ksesek.', '..kkkk..',
+      '.krrrrk.', 'krrxxrrk', '.krrrrk.', '.kBBBBk.', '.kBkkBk.', '.kk..kk.',
+    ]),
+    mouse: buildSprite([
+      '..kk........', '.kmgk.......', '.kgggkkkk...', 'kegggggggk..', 'kgggggggggk.',
+      '.kgggggggggk', '..kk...kk.kk',
+    ]),
+    slipper: buildSprite(['..kkkkk...', '.kmmmmmkk.', 'kmwwmmmmmk', 'kkkkkkkkkk']),
+  };
+  const MARIE = mkLook('long', 'brown', 'light', '#f4f1e8', '#e8e0cc');
+
+  let phase = 'intro';
+  let t = 0;
+  let chart = [];
+  let nextIdx = 0;
+  let pops = [];
+  let bits = [];
+  let combo = 0;
+  let score = 0;
+  let hits = 0;
+  let advance = 0;
+  let laneFlash = [0, 0, 0];
+  let countT = 0;
+  let startLocal = 0;
+  let useAudio = false;
+  let endAt = 0;
+  let slip = null;
+  let msg = null;
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+
+  const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+  function midi(name) {
+    const m = /^([A-G])([#b]?)(\d)$/.exec(name);
+    if (!m) return 0;
+    return SEMI[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (parseInt(m[3], 10) + 1) * 12;
+  }
+
+  // Noten aus der Melodie des Marsches ableiten: höher → rechts, tiefer → links, gleich → Mitte
+  function buildChart() {
+    const info = Sound.songInfo('march');
+    const toks = info.tracks[0];
+    const out = [];
+    let lastStep = -9;
+    let lastPitch = 0;
+    for (let i = 0; i < toks.length; i++) {
+      const tok = toks[i];
+      if (tok === '-' || tok === '.') continue;
+      const pitch = midi(tok);
+      if (i - lastStep < 2) { lastPitch = pitch; continue; }
+      let lane = 1;
+      if (out.length) lane = pitch > lastPitch ? 2 : pitch < lastPitch ? 0 : 1;
+      out.push({ time: i * info.stepDur, lane, state: null });
+      lastStep = i;
+      lastPitch = pitch;
+    }
+    endAt = toks.length * info.stepDur;
+    return out;
+  }
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    phase = 'intro';
+    t = 0;
+    chart = buildChart();
+    nextIdx = 0;
+    pops = [];
+    bits = [];
+    combo = 0;
+    score = 0;
+    hits = 0;
+    advance = 0;
+    slip = null;
+    msg = null;
+    result = null;
+    Sound.play('march');
+    const icon = emblemIcon('nuss');
+    StoryCard.show([
+      { title: 'Nussknacker und Mausekönig', sub: 'E. T. A. Hoffmann · 1816', icon, text: 'Heiliger Abend bei Familie Stahlbaum. Unter dem Christbaum findet Marie ein kleines Männchen mit großem Mund: einen Nussknacker. Sie schließt ihn sofort ins Herz.\n\nAls um Mitternacht die Uhr schlägt, raschelt und pfeift es plötzlich überall …' },
+      { title: 'Die Schlacht', sub: 'Um Mitternacht', icon, text: 'Aus den Ritzen im Boden quillt ein Heer von Mäusen, angeführt vom Mausekönig mit sieben Köpfen und sieben Kronen! Der Nussknacker erwacht und ruft die Spielzeugsoldaten zum Kampf.\n\nKnack die Nüsse im Takt: ← ↑ → drücken, wenn eine Nuss die Linie erreicht.' },
+    ], () => {
+      phase = 'count';
+      countT = 0;
+      useAudio = Sound.ready;
+      Sound.stop();
+    });
+  }
+
+  function clock() {
+    if (phase === 'count') return countT - LEAD - (useAudio ? 0.12 : 0);
+    if (useAudio) {
+      const st = Sound.songTime();
+      if (st !== null) return st;
+    }
+    return t - startLocal - (useAudio ? 0.12 : 0);
+  }
+
+  function update(dt) {
+    t += dt;
+    if (StoryCard.update(dt)) return;
+    if (msg) {
+      msg.t -= dt;
+      if (msg.t <= 0) msg = null;
+    }
+    for (let i = 0; i < 3; i++) laneFlash[i] = Math.max(0, laneFlash[i] - dt * 4);
+    for (const p of pops) p.t += dt;
+    pops = pops.filter((p) => p.t < 0.7);
+    for (const b of bits) { b.t += dt; b.x += b.vx * dt; b.y += b.vy * dt; b.vy += 300 * dt; }
+    bits = bits.filter((b) => b.t < 0.6);
+    if (phase === 'count') {
+      const before = Math.floor(countT / 0.6);
+      countT += dt;
+      if (Math.floor(countT / 0.6) !== before && countT < LEAD) Sound.sfx('blip');
+      handleInput();
+      if (countT >= LEAD) {
+        phase = 'play';
+        startLocal = t;
+        Sound.play('march', true);
+      }
+      return;
+    }
+    if (phase === 'play') {
+      handleInput();
+      const now = clock();
+      for (const n of chart) {
+        if (!n.state && now - n.time > 0.2) {
+          n.state = 'miss';
+          combo = 0;
+          advance = Math.min(60, advance + 4);
+          pops.push({ lane: n.lane, text: 'Daneben', col: UI_COL.bad, t: 0 });
+        }
+      }
+      if (now > endAt + 0.4) {
+        phase = 'slipper';
+        slip = { pos: 0, dir: 1, tries: 0, fly: null };
+        Sound.play('march');
+        msg = { text: 'Der Mausekönig greift den Nussknacker an! Marie zieht ihren Pantoffel aus … Drück E, wenn der Zeiger im grünen Feld ist!', t: 99 };
+      }
+      return;
+    }
+    if (phase === 'slipper') updateSlipper(dt);
+  }
+
+  function handleInput() {
+    const lanes = [];
+    if (Input.hit('left')) lanes.push(0);
+    if (Input.hit('up') || Input.hit('down')) lanes.push(1);
+    if (Input.hit('right')) lanes.push(2);
+    if (!lanes.length) return;
+    const now = clock();
+    for (const lane of lanes) {
+      laneFlash[lane] = 1;
+      let best = null;
+      let bd = 0.22;
+      for (const n of chart) {
+        if (n.state || n.lane !== lane) continue;
+        const d = Math.abs(n.time - now);
+        if (d < bd) { bd = d; best = n; }
+      }
+      if (!best) continue;
+      const good = bd < 0.09;
+      best.state = good ? 'super' : 'good';
+      hits++;
+      score += good ? 1 : 0.7;
+      combo++;
+      advance = Math.max(0, advance - 3);
+      Sound.sfx('crack');
+      pops.push({ lane, text: good ? 'Super!' : 'Gut!', col: good ? '#ffd977' : UI_COL.good, t: 0 });
+      for (let k = 0; k < 6; k++) bits.push({ x: LANES[lane], y: HIT_Y, vx: (Math.random() - 0.5) * 90, vy: -60 - Math.random() * 60, t: 0 });
+    }
+  }
+
+  function updateSlipper(dt) {
+    if (slip.fly) {
+      slip.fly.t += dt;
+      if (slip.fly.t >= 0.9) {
+        if (slip.fly.hit) {
+          phase = 'won';
+          slip.wonT = 0;
+          Sound.sfx('thud');
+          setTimeout(() => Sound.sfx('cheer'), 250);
+          msg = { text: 'Volltreffer! Der Mausekönig taumelt – und das ganze Mäuseheer ergreift die Flucht.', t: 99 };
+        } else {
+          slip.fly = null;
+          msg = { text: 'Knapp vorbei! Marie hat noch den zweiten Pantoffel … Nochmal!', t: 99 };
+        }
+      }
+      return;
+    }
+    slip.pos += slip.dir * dt * 1.25;
+    if (slip.pos > 1) { slip.pos = 1; slip.dir = -1; }
+    if (slip.pos < 0) { slip.pos = 0; slip.dir = 1; }
+    if (Input.hit('act') || Input.hit('jump')) {
+      slip.tries++;
+      const ok = Math.abs(slip.pos - 0.5) < 0.11 || slip.tries >= 3;
+      slip.fly = { t: 0, hit: ok };
+      Sound.sfx('whoosh');
+    }
+  }
+
+  function finishLater(dt) {
+    slip.wonT += dt;
+    if (slip.wonT > 2.4 && phase === 'won') {
+      phase = 'outro';
+      msg = null;
+      const ratio = chart.length ? score / chart.length : 0;
+      const pts = 20 + Math.round(10 * ratio);
+      result = { world: 'nuss', pts };
+      const icon = emblemIcon('nuss');
+      StoryCard.show([
+        { title: 'Der Pantoffel trifft!', sub: 'Nussknacker und Mausekönig', icon, text: 'Marie wirft ihren Pantoffel mitten ins Getümmel – und der Mausekönig flieht mit seinem ganzen Heer.\n\nDu hast ' + hits + ' von ' + chart.length + ' Nüssen im Takt geknackt.' },
+        { title: 'Wie geht es weiter?', sub: 'E. T. A. Hoffmann', icon, text: 'Wer ist der Nussknacker wirklich? Was weiß Pate Drosselmeier? Und wie sieht das Puppenreich mit seinem Marzipanschloss aus? Lies selbst!\n\nWeil Tschaikowski daraus ein berühmtes Ballett gemacht hat, steht die Geschichte hier bei „Theater & Tanz & Film“.' + rewardLine(firstTime, pts) },
+      ], () => onExit(result));
+    }
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function drawRoom(g) {
+    rect(g, 0, 0, VIEW_W, 150, '#1d2346');
+    for (let x = 0; x < VIEW_W; x += 32) rect(g, x, 0, 16, 150, '#20284d');
+    rect(g, 0, 146, VIEW_W, 4, '#3a2a20');
+    rect(g, 0, 150, VIEW_W, VIEW_H - 150, '#5a3d2b');
+    for (let y = 154; y < VIEW_H; y += 8) rect(g, 0, y, VIEW_W, 1, '#4d3324');
+    // Fenster mit Mond
+    rect(g, 168, 14, 48, 40, '#3a2a20');
+    rect(g, 171, 17, 42, 34, '#0f1530');
+    rect(g, 191, 17, 2, 34, '#3a2a20');
+    rect(g, 171, 33, 42, 2, '#3a2a20');
+    for (let yy = -5; yy <= 5; yy++) for (let xx = -5; xx <= 5; xx++) if (xx * xx + yy * yy <= 25) px(g, 202 + xx, 25 + yy, '#fff6cf');
+    // Christbaum
+    for (let i = 0; i < 9; i++) rect(g, 30 - i * 3, 22 + i * 12, 14 + i * 6, 12, i % 2 ? '#1f6b3a' : '#236f40');
+    rect(g, 33, 130, 8, 16, '#4a2c1a');
+    for (const [x, y, c] of [[30, 40, '#e0115f'], [18, 70, '#ffd24a'], [44, 82, '#5fa8e8'], [24, 104, '#e0115f'], [52, 112, '#ffd24a'], [12, 122, '#5fa8e8']]) {
+      rect(g, x, y, 3, 3, c);
+      if (Math.floor(t * 2 + x) % 3 === 0) rect(g, x + 1, y - 1, 1, 1, '#ffffff');
+    }
+    rect(g, 34, 14, 5, 5, '#ffd24a');
+    // Glasschrank
+    rect(g, 318, 26, 56, 120, '#3a2a20');
+    rect(g, 321, 29, 50, 114, '#2a3550');
+    for (let y = 60; y < 140; y += 30) rect(g, 321, y, 50, 2, '#3a2a20');
+  }
+
+  function drawArmies(g) {
+    // Spielzeugsoldaten links
+    for (let i = 0; i < 6; i++) {
+      const x = 64 + (i % 3) * 14;
+      const y = 150 + Math.floor(i / 3) * 16;
+      const hop = combo > 0 && (Math.floor(t * 4) + i) % 4 === 0 ? 1 : 0;
+      g.drawImage(SPR.soldier, x, y - hop);
+    }
+    g.drawImage(SPR.nutcracker, 108, 142);
+    // Mäuse rechts (rücken bei Fehlern vor)
+    const flee = phase === 'won' ? slip.wonT * 140 : 0;
+    for (let i = 0; i < 8; i++) {
+      const x = 268 + (i % 4) * 24 - advance + flee;
+      const y = 154 + Math.floor(i / 4) * 18 + ((Math.floor(t * 6) + i) % 2);
+      if (x < VIEW_W + 10) g.drawImage(SPR.mouse, Math.round(x), y);
+    }
+    // Mausekönig mit sieben Köpfen
+    const kx = 332 - advance * 0.6 + flee;
+    const ky = 132 + (phase === 'won' ? Math.min(20, slip.wonT * 30) : 0);
+    if (kx < VIEW_W + 20) {
+      rect(g, kx - 2, ky + 14, 30, 18, PAL.k);
+      rect(g, kx - 1, ky + 15, 28, 16, '#8e887f');
+      rect(g, kx + 4, ky + 20, 18, 3, '#7b3fa0');
+      for (let i = 0; i < 7; i++) {
+        const hx = kx - 4 + i * 5;
+        const hy = ky + 6 + Math.abs(i - 3) * 2;
+        rect(g, hx, hy, 6, 6, PAL.k);
+        rect(g, hx + 1, hy + 1, 4, 4, '#c7c1b6');
+        rect(g, hx + 1, hy + 2, 1, 1, '#e0115f');
+        rect(g, hx + 1, hy - 2, 4, 2, '#ffd24a');
+        rect(g, hx + 1, hy - 3, 1, 1, '#ffd24a');
+        rect(g, hx + 4, hy - 3, 1, 1, '#ffd24a');
+      }
+    }
+  }
+
+  function drawLanes(g) {
+    rect(g, 136, 18, 112, 168, 'rgba(10,8,20,0.55)');
+    for (let i = 0; i < 3; i++) {
+      const x = LANES[i];
+      rect(g, x, 18, 1, 168, 'rgba(255,255,255,0.08)');
+      const f = laneFlash[i];
+      drawPanel(g, x - 13, HIT_Y - 9, 26, 18, f > 0 ? 'rgba(255,217,119,' + (0.25 + 0.5 * f) + ')' : 'rgba(40,30,48,0.9)', '#ffd977');
+      Font.drawCentered(g, ARROWS[i], x + 1, HIT_Y - 5, '#ffffff');
+    }
+    const now = clock();
+    for (const n of chart) {
+      if (n.state) continue;
+      const y = HIT_Y - (n.time - now) * SPEED;
+      if (y < 10 || y > VIEW_H + 10) continue;
+      const x = LANES[n.lane];
+      g.drawImage(SPR.nut, x - 6, Math.round(y) - 5);
+      Font.drawCentered(g, ARROWS[n.lane], x + 1, Math.round(y) - 4, '#fff3b0');
+    }
+    for (const b of bits) {
+      g.globalAlpha = 1 - b.t / 0.6;
+      g.drawImage(SPR.half, Math.round(b.x - 3), Math.round(b.y - 3));
+      g.globalAlpha = 1;
+    }
+    for (const p of pops) {
+      g.globalAlpha = 1 - p.t / 0.7;
+      Font.drawCentered(g, p.text, LANES[p.lane] + 1, HIT_Y - 26 - p.t * 20, p.col, '#1a1220');
+      g.globalAlpha = 1;
+    }
+    if (phase === 'count') {
+      const n = Math.max(1, Math.ceil((LEAD - countT) / 0.6));
+      Font.drawCentered(g, String(Math.min(3, n)), VIEW_W / 2, 80, '#ffd977', '#1a1220', 3);
+    }
+  }
+
+  function drawSlipper(g) {
+    const marie = charSprites(MARIE);
+    g.drawImage(marie.right[0], 140, 150);
+    if (phase === 'slipper' && !slip.fly) {
+      drawPanel(g, 90, 112, 204, 18);
+      rect(g, 94, 117, 196, 8, '#3d3242');
+      rect(g, 94 + Math.round(196 * 0.39), 117, Math.round(196 * 0.22), 8, '#5fbf5f');
+      const mx = 94 + Math.round(196 * slip.pos);
+      rect(g, mx - 1, 114, 3, 14, '#ffffff');
+    }
+    if (slip && slip.fly) {
+      const k = clamp(slip.fly.t / 0.9, 0, 1);
+      const tx = slip.fly.hit ? 340 : 366;
+      const x = lerp(152, tx, k);
+      const y = lerp(150, 128, k) - Math.sin(k * Math.PI) * 60;
+      g.save();
+      g.translate(Math.round(x), Math.round(y));
+      g.rotate(k * Math.PI * 4);
+      g.drawImage(SPR.slipper, -5, -2);
+      g.restore();
+    }
+  }
+
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    drawRoom(g);
+    drawArmies(g);
+    if (phase === 'count' || phase === 'play') drawLanes(g);
+    if (phase === 'slipper' || phase === 'won') drawSlipper(g);
+    drawWorldHud(g, 'Nussknacker', hits + ' / ' + chart.length, SPR.half);
+    if (combo >= 4 && phase === 'play') Font.drawCentered(g, combo + 'er-Serie!', VIEW_W / 2, 24, '#ffd977', '#1a1220');
+    if (msg) drawWorldMsg(g, msg.text, 30);
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  const baseUpdate = update;
+  function updateAll(dt) {
+    baseUpdate(dt);
+    if (phase === 'won') finishLater(dt);
+  }
+
+  return {
+    enter, update: updateAll, draw,
+    debug: () => ({ phase, now: clock(), chart, hits, score, slip, advance }),
+  };
+})();
+
+// ===================================================================
+// Buchwelt: In 80 Tagen um die Welt – Routenwahl gegen die Uhr
+// ===================================================================
+const ReiseWorld = (() => {
+  // Weltkarte (einfache Umrisse, Länge/Breite) – nach Osten von London bis London
+  const LAND = [
+    [[-166, 68], [-156, 71.3], [-140, 69.6], [-120, 69], [-100, 68], [-95, 71], [-88, 68.5], [-82, 69.5], [-80, 66], [-75, 64], [-70, 62], [-64, 60], [-62, 57], [-58, 54], [-56, 51.5], [-59, 48], [-64, 47], [-66, 45], [-70, 43.5], [-70, 41.5], [-74, 40.5], [-76, 38], [-76, 35], [-79, 33], [-81, 31], [-81, 28], [-80, 25.5], [-81.5, 25], [-82.5, 27.5], [-84, 30], [-89, 30.2], [-90, 29], [-94, 29.6], [-97, 27.8], [-97.5, 22], [-96, 19], [-91, 18.6], [-90.5, 21], [-87, 21.5], [-88.3, 16], [-83.5, 15], [-83.6, 11], [-81.5, 9], [-79, 9.5], [-77.5, 8.5], [-80, 7.3], [-83.6, 8.5], [-87.5, 13], [-91, 13.8], [-94, 16], [-101, 17.3], [-105, 19.5], [-107, 23.5], [-109.5, 26], [-112.5, 29], [-114.7, 31.5], [-112, 27], [-110, 23], [-112, 25], [-115.5, 30], [-117.1, 32.5], [-121, 35], [-122.5, 37.5], [-124, 40], [-124, 46.5], [-124.7, 48.4], [-128, 52], [-133, 57], [-140, 59.8], [-145, 60.5], [-151.5, 59.5], [-154, 57.5], [-160, 55.5], [-163, 55], [-158, 57.5], [-162, 59.8], [-165, 62.5], [-161, 64.5], [-166, 65.3], [-164, 66.5]],
+    [[-73, 78], [-60, 82], [-40, 83.5], [-18, 80], [-20, 75], [-22, 70], [-30, 68], [-40, 65], [-43, 60], [-48, 61], [-52, 64], [-54, 67], [-56, 71], [-60, 76]],
+    [[-80, 62], [-64, 62], [-62, 67], [-67, 69.7], [-75, 72], [-85, 73.4], [-90, 71.3], [-85, 69.8], [-81, 68], [-83, 66], [-78, 64.5]],
+    [[-118, 69], [-101, 68.5], [-102, 72], [-114, 73], [-118, 71.5]],
+    [[-77.5, 8.5], [-72, 11.8], [-67, 10.7], [-61, 8.5], [-54, 5.8], [-50, 1.7], [-44, -2.5], [-37, -5], [-35, -7.5], [-38, -13], [-39, -17.5], [-42, -23], [-48.5, -26], [-51, -31], [-56.5, -35.5], [-57.5, -38], [-62.5, -41], [-65.5, -45], [-67.5, -46.5], [-68.5, -50], [-68.5, -54.5], [-74.5, -52.5], [-75.5, -48], [-73, -40], [-71.5, -32], [-70.5, -25], [-70.4, -18], [-75.5, -15], [-79, -8], [-81.2, -4.5], [-80, -2.5], [-80, 1], [-77.5, 3.5], [-77.5, 7.5]],
+    [[-85, 21.9], [-81.8, 23.1], [-77.5, 21.5], [-74.2, 20.2], [-77.8, 20.7], [-81, 21.9]],
+    [[-74.5, 18.5], [-72.8, 19.9], [-70, 19.7], [-68.3, 18.6], [-71, 17.8]],
+    [[-17, 21], [-17.2, 14.7], [-15, 11], [-11.5, 7], [-8, 4.5], [0, 5.6], [5.5, 4.5], [9.6, 3], [9, -1], [12.3, -6], [13.5, -12], [11.8, -17.5], [14.5, -23], [16.5, -28.6], [18.4, -34], [22, -34], [27.5, -33.2], [31.3, -29], [32.8, -25.5], [35.5, -24], [34.9, -20], [39.5, -16.5], [40.4, -11], [39, -6.5], [41, -2], [44.5, 1.5], [49, 6.8], [51.3, 11.8], [45, 10.5], [43.4, 11.7], [41.5, 14.5], [38.5, 18], [37.3, 21], [35.6, 23.5], [33.6, 27.5], [32.4, 29.8], [32.3, 31.2], [28, 31], [25, 31.6], [22.5, 32.8], [20, 31.5], [15.5, 31.5], [11.5, 33.2], [10.8, 35.5], [10, 37.3], [4, 36.9], [0, 35.8], [-5.5, 35.8], [-9.5, 32.5], [-11.5, 28], [-14.5, 26], [-16.5, 22]],
+    [[43.3, -21.5], [44, -25], [47, -25.2], [49.5, -17.5], [50.5, -15.2], [49.3, -12], [46, -15.8], [43.6, -18.5]],
+    [[-9.5, 37], [-8.9, 39], [-8.8, 42], [-8, 43.7], [-1.6, 43.4], [-1.2, 46], [-4.4, 47.9], [-1.6, 48.7], [0.2, 49.7], [1.6, 50.5], [4, 51.5], [4.8, 52.8], [8.6, 53.9], [8.6, 55.5], [10.3, 57.6], [10.6, 56.2], [11, 54], [14.3, 54], [18.5, 54.5], [21.2, 55.2], [21, 57], [24, 57.4], [23.6, 58.9], [28, 59.5], [30, 60], [25, 60.3], [22.5, 60], [21.4, 61], [21.7, 63], [24.5, 65.8], [29, 69.5], [33, 69.3], [40.5, 67.8], [41, 66.2], [34.8, 65.7], [34.5, 64.5], [37, 63.8], [44, 66.3], [44, 68.4], [53, 68.7], [59, 68.5], [61, 69.8], [66, 69.6], [69.5, 72.8], [73, 71.5], [79, 72.3], [87, 74], [95, 76], [104.5, 77.7], [113, 76], [118, 73.5], [129, 72.6], [140, 72.4], [153, 71], [161, 69.5], [170.5, 70], [180, 68.8], [180, 65], [177, 62.5], [170, 60], [163, 58], [161.8, 54.5], [156.7, 51], [155.5, 56], [158, 58], [160, 60.5], [156, 61.5], [153, 59.2], [143, 59.3], [137.5, 56.5], [135, 54.7], [138.5, 53], [141.3, 53], [140, 48.4], [136.5, 44.8], [133.5, 42.8], [129.7, 41], [128, 39], [129.4, 35.3], [126.2, 35], [126.6, 37], [124.7, 38], [125, 39.6], [121.6, 40], [118, 39.2], [118.9, 37.4], [122.5, 37.3], [120.4, 36], [119.4, 34.8], [121.9, 31.7], [122, 30], [120.4, 27], [118, 24.5], [114.2, 22.3], [110.5, 21.2], [109.6, 21.5], [106.7, 20.7], [105.7, 19], [108.5, 15.5], [109.2, 11.6], [106.5, 9.5], [104.8, 8.6], [103.4, 10.5], [100.9, 12.6], [100, 13.4], [99.2, 10], [100.4, 7.5], [102.9, 5.5], [103.4, 2.6], [104.2, 1.4], [101.4, 2.8], [100.3, 4.8], [98.5, 8.2], [98.6, 12], [97.6, 16.5], [94.3, 16], [94.6, 18], [92.4, 20.7], [91.8, 22.3], [88.5, 21.7], [86.8, 20.4], [83, 17.8], [80.2, 13.5], [80.2, 11], [77.5, 8.1], [76, 10.5], [74.5, 14], [72.8, 19], [72.4, 22.9], [70.5, 20.8], [69, 22.4], [67.4, 24], [66.5, 25.4], [61.5, 25.1], [57.4, 25.7], [56.5, 27.1], [53.5, 26.8], [50.1, 30.2], [48, 29.5], [50.2, 26.7], [51.6, 24.2], [54, 24.1], [56.4, 26.4], [56.4, 24.9], [59.8, 22.3], [57.7, 19], [55.3, 17.2], [52.2, 16], [48.7, 14], [45, 12.8], [43.5, 12.6], [42.6, 15.5], [40.2, 20.2], [38.5, 23.6], [36.5, 26], [34.6, 28.1], [34.4, 29.5], [34.9, 29.5], [34.2, 31.3], [35, 33.1], [36, 34.6], [35.8, 35.8], [36.2, 36.6], [34, 36.3], [30.6, 36.7], [28, 36.7], [26.3, 38.2], [26.6, 40.2], [29, 40.9], [31.2, 41.1], [35.2, 42], [38.3, 40.9], [41.5, 41.5], [41.7, 42.8], [38, 44.5], [39.1, 47.1], [35, 45.6], [36.4, 45.1], [33.5, 44.5], [32.6, 45.4], [33.6, 46], [30.8, 46.6], [29.6, 45], [28.6, 43.7], [28, 42], [28.8, 41.1], [26.4, 40.6], [23, 40.4], [23.5, 38.5], [21.7, 36.8], [20.2, 39.6], [19.5, 41.7], [16, 43.5], [13.7, 45.6], [12.4, 45.4], [12.4, 44.2], [14.9, 42.1], [16.2, 41.7], [18.5, 40.2], [17, 38.9], [16, 38], [16.2, 38.9], [15.4, 40], [14, 40.8], [12.6, 41.5], [10.5, 42.9], [10.2, 43.9], [8.8, 44.4], [6.6, 43.2], [3.1, 43.1], [3.1, 41.9], [0.8, 41], [0, 39.9], [0.1, 38.7], [-0.7, 37.6], [-2.1, 36.7], [-5.4, 36], [-7.5, 37.1]],
+    [[5, 58], [5, 62], [8, 63.5], [12.5, 66], [15.5, 68.5], [19, 69.8], [25, 71], [31, 70.3], [28.5, 68.5], [28, 66.5], [30, 63.8], [31.5, 62.8], [27, 60.5], [22.5, 60], [21.6, 63.2], [25.3, 65.5], [22.2, 65.8], [19.6, 63.5], [17.6, 62.5], [18.8, 60], [16.5, 57.8], [14.5, 56.1], [12.9, 55.4], [11.8, 58], [10.5, 59.6], [8, 58.1]],
+    [[-5.7, 50], [-1, 50.7], [1.3, 51.1], [1.7, 52.5], [0.3, 53.4], [-1.5, 55.5], [-2.1, 56], [-1.8, 57.6], [-3, 58.6], [-5, 58.6], [-6.2, 57.5], [-5.6, 55.3], [-3.4, 54.9], [-3, 53.3], [-4.6, 53.3], [-4.9, 51.8], [-3, 51.6], [-5.7, 50.1]],
+    [[-10, 51.6], [-6.2, 52.2], [-6, 53.8], [-5.5, 54.6], [-8.5, 55.2], [-10, 54.2], [-10.4, 52.2]],
+    [[-24, 64.5], [-22, 66.3], [-14.5, 66.2], [-13.6, 65], [-18, 63.4], [-22, 63.8]],
+    [[52, 71], [56, 70.5], [58, 72], [61, 74.5], [57, 75], [54, 73]],
+    [[130, 31], [131.4, 34.4], [132.8, 35.5], [135.4, 35.6], [136.8, 37.3], [140, 39.6], [141.4, 41.4], [141.9, 39], [140.9, 36.8], [140.6, 35.7], [138.8, 34.6], [135.5, 33.5], [132.4, 32.9], [131.4, 31.4]],
+    [[140, 41.5], [141.6, 45.4], [145.5, 43.3], [143.3, 42], [141, 41.8]],
+    [[120.2, 22.4], [121.6, 25.3], [121.9, 24.6], [120.9, 22]],
+    [[79.8, 6.2], [79.9, 9.6], [81.8, 7.3], [81.2, 6.1]],
+    [[95.3, 5.6], [97.5, 5.2], [100.4, 2.2], [104.5, -1.8], [106, -3.2], [105.8, -5.8], [102.3, -4], [98.7, 1.7]],
+    [[105.2, -6.8], [110, -6.9], [114.5, -7.8], [108, -7.8]],
+    [[109, 1.5], [113.5, 3.8], [117, 6.9], [119.2, 5.3], [117.6, 3.2], [118.1, 1], [116.2, -3.9], [111.8, -3.5], [110, -1.6]],
+    [[120.6, 18.5], [122.2, 18.5], [121.6, 15.5], [124.1, 13], [121, 14.1], [120, 16.2]],
+    [[122, 7], [126.4, 8.6], [126.2, 6.3], [124, 6.2]],
+    [[131, -1.2], [137.8, -1.5], [145.7, -4.8], [147.6, -6.1], [150, -10.3], [143.4, -8.8], [139, -8.1], [138, -5.5], [132.7, -4.1]],
+    [[113.4, -22], [115, -30], [115, -33.6], [117.9, -35.1], [124, -33], [131.2, -31.5], [135.6, -34.8], [138, -35.6], [140.6, -38], [146.3, -39.1], [150, -37.4], [152.9, -31.5], [153.1, -25.6], [149.2, -21], [145.4, -16.4], [143.6, -14], [142.5, -10.7], [141.6, -15.6], [139.3, -17.4], [135.5, -15], [136.6, -12], [132.6, -11.5], [129.5, -14.9], [126, -14.2], [122.2, -17.4], [118.8, -20.3], [114.6, -21.8]],
+    [[172.7, -34.4], [175.9, -37.4], [178.4, -37.7], [176.8, -40], [175.2, -41.6], [173.8, -39.2], [174.5, -36.6]],
+    [[172.8, -40.5], [174.3, -41.7], [172.7, -43.8], [170.6, -45.9], [166.6, -46], [168.5, -44], [172, -41]],
+  ];
+  const WATER = [
+    [[-95, 59], [-91, 63], [-87, 64.5], [-82, 64], [-78, 58], [-77, 55.5], [-80, 51.5], [-87, 55.3], [-92, 57]],
+    [[47, 45], [51.5, 47], [53, 45.5], [51, 44.5], [52.7, 41.7], [53.9, 40.5], [53.9, 37.3], [51, 36.8], [49, 37.8], [49.5, 40.2], [47.5, 43.5]],
+  ];
+  const MAP_Y = 20;
+  const MAP_H = 128;
+  const K = VIEW_W / 390;
+  const mx = (lon) => (lon + 20) * K;
+  const my = (lat) => MAP_Y + (75 - lat) * K;
+
+  const CITIES = {
+    London: [-0.13, 51.5], Suez: [32.55, 29.97], Bombay: [72.88, 19.08], Kalkutta: [88.36, 22.57], Hongkong: [114.17, 22.32],
+    Yokohama: [139.64, 35.44], 'San Francisco': [237.58, 37.77], 'New York': [286, 40.71], London2: [359.87, 51.5],
+  };
+  const LOOKS = {
+    fogg: { name: 'Phileas Fogg', look: mkLook('short', 'brown', 'light', '#3a3a4a', '#2b2d42', 'hat') },
+    pass: { name: 'Passepartout', look: mkLook('short', 'black', 'light', '#b8453a', '#2b2d42', 'cap') },
+    fix: { name: 'Detektiv Fix', look: mkLook('short', 'red', 'light', '#6b5a45', '#3d3a35', 'hat+beard') },
+  };
+  const LEGS = [
+    { from: 'London', to: 'Suez', days: 7, veh: 'zug',
+      path: [[-0.13, 51.5], [2.35, 48.86], [7.7, 45.07], [12.5, 42], [17.94, 40.63], [22, 36.5], [28, 33], [32.3, 31.26], [32.55, 29.97]],
+      before: [['fogg', 'Ich wette 20.000 Pfund, dass ich in 80 Tagen um die Welt reise. Abfahrt: heute, 2. Oktober 1872, 20:45 Uhr!'], ['pass', 'Mit nur einer Reisetasche, Monsieur? Na gut – allez!']],
+      after: [['fix', 'Das ist er! Der Mann, der die Bank von England bestohlen hat. Ich folge ihm, bis ich ihn verhaften kann!'], ['', 'Detektiv Fix hält Fogg für einen Bankräuber und heftet sich an eure Fersen.']] },
+    { from: 'Suez', to: 'Bombay', days: 13, veh: 'schiff',
+      path: [[32.55, 29.97], [34.5, 27], [38, 21], [42, 15], [44.5, 12.4], [52, 13], [62, 16], [72.88, 19.08]],
+      choice: { who: 'fogg', q: 'Der Dampfer Mongolia fährt pünktlich nach Fahrplan. Was tust du?', options: [
+        { t: 'Den Heizern eine Prämie versprechen, wenn sie schneller fahren', d: -2, reply: 'Die Heizer schaufeln wie wild. Die Mongolia kommt zwei Tage früher in Bombay an!' },
+        { t: 'In Ruhe Whist spielen', d: 0, reply: 'Fogg gewinnt jede Partie Whist. Die Mongolia kommt genau nach Plan an.' },
+      ] } },
+    { from: 'Bombay', to: 'Kalkutta', days: 3, veh: 'zug',
+      path: [[72.88, 19.08], [76, 21], [77.5, 23], [81.85, 25.45], [85, 24.5], [88.36, 22.57]],
+      choice: { who: 'pass', q: 'Halt! Mitten im Dschungel endet die Bahnstrecke. Bis Allahabad fehlen 50 Meilen!', options: [
+        { t: 'Den Elefanten Kiouni kaufen – für 2000 Pfund', d: 1, veh: 'elefant', reply: 'Auf Kiouni geht es quer durch den Dschungel. Unterwegs rettet ihr die junge Aouda aus großer Gefahr – sie reist von nun an mit euch.' },
+        { t: 'Zu Fuß weitergehen', d: 3, reply: 'Drei lange Tage Fußmarsch durch den Dschungel …' },
+        { t: 'Warten, bis die Strecke fertig ist', d: 6, reply: 'Die Bauarbeiter lassen sich Zeit. Sehr viel Zeit.' },
+      ] } },
+    { from: 'Kalkutta', to: 'Hongkong', days: 13, veh: 'schiff',
+      path: [[88.36, 22.57], [89, 19], [93, 14], [97, 7.5], [100, 4], [103.85, 1.29], [106.5, 5], [110, 12], [114.17, 22.32]],
+      after: [['', 'Sturm im Chinesischen Meer! Der Dampfer Rangoon kämpft sich durch die Wellen.']] },
+    { from: 'Hongkong', to: 'Yokohama', days: 6, veh: 'boot',
+      path: [[114.17, 22.32], [118, 24.5], [121, 28], [123, 31.2], [127, 32.5], [131, 33], [135, 33.5], [139.64, 35.44]],
+      choice: { who: 'fogg', q: 'Fix hat Passepartout in einer Hafenkneipe aufgehalten – die Carnatic ist ohne euch abgefahren!', options: [
+        { t: 'Das kleine Lotsenboot Tankadère mieten', d: 0, reply: 'Die winzige Tankadère trotzt Wind und Wellen. In Yokohama findet Fogg Passepartout wieder – als Akrobat in einem Zirkus!' },
+        { t: 'Eine Woche auf das nächste Schiff warten', d: 7, reply: 'Sieben Tage Warten in Hongkong. Fix reibt sich die Hände.' },
+      ] } },
+    { from: 'Yokohama', to: 'San Francisco', days: 22, veh: 'schiff',
+      path: [[139.64, 35.44], [150, 39], [165, 41], [180, 42], [195, 42], [210, 41], [225, 39.5], [237.58, 37.77]],
+      choice: { who: 'fogg', q: 'Die General Grant bringt euch über den Pazifik. Soll sie schneller fahren?', options: [
+        { t: 'Dem Kapitän Geld für extra Kohle geben', d: -1, reply: 'Volle Kraft voraus! Ein Tag gewonnen.' },
+        { t: 'Das Meer genießen', d: 0, reply: 'Aouda und Fogg schauen den Delfinen zu. Wunderschön – aber nicht schneller.' },
+      ] } },
+    { from: 'San Francisco', to: 'New York', days: 7, veh: 'zug',
+      path: [[237.58, 37.77], [240, 39.5], [250, 41], [258, 41.5], [264.07, 41.26], [272.37, 41.88], [280, 41.5], [286, 40.71]],
+      choice: { who: 'pass', q: 'In der Prärie bei Fort Kearney fährt der Zug ohne euch ab!', options: [
+        { t: 'Mit Mudges Segelschlitten über die gefrorene Prärie', d: 0, veh: 'schlitten', reply: 'Der Wind pfeift, der Schlitten fliegt über das Eis. In Omaha erwischt ihr den nächsten Zug.' },
+        { t: 'Auf den nächsten Zug warten', d: 2, reply: 'Zwei Tage im Schnee. Brrr.' },
+      ] } },
+    { from: 'New York', to: 'London', days: 9, veh: 'schiff',
+      path: [[286, 40.71], [300, 44], [320, 48.5], [340, 51], [351.7, 51.85], [353.75, 53.35], [357, 53.41], [359.87, 51.5]],
+      choice: { who: 'fogg', q: 'Der Dampfer China nach Liverpool ist seit 45 Minuten weg!', options: [
+        { t: 'Das Frachtschiff Henrietta kaufen – zur Not wird das Holz verheizt', d: 0, reply: 'Als die Kohle ausgeht, lässt Fogg Kabinen, Masten und Deck verfeuern. Die Henrietta schafft es bis Irland!' },
+        { t: 'Auf den nächsten Dampfer warten', d: 3, reply: 'Drei Tage später geht es endlich los.' },
+      ] },
+      after: [['fix', 'Im Namen der Königin: Phileas Fogg, Sie sind verhaftet!'], ['', 'Erst nach Stunden stellt sich heraus: Der echte Bankräuber wurde schon vor Tagen gefasst. Fogg nimmt einen Sonderzug nach London.']] },
+  ];
+  const VEH = {
+    zug: buildSprite(['k.........', 'kk.kkkkk..', 'kkkkRRRk..', 'kRRRRRRkk.', 'kRRRRRRRRk', '.kkkkkkkk.', '.kWk.kWk..', '..k...k...']),
+    schiff: buildSprite(['....kk....', '....kk..k.', '..kkkkkkk.', 'kkwwwwwwkk', '.kTTTTTTk.', '..kkkkkk..']),
+    boot: buildSprite(['....k.....', '...kwk....', '..kwwwk...', '.kwwwwwk..', '....k.....', 'kkkkkkkkk.', '.kTTTTTk..', '..kkkkk...']),
+    elefant: buildSprite(['..kkkkkk..', '.kggggggk.', 'kggggggggk', 'kgekggggk.', 'kgkkggggk.', 'kgk.kgggk.', 'kk..kk.kk.', '....k...k.']),
+    schlitten: buildSprite(['....k.....', '...kwk....', '..kwwwk...', '.kwwwwwk..', '....k.....', 'kkkkkkkkkk', '.k.....k..']),
+  };
+
+  let mapImg = null;
+  let phase = 'intro';
+  let t = 0;
+  let leg = 0;
+  let part = 0;
+  let prog = 0;
+  let days = 0;
+  let shownDays = 0;
+  let veh = 'zug';
+  let travel = null;
+  let traveled = [];
+  let msg = null;
+  let endT = 0;
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+
+  function inside(poly, x, y) {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [xi, yi] = poly[i];
+      const [xj, yj] = poly[j];
+      if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+
+  function buildMap() {
+    const c = makeCanvas(VIEW_W, MAP_H);
+    const g = c.getContext('2d');
+    const boxes = LAND.map((p) => {
+      let a = 1e9; let b = -1e9; let cc = 1e9; let d = -1e9;
+      for (const [x, y] of p) { a = Math.min(a, x); b = Math.max(b, x); cc = Math.min(cc, y); d = Math.max(d, y); }
+      return [a, b, cc, d];
+    });
+    const land = new Uint8Array(VIEW_W * MAP_H);
+    for (let py = 0; py < MAP_H; py++) {
+      const lat = 75 - (py + 0.5) / K;
+      for (let pxx = 0; pxx < VIEW_W; pxx++) {
+        let lon = (pxx + 0.5) / K - 20;
+        if (lon > 180) lon -= 360;
+        let on = false;
+        for (let i = 0; i < LAND.length && !on; i++) {
+          const bx = boxes[i];
+          if (lon < bx[0] || lon > bx[1] || lat < bx[2] || lat > bx[3]) continue;
+          if (inside(LAND[i], lon, lat)) on = true;
+        }
+        if (on) for (const w of WATER) if (inside(w, lon, lat)) on = false;
+        land[py * VIEW_W + pxx] = on ? 1 : 0;
+      }
+    }
+    const at = (x, y) => (x < 0 || y < 0 || x >= VIEW_W || y >= MAP_H ? 0 : land[y * VIEW_W + x]);
+    for (let y = 0; y < MAP_H; y++) {
+      for (let x = 0; x < VIEW_W; x++) {
+        let col;
+        if (at(x, y)) {
+          const coast = !at(x - 1, y) || !at(x + 1, y) || !at(x, y - 1) || !at(x, y + 1);
+          col = coast ? '#8a6f45' : (x * 7 + y * 13) % 17 === 0 ? '#d9c38e' : '#e6d3a3';
+        } else {
+          col = (x + y * 3) % 23 === 0 ? '#93bcc2' : '#9fc6cb';
+        }
+        rect(g, x, y, 1, 1, col);
+      }
+    }
+    // Gradnetz
+    g.fillStyle = 'rgba(90,70,50,0.18)';
+    for (let lon = -0; lon <= 360; lon += 30) g.fillRect(Math.round(mx(lon)), 0, 1, MAP_H);
+    for (let lat = 60; lat >= -45; lat -= 30) g.fillRect(0, Math.round(my(lat) - MAP_Y), VIEW_W, 1);
+    return c;
+  }
+
+  function pathPoints(L) {
+    return L.path.map(([lo, la]) => [mx(lo), my(la)]);
+  }
+
+  function pointAt(pts, k) {
+    let total = 0;
+    const seg = [];
+    for (let i = 1; i < pts.length; i++) {
+      const l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      seg.push(l);
+      total += l;
+    }
+    let d = clamp(k, 0, 1) * total;
+    for (let i = 0; i < seg.length; i++) {
+      if (d <= seg[i] || i === seg.length - 1) {
+        const f = seg[i] ? clamp(d / seg[i], 0, 1) : 0;
+        return [lerp(pts[i][0], pts[i + 1][0], f), lerp(pts[i][1], pts[i + 1][1], f)];
+      }
+      d -= seg[i];
+    }
+    return pts[pts.length - 1];
+  }
+
+  function page(who, text) {
+    return who ? npcPage(LOOKS[who], text) : narr(text);
+  }
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    if (!mapImg) mapImg = buildMap();
+    phase = 'intro';
+    t = 0;
+    leg = 0;
+    days = 0;
+    shownDays = 0;
+    veh = 'zug';
+    travel = null;
+    traveled = [];
+    msg = null;
+    endT = 0;
+    result = null;
+    Sound.play('galop');
+    const icon = emblemIcon('reise');
+    StoryCard.show([
+      { title: 'In 80 Tagen um die Welt', sub: 'Jules Verne · 1873', icon, text: 'London, 1872. Im Reform-Club behauptet der überpünktliche Phileas Fogg, man könne in 80 Tagen um die ganze Welt reisen. Seine Clubfreunde lachen – und Fogg wettet 20.000 Pfund.\n\nNoch am selben Abend bricht er mit seinem Diener Passepartout auf.' },
+      { title: 'Die Wette gilt!', sub: 'Zug, Schiff oder Elefant?', icon, text: 'Unterwegs geht einiges schief. Du entscheidest, wie es weitergeht.\n\nAm 21. Dezember um 20:45 Uhr muss Fogg wieder im Reform-Club sein. Jeder Tag zählt!\n\n↑↓ wählen · E bestätigen' },
+    ], () => startLeg());
+  }
+
+  function startLeg() {
+    const L = LEGS[leg];
+    veh = L.veh;
+    phase = 'talk';
+    const go = () => beginTravel(0, L.choice ? 0.5 : 1, L.choice ? Math.floor(L.days / 2) : L.days);
+    if (L.before) Dialog.open(L.before.map(([w, tx]) => page(w, tx)), go);
+    else go();
+  }
+
+  function beginTravel(from, to, addDays) {
+    phase = 'travel';
+    travel = { from, to, addDays, startDays: days, t: 0, dur: 1.2 + (to - from) * 2.2 };
+    Sound.sfx(veh === 'zug' ? 'whistle' : veh === 'elefant' ? 'call' : 'splash');
+  }
+
+  function update(dt) {
+    t += dt;
+    if (StoryCard.update(dt)) return;
+    if (msg) {
+      msg.t -= dt;
+      if (msg.t <= 0) msg = null;
+    }
+    if (phase === 'travel') {
+      travel.t += dt;
+      const k = clamp(travel.t / travel.dur, 0, 1);
+      prog = lerp(travel.from, travel.to, k);
+      shownDays = travel.startDays + travel.addDays * k;
+      if (k >= 1) {
+        days = travel.startDays + travel.addDays;
+        shownDays = days;
+        legPartDone();
+      }
+    } else if (phase === 'end') {
+      updateEnd(dt);
+    }
+  }
+
+  function legPartDone() {
+    const L = LEGS[leg];
+    if (travel.to < 1) {
+      // Ereignis unterwegs mit Auswahl
+      phase = 'talk';
+      const c = L.choice;
+      Dialog.open([Object.assign(page(c.who, c.q), {
+        choices: c.options.map((o) => ({
+          t: o.t + (o.d > 0 ? ' (+' + o.d + ' Tage)' : ''),
+          fn: () => {
+            if (o.veh) veh = o.veh;
+            Sound.sfx(o.d <= 0 ? 'correct' : 'wrong');
+            Dialog.open([narr(o.reply)], () => {
+              const rest = L.days - Math.floor(L.days / 2) + o.d;
+              beginTravel(0.5, 1, Math.max(0, rest));
+            });
+          },
+        })),
+      })]);
+      return;
+    }
+    traveled.push(leg);
+    phase = 'talk';
+    const next = () => {
+      leg++;
+      if (leg < LEGS.length) startLeg();
+      else arrive();
+    };
+    const pages = [narr('Angekommen in ' + L.to + '. Tag ' + days + ' von 80.')];
+    if (L.after) for (const [w, tx] of L.after) pages.push(page(w, tx));
+    if (leg === 3) {
+      days += 1;
+      shownDays = days;
+      pages.push(narr('Durch den Sturm kommt die Rangoon einen Tag zu spät in Hongkong an. Tag ' + days + '.'));
+    }
+    Dialog.open(pages, next);
+  }
+
+  function arrive() {
+    phase = 'end';
+    endT = 0;
+  }
+
+  function updateEnd(dt) {
+    endT += dt;
+    if (endT > 0.2 && endT - dt <= 0.2) {
+      Sound.sfx('ding');
+      const late = days >= 80;
+      Dialog.open([
+        narr('London! Ein Sonderzug bringt Fogg zum Bahnhof. Die Uhr zeigt 20:50 Uhr am ' + days + '. Tag der Reise.'),
+        late
+          ? npcPage(LOOKS.fogg, 'Fünf Minuten zu spät. Die Wette ist verloren.')
+          : npcPage(LOOKS.fogg, 'Noch vor dem 80. Tag! Passepartout, auf in den Reform-Club!'),
+      ], () => twist());
+    }
+  }
+
+  function twist() {
+    const real = days - 1;
+    const won = real < 80;
+    const pages = [];
+    if (days >= 80) {
+      pages.push(npcPage(LOOKS.pass, 'Monsieur! Monsieur! Heute ist erst ' + (real === 79 ? 'Samstag' : 'der ' + real + '. Tag') + '! Wir sind immer nach Osten gereist – jeden Tag ging die Sonne ein bisschen früher auf. Wir haben einen ganzen Tag gewonnen!'));
+      if (won) pages.push(narr('20:44:57 Uhr: Phileas Fogg betritt den Reform-Club. Drei Sekunden vor Ablauf der Frist!'));
+      else pages.push(narr('Doch selbst mit dem geschenkten Tag ist es zu knapp: Fogg kommt fünf Minuten zu spät in den Club.'));
+    } else {
+      pages.push(npcPage(LOOKS.pass, 'Und wissen Sie was, Monsieur? Wir sind nach Osten gereist und haben dabei sogar einen Tag gewonnen – wir waren noch schneller als gedacht!'));
+    }
+    Dialog.open(pages, () => (won ? finish(true) : lost()));
+  }
+
+  function lost() {
+    phase = 'talk';
+    Dialog.open([Object.assign(narr('Fogg hat die Wette verloren – aber er gewinnt etwas Schöneres: Aouda wird seine Frau. Möchtest du es nochmal versuchen?'), {
+      choices: [
+        { t: 'Nochmal um die Welt!', fn: () => enterAgain() },
+        { t: 'Zurück in die Bücherei', fn: () => finish(false) },
+      ],
+    })]);
+  }
+
+  function enterAgain() {
+    const cb = onExit;
+    const f = firstTime;
+    enter(cb, f);
+    StoryCard.close();
+    startLeg();
+  }
+
+  function finish(won) {
+    phase = 'outro';
+    const pts = won ? (days <= 79 ? 30 : 27) : 20;
+    result = { world: 'reise', pts };
+    const icon = emblemIcon('reise');
+    StoryCard.show([
+      { title: won ? 'Gewonnen!' : 'Knapp verloren', sub: 'In 80 Tagen um die Welt', icon, text: 'Wer nach Osten um die Erde reist, erlebt einen Sonnenaufgang mehr als die Daheimgebliebenen – und zählt deshalb einen Tag zu viel.\n\nDeine Reise: ' + days + ' Tage nach eigener Zählung, in Wahrheit ' + (days - 1) + '.' },
+      { title: 'Und Fogg?', sub: 'Jules Verne', icon, text: 'Das Schönste an der Reise ist für Phileas Fogg am Ende nicht das Geld: Aouda wird seine Frau.\n\nReisebücher für deine eigene Weltreise findest du bei „Länder & Reisen“ im College 2.' + rewardLine(firstTime, pts) },
+    ], () => onExit(result));
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function drawRoute(g) {
+    // geplante Route (gepunktet) und erledigte Strecken (rot)
+    for (let i = 0; i < LEGS.length; i++) {
+      const pts = pathPoints(LEGS[i]);
+      const done = traveled.includes(i);
+      const cur = i === leg && phase !== 'end';
+      const steps = 60;
+      for (let s = 0; s <= steps; s++) {
+        const k = s / steps;
+        const [x, y] = pointAt(pts, k);
+        if (done || (cur && k <= prog)) rect(g, Math.round(x), Math.round(y), 1, 1, '#b8453a');
+        else if (s % 2 === 0) rect(g, Math.round(x), Math.round(y), 1, 1, '#6b4a2e');
+      }
+    }
+    for (const [name, [lo, la]] of Object.entries(CITIES)) {
+      const x = Math.round(mx(lo));
+      const y = Math.round(my(la));
+      rect(g, x - 1, y - 1, 3, 3, PAL.k);
+      rect(g, x, y, 1, 1, '#ffd977');
+      if (name === 'London2') continue;
+      const label = name;
+      const w = Font.measure(label);
+      let lx = x + 3;
+      let ly = y - 11;
+      if (name === 'London') { lx = x - 2; ly = y + 2; }
+      if (name === 'Bombay' || name === 'Suez') { lx = x - w - 2; ly = y; }
+      if (name === 'New York') { lx = x - w / 2; ly = y + 3; }
+      if (name === 'San Francisco') { lx = x - w - 3; ly = y + 1; }
+      if (name === 'Kalkutta') { lx = x + 2; ly = y - 10; }
+      if (name === 'Hongkong') { lx = x - w / 2; ly = y + 3; }
+      Font.drawShadow(g, label, Math.round(lx), Math.round(ly), '#3a2a22', 'rgba(255,250,235,0.85)');
+    }
+  }
+
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    rect(g, 0, 0, VIEW_W, VIEW_H, '#3a2a20');
+    g.drawImage(mapImg, 0, MAP_Y);
+    rect(g, 0, MAP_Y - 1, VIEW_W, 1, '#2b1d1f');
+    rect(g, 0, MAP_Y + MAP_H, VIEW_W, 1, '#2b1d1f');
+    drawRoute(g);
+    if (phase !== 'end' && leg < LEGS.length) {
+      const [x, y] = pointAt(pathPoints(LEGS[leg]), prog);
+      const spr = VEH[veh] || VEH.zug;
+      const bob = phase === 'travel' ? Math.round(Math.sin(t * 10)) : 0;
+      g.drawImage(spr, Math.round(x - spr.width / 2), Math.round(y - spr.height - 1 + bob));
+    }
+    // Kalender
+    const d = Math.floor(shownDays + 1e-6);
+    drawWorldHud(g, 'In 80 Tagen um die Welt', 'Tag ' + d + ' / 80');
+    const frac = clamp(shownDays / 80, 0, 1.2);
+    const bx = 8;
+    const by = MAP_Y + MAP_H + 6;
+    rect(g, bx, by, VIEW_W - 16, 5, '#2b2230');
+    rect(g, bx, by, Math.round((VIEW_W - 16) * Math.min(1, frac)), 5, frac > 0.95 ? '#ff8a5b' : '#e0b13c');
+    if (!Dialog.active()) {
+      if (phase === 'travel') {
+        const L = LEGS[leg];
+        Font.draw(g, 'Unterwegs: ' + L.from + ' → ' + L.to, 8, by + 10, UI_COL.text);
+      }
+      Font.draw(g, 'Frist: 21. Dezember 1872, 20:45 Uhr im Reform-Club', 8, by + 24, UI_COL.dim);
+    }
+    if (msg) drawWorldMsg(g, msg.text);
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  return {
+    enter, update, draw,
+    debug: () => ({ phase, leg, days, prog, veh }),
+  };
+})();
+
+// ===================================================================
+// Buchwelt: Von der Erde zum Mond – Ladung wählen, im richtigen Moment feuern
+// ===================================================================
+const MondWorld = (() => {
+  const CX = 112;
+  const MOUTH_Y = 128;
+  const MOON_Y = 38;
+  const MOON_V = 34;
+  const BARBICANE = { name: 'Impey Barbicane', look: mkLook('short', 'black', 'light', '#2b2d42', '#2b2d42', 'hat') };
+  const ARDAN = { name: 'Michel Ardan', look: mkLook('long', 'red', 'light', '#b8453a', '#3d3a35', 'beard') };
+  const BULLET = buildSprite(['..kk..', '.kggk.', '.kWgk.', 'kgWggk', 'kgWggk', 'kgWggk', 'kgggGk', 'kkkkkk']);
+
+  let phase = 'intro';
+  let t = 0;
+  let speed = 6;
+  let moonX = -30;
+  let shot = null;
+  let tries = 0;
+  let ghost = null;
+  let orbit = 0;
+  let smoke = [];
+  let msg = null;
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+
+  const moonYAt = (x) => MOON_Y + Math.pow((x - 192) / 210, 2) * 26;
+  const pxSpeed = () => 40 + (speed - 11) * 12;
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    phase = 'intro';
+    t = 0;
+    speed = 6;
+    tries = 0;
+    shot = null;
+    ghost = null;
+    orbit = 0;
+    smoke = [];
+    msg = null;
+    result = null;
+    moonX = -30;
+    Sound.play('space');
+    const icon = emblemIcon('mond');
+    StoryCard.show([
+      { title: 'Von der Erde zum Mond', sub: 'Jules Verne · 1865', icon, text: 'Baltimore, kurz nach dem Bürgerkrieg. Die Mitglieder des Kanonen-Clubs langweilen sich: keine Schlachten, keine Kanonen. Da hat ihr Präsident Impey Barbicane eine kühne Idee:\n\n„Wir schießen eine Kugel zum Mond!“' },
+      { title: 'Die Columbiad', sub: 'Florida, 1. Dezember', icon, text: 'In Florida gießen sie eine riesige Kanone direkt in den Boden: die Columbiad, fast 300 Meter lang. Und der Abenteurer Michel Ardan will mitfliegen – in einer hohlen Kugel aus Aluminium!\n\n↑↓ Ladung wählen · E bestätigen · E im richtigen Moment feuern' },
+    ], () => {
+      phase = 'talk';
+      Dialog.open([
+        npcPage(BARBICANE, 'Zuerst die Ladung: Wie schnell muss die Kugel die Kanone verlassen? Ist sie zu langsam, holt die Erde sie zurück.'),
+        npcPage(ARDAN, 'Und zu schnell bitte auch nicht – ich möchte heil auf dem Mond ankommen!'),
+      ], () => { phase = 'charge'; });
+    });
+  }
+
+  function update(dt) {
+    t += dt;
+    if (StoryCard.update(dt)) return;
+    if (msg) {
+      msg.t -= dt;
+      if (msg.t <= 0) msg = null;
+    }
+    for (const s of smoke) { s.t += dt; s.y -= 6 * dt; s.x += s.vx * dt; }
+    smoke = smoke.filter((s) => s.t < 2);
+    if (phase === 'charge') updateCharge();
+    else if (phase === 'aim') updateAim(dt);
+    else if (phase === 'flight') updateFlight(dt);
+    else if (phase === 'orbit') updateOrbit(dt);
+  }
+
+  function updateCharge() {
+    if (Input.hit('up')) { speed = Math.min(16, speed + 0.5); Sound.sfx('blip'); }
+    if (Input.hit('down')) { speed = Math.max(4, speed - 0.5); Sound.sfx('blip'); }
+    if (Input.confirm()) {
+      phase = 'talk';
+      if (speed < 11) {
+        Sound.sfx('wrong');
+        Dialog.open([npcPage(BARBICANE, 'Zu wenig! Mit ' + fmt(speed) + ' km/s fällt die Kugel zur Erde zurück. Um der Erdanziehung zu entkommen, braucht sie rund 11 Kilometer pro Sekunde.')], () => { phase = 'charge'; });
+      } else if (speed > 13) {
+        Sound.sfx('wrong');
+        Dialog.open([npcPage(ARDAN, 'Halt, halt! Bei ' + fmt(speed) + ' km/s wäre der Ruck beim Abschuss viel zu heftig für uns drei. Etwas weniger, bitte!')], () => { phase = 'charge'; });
+      } else {
+        Sound.sfx('correct');
+        Dialog.open([
+          npcPage(BARBICANE, fmt(speed) + ' km/s – genau richtig! Jetzt kommt es auf den Zeitpunkt an. Die Kanone steckt fest im Boden und zeigt senkrecht nach oben.'),
+          npcPage(BARBICANE, 'Die Kugel braucht eine Weile bis zum Mond. Also feuern wir nicht, wenn der Mond über uns steht – sondern dann, wenn er dort ankommt, sobald die Kugel oben ist!'),
+        ], () => startAim());
+      }
+    }
+  }
+
+  function fmt(v) {
+    return v.toFixed(1).replace('.', ',');
+  }
+
+  function startAim() {
+    phase = 'aim';
+    moonX = -30;
+    shot = null;
+    msg = { text: 'Drück E, um die Columbiad abzufeuern!', t: 3 };
+  }
+
+  function updateAim(dt) {
+    moonX += MOON_V * dt;
+    if (moonX > VIEW_W + 30) {
+      moonX = -30;
+      msg = { text: 'Der Mond ist untergegangen. Nächste Nacht, neues Glück!', t: 3 };
+    }
+    if (Input.confirm()) {
+      tries++;
+      phase = 'flight';
+      shot = { y: MOUTH_Y, t: 0 };
+      Sound.sfx('boom');
+      for (let i = 0; i < 26; i++) smoke.push({ x: CX + (Math.random() - 0.5) * 30, y: MOUTH_Y - Math.random() * 14, vx: (Math.random() - 0.5) * 30, t: Math.random() * 0.4, r: 3 + Math.random() * 5 });
+    }
+  }
+
+  function updateFlight(dt) {
+    moonX += MOON_V * dt;
+    shot.t += dt;
+    shot.y -= pxSpeed() * dt;
+    if (Math.random() < dt * 30) smoke.push({ x: CX + (Math.random() - 0.5) * 3, y: shot.y + 8, vx: 0, t: 0.6, r: 1.5 });
+    const my = moonYAt(moonX);
+    if (shot.y <= my + 2) {
+      const dx = moonX - CX;
+      if (Math.abs(dx) < 16 || tries >= 4) {
+        phase = 'orbit';
+        orbit = 0;
+        if (Math.abs(dx) >= 16) moonX = CX + 6;
+        Sound.sfx('unlock');
+      } else {
+        phase = 'talk';
+        ghost = { x: moonX, y: my };
+        Sound.sfx('wrong');
+        const early = dx < 0;
+        const tip = early ? 'Zu früh gefeuert – der Mond war noch nicht da. Warte etwas länger!' : 'Zu spät – der Mond war schon vorbei. Feuer etwas früher!';
+        Dialog.open([npcPage(BARBICANE, 'Daneben! ' + tip + (tries >= 3 ? ' Keine Sorge, die nächste Kugel sitzt – ich rechne mit.' : ''))], () => { ghost = null; startAim(); });
+      }
+    }
+  }
+
+  function updateOrbit(dt) {
+    orbit += dt;
+    if (orbit > 4.5) {
+      phase = 'outro';
+      const pts = tries <= 1 ? 30 : tries === 2 ? 26 : tries === 3 ? 23 : 20;
+      result = { world: 'mond', pts };
+      const icon = emblemIcon('mond');
+      StoryCard.show([
+        { title: 'Rund um den Mond', sub: 'Von der Erde zum Mond', icon, text: 'Die Kugel verfehlt den Mond um ein Haar – und schwenkt in eine Bahn um ihn ein. Genau so endet Vernes Buch!\n\nIn der Fortsetzung „Reise um den Mond“ kehren Barbicane, Ardan und Nicholl zur Erde zurück und landen im Pazifik.' + (tries > 1 ? '\n\nVersuche: ' + tries : '\n\nGleich beim ersten Schuss!') },
+        { title: 'Fast 100 Jahre später', sub: 'Apollo 8 · 1968', icon, text: 'Im Dezember 1968 umkreisten mit Apollo 8 wirklich drei Menschen den Mond – gestartet in Florida, gelandet im Pazifik. Wie bei Verne!\n\nBücher über Raumfahrt und Technik findest du im Know How.' + rewardLine(firstTime, pts) },
+      ], () => onExit(result));
+    }
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function drawMoon(g, x, y, alpha = 1) {
+    g.globalAlpha = alpha;
+    for (let yy = -12; yy <= 12; yy++) {
+      for (let xx = -12; xx <= 12; xx++) {
+        const d = xx * xx + yy * yy;
+        if (d > 144) continue;
+        let col = d > 120 ? '#c9c3a6' : '#efe9cf';
+        if ((xx + 4) * (xx + 4) + (yy + 3) * (yy + 3) < 10 || (xx - 5) * (xx - 5) + (yy - 4) * (yy - 4) < 6 || (xx - 2) * (xx - 2) + (yy + 7) * (yy + 7) < 4) col = '#cfc8a8';
+        px(g, Math.round(x + xx), Math.round(y + yy), col);
+      }
+    }
+    g.globalAlpha = 1;
+  }
+
+  function drawScene(g) {
+    for (let y = 0; y < VIEW_H; y++) rect(g, 0, y, VIEW_W, 1, mixHex('#060a1e', '#26345e', y / VIEW_H));
+    drawStars(g, 1865, 120, t, 0, 0, VIEW_W, 140);
+    // Erde: gekrümmter Horizont
+    for (let x = 0; x < VIEW_W; x++) {
+      const h = 142 + Math.pow((x - 192) / 192, 2) * 10;
+      rect(g, x, Math.round(h), 1, VIEW_H - Math.round(h), '#2a3a24');
+      rect(g, x, Math.round(h), 1, 2, '#3f5a33');
+    }
+    // Stones Hill mit der Columbiad
+    for (let x = CX - 50; x <= CX + 50; x++) {
+      const h = MOUTH_Y + Math.pow((x - CX) / 50, 2) * 18;
+      rect(g, x, Math.round(h), 1, 160 - Math.round(h), '#5a4a30');
+    }
+    rect(g, CX - 9, MOUTH_Y - 4, 18, 6, '#1d1a22');
+    rect(g, CX - 11, MOUTH_Y - 5, 22, 2, '#6b6b6b');
+    rect(g, CX - 6, MOUTH_Y - 3, 12, 3, '#000000');
+    // Zuschauer
+    const r = makeRng(3);
+    for (let i = 0; i < 60; i++) {
+      const x = Math.floor(r() * VIEW_W);
+      if (Math.abs(x - CX) < 60) continue;
+      const y = 150 + Math.floor(r() * 50);
+      rect(g, x, y, 2, 3, pick(['#1d1a22', '#2b2230', '#3a2f2a'], r));
+      rect(g, x, y - 2, 2, 2, pick(['#d9a27e', '#a46d45', '#f5cba8'], r));
+    }
+    const bs = charSprites(BARBICANE.look);
+    const as = charSprites(ARDAN.look);
+    g.drawImage(bs.right[0], CX - 46, MOUTH_Y + 4);
+    g.drawImage(as.left[0], CX + 30, MOUTH_Y + 4);
+    // Palmen
+    for (const x of [300, 340, 24]) {
+      rect(g, x, 128, 2, 22, '#3a2618');
+      for (let k = -1; k <= 1; k += 2) { rect(g, x + Math.min(0, k * 7), 126, 7, 1, '#2e5a2e'); rect(g, x + (k < 0 ? -9 : 6), 127, 4, 2, '#2e5a2e'); }
+    }
+  }
+
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    drawScene(g);
+    if (ghost) drawMoon(g, ghost.x, ghost.y, 0.35);
+    if (phase === 'aim' || phase === 'flight' || phase === 'orbit' || ghost) {
+      drawMoon(g, phase === 'orbit' ? moonX : moonX, moonYAt(moonX));
+      // Zielhilfe: senkrechte Linie über der Kanone
+      for (let y = MOON_Y - 16; y < MOUTH_Y - 8; y += 4) rect(g, CX, y, 1, 2, 'rgba(255,217,119,0.35)');
+    }
+    for (const s of smoke) {
+      g.globalAlpha = Math.max(0, 0.55 - s.t * 0.3);
+      rect(g, Math.round(s.x - s.r), Math.round(s.y - s.r), Math.round(s.r * 2), Math.round(s.r * 2), '#c9c6bd');
+    }
+    g.globalAlpha = 1;
+    if (phase === 'flight' && shot) g.drawImage(BULLET, CX - 3, Math.round(shot.y));
+    if (phase === 'orbit') {
+      const a = orbit * 3;
+      const x = moonX + Math.cos(a) * 20;
+      const y = moonYAt(moonX) + Math.sin(a) * 9;
+      if (Math.sin(a) > -0.2 || Math.cos(a) > 0.6 || Math.cos(a) < -0.6) g.drawImage(BULLET, Math.round(x - 3), Math.round(y - 4));
+      Font.drawCentered(g, 'In der Mondumlaufbahn!', VIEW_W / 2, 84, '#ffd977', '#1a1220');
+    }
+    drawWorldHud(g, 'Von der Erde zum Mond', 'Schuss ' + Math.max(1, tries));
+    if (phase === 'charge') {
+      drawPanel(g, 200, 50, 172, 70);
+      Font.draw(g, 'Startgeschwindigkeit', 210, 56, UI_COL.title);
+      Font.draw(g, fmt(speed) + ' km/s', 210, 72, '#ffffff', 2);
+      Font.draw(g, '↑↓ ändern · E bestätigen', 210, 102, UI_COL.dim);
+      // Skala neben der Kanone
+      rect(g, 176, 40, 8, 90, '#2b2230');
+      const f = (speed - 4) / 12;
+      rect(g, 177, 40 + Math.round(90 * (1 - f)), 6, Math.round(90 * f), speed < 11 ? '#5fa8e8' : speed > 13 ? '#ff6b5b' : '#5fbf5f');
+    }
+    if (msg) drawWorldMsg(g, msg.text);
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  return {
+    enter, update, draw,
+    debug: () => ({ phase, speed, moonX, tries, shotY: shot ? shot.y : null, lead: (MOUTH_Y - moonYAt(CX)) / pxSpeed() * MOON_V }),
+  };
+})();
+
+// ===================================================================
+// Buchwelt: Ada Lovelace – die Analytische Maschine mit Lochkarten programmieren
+// ===================================================================
+const AdaWorld = (() => {
+  const ADA = { name: 'Ada Lovelace', look: mkLook('long', 'black', 'light', '#6a4c93', '#4b3569') };
+  const BABBAGE = { name: 'Charles Babbage', look: mkLook('short', 'grey', 'light', '#2b2d42', '#3d3a35', 'beard') };
+  const OPS = [
+    { s: '+', f: (a, b) => a + b, holes: [1, 0, 0, 1, 0] },
+    { s: '−', f: (a, b) => a - b, holes: [0, 1, 0, 1, 1] },
+    { s: '×', f: (a, b) => a * b, holes: [1, 1, 0, 0, 1] },
+    { s: ':', f: (a, b) => a / b, holes: [0, 0, 1, 1, 0] },
+  ];
+  const LEVELS = [
+    { vars: [2, 3], goal: 5, slots: 1, say: 'Im Speicher liegen zwei Zahlen: V1 = 2 und V2 = 3. Welche Rechenkarte brauchen wir, damit 5 herauskommt?' },
+    { vars: [4, 6], goal: 24, slots: 1, say: 'Sehr gut! Jetzt liegen 4 und 6 im Speicher. Diesmal wollen wir 24.' },
+    { vars: [5, 3, 4], goal: 32, slots: 2, say: 'Jetzt zwei Karten nacheinander: Zuerst rechnet die Maschine mit V1 und V2, dann mit dem Ergebnis und V3. Ziel: 32.' },
+    { loop: true, start: 1, goal: 32, say: 'Mein Lieblingstrick: Wir lassen dieselbe Karte immer wieder laufen! Die Karte „× 2“ verdoppelt V1. Wie oft muss sie laufen, damit aus 1 die Zahl 32 wird?' },
+  ];
+
+  let phase = 'intro';
+  let t = 0;
+  let level = 0;
+  let sel = 0;
+  let picks = [];
+  let reps = 1;
+  let run = null;
+  let mistakes = 0;
+  let notes = [];
+  let musicT = 0;
+  let onExit = null;
+  let firstTime = true;
+  let result = null;
+
+  const fmtNum = (v) => (Number.isInteger(v) ? String(v) : v.toFixed(2).replace('.', ','));
+
+  function enter(exitCb, first) {
+    onExit = exitCb;
+    firstTime = first;
+    phase = 'intro';
+    t = 0;
+    level = 0;
+    mistakes = 0;
+    notes = [];
+    result = null;
+    run = null;
+    Sound.play('engine');
+    const icon = emblemIcon('ada');
+    StoryCard.show([
+      { title: 'Die Analytische Maschine', sub: 'Ada Lovelace · 1843', icon, text: 'London, 1843. Der Erfinder Charles Babbage plant eine gewaltige Rechenmaschine aus Messing und Zahnrädern: die Analytische Maschine. Gebaut wird sie nie.\n\nAber Ada Lovelace versteht sie besser als fast jeder andere.' },
+      { title: 'Lochkarten', sub: 'Das erste Programm', icon, text: 'Ada schreibt auf, wie man der Maschine mit Lochkarten Schritt für Schritt Befehle gibt. Ihre Anleitung gilt heute als erstes veröffentlichtes Computerprogramm.\n\nJetzt bist du dran!\n\n←→ Karte wählen · E Karte einlegen' },
+    ], () => startLevel());
+  }
+
+  function startLevel() {
+    const L = LEVELS[level];
+    picks = [];
+    sel = 0;
+    reps = 1;
+    run = null;
+    phase = 'talk';
+    Dialog.open([npcPage(ADA, L.say)], () => { phase = 'pick'; });
+  }
+
+  function update(dt) {
+    t += dt;
+    if (StoryCard.update(dt)) return;
+    for (const n of notes) { n.t += dt; n.y -= 18 * dt; n.x += Math.sin(n.t * 3 + n.ph) * 10 * dt; }
+    notes = notes.filter((n) => n.t < 2.5);
+    if (phase === 'pick') updatePick();
+    else if (phase === 'run') updateRun(dt);
+    else if (phase === 'music') updateMusic(dt);
+  }
+
+  function updatePick() {
+    const L = LEVELS[level];
+    if (L.loop) {
+      if (Input.hit('up') || Input.hit('right')) { reps = Math.min(9, reps + 1); Sound.sfx('blip'); }
+      if (Input.hit('down') || Input.hit('left')) { reps = Math.max(1, reps - 1); Sound.sfx('blip'); }
+      if (Input.confirm()) startRun();
+      return;
+    }
+    if (Input.hit('left')) { sel = (sel + 3) % 4; Sound.sfx('blip'); }
+    if (Input.hit('right')) { sel = (sel + 1) % 4; Sound.sfx('blip'); }
+    if (Input.confirm()) {
+      picks.push(sel);
+      Sound.sfx('punch');
+      if (picks.length >= L.slots) startRun();
+    }
+  }
+
+  function compute() {
+    const L = LEVELS[level];
+    if (L.loop) {
+      const seq = [L.start];
+      for (let i = 0; i < reps; i++) seq.push(seq[seq.length - 1] * 2);
+      return { value: seq[seq.length - 1], seq };
+    }
+    let v = OPS[picks[0]].f(L.vars[0], L.vars[1]);
+    if (L.slots > 1) v = OPS[picks[1]].f(v, L.vars[2]);
+    return { value: Math.round(v * 100) / 100, seq: null };
+  }
+
+  function startRun() {
+    const c = compute();
+    run = { t: 0, dur: c.seq ? 0.45 * (c.seq.length - 1) + 0.6 : 1.6, value: c.value, seq: c.seq, shown: c.seq ? c.seq[0] : null, step: 0 };
+    phase = 'run';
+    Sound.sfx('gear');
+  }
+
+  function updateRun(dt) {
+    run.t += dt;
+    if (run.seq) {
+      const k = Math.min(run.seq.length - 1, Math.floor(run.t / 0.45));
+      if (k !== run.step) {
+        run.step = k;
+        run.shown = run.seq[k];
+        Sound.sfx('gear');
+      }
+    } else if (Math.floor(run.t * 10) % 4 === 0 && Math.random() < 0.3) {
+      Sound.sfx('type');
+    }
+    if (run.t < run.dur) return;
+    const L = LEVELS[level];
+    const ok = run.value === L.goal;
+    phase = 'talk';
+    if (ok) {
+      Sound.sfx('bell');
+      for (let i = 0; i < 4; i++) notes.push({ x: 320 + Math.random() * 30, y: 60, t: 0, ph: Math.random() * 6, s: '★' });
+      if (level + 1 < LEVELS.length) {
+        Dialog.open([npcPage(ADA, pick(['Genau! ', 'Wunderbar! ', 'Richtig! '], Math.random) + fmtNum(L.goal) + ' – die Maschine rechnet, wie wir es wollen.')], () => {
+          level++;
+          startLevel();
+        });
+      } else {
+        Dialog.open([
+          npcPage(BABBAGE, 'Zweiunddreißig! Ada, Sie haben meiner Maschine eine Schleife beigebracht.'),
+          npcPage(ADA, 'Und sie kann noch mehr als rechnen. Wenn wir ihr die Regeln der Musik beibringen, könnte sie eines Tages ganze Musikstücke komponieren. Hören Sie!'),
+        ], () => startMusic());
+      }
+    } else {
+      mistakes++;
+      Sound.sfx('wrong');
+      let tip;
+      if (L.loop) tip = 'Da kommt ' + fmtNum(run.value) + ' heraus – ' + (run.value < L.goal ? 'noch zu wenig. Lass die Karte öfter laufen!' : 'zu viel. Lass sie seltener laufen!');
+      else tip = 'Hmm, da kommt ' + fmtNum(run.value) + ' heraus. Versuch es mit einer anderen Karte!';
+      Dialog.open([npcPage(ADA, tip)], () => {
+        picks = [];
+        phase = 'pick';
+      });
+    }
+    run.done = true;
+  }
+
+  function startMusic() {
+    phase = 'music';
+    musicT = 0;
+    Sound.play('engine', true);
+  }
+
+  function updateMusic(dt) {
+    musicT += dt;
+    if (Math.random() < dt * 4) notes.push({ x: 300 + Math.random() * 60, y: 70, t: 0, ph: Math.random() * 6, s: '♪' });
+    if (musicT > 7.5) {
+      phase = 'outro';
+      const pts = 20 + Math.max(0, 10 - 2 * mistakes);
+      result = { world: 'ada', pts };
+      const icon = emblemIcon('ada');
+      StoryCard.show([
+        { title: 'Musik aus Zahnrädern', sub: 'Die Analytische Maschine', icon, text: 'Ada Lovelace sah schon 1843, was in Computern steckt: Sie verarbeiten nicht nur Zahlen, sondern alles, was man in Zahlen ausdrücken kann – Buchstaben, Bilder, Musik.' + (mistakes ? '' : '\n\nAlle Rätsel ohne Fehler gelöst!') },
+        { title: 'Und heute?', sub: 'Ada Lovelace', icon, text: 'Eine Programmiersprache trägt ihren Namen: Ada. Und jedes Jahr im Oktober feiert man den Ada-Lovelace-Tag.\n\nBücher über Informatik und das Programmieren findest du im Know How.' + rewardLine(firstTime, pts) },
+      ], () => onExit(result));
+    }
+  }
+
+  // --- Zeichnen ------------------------------------------------------
+  function drawRoom(g) {
+    rect(g, 0, 0, VIEW_W, 150, '#5a2630');
+    for (let y = 6; y < 150; y += 14) for (let x = (y / 14) % 2 ? 8 : 0; x < VIEW_W; x += 16) rect(g, x + 6, y, 3, 3, '#6b3039');
+    rect(g, 0, 146, VIEW_W, 4, '#3a2418');
+    rect(g, 0, 150, VIEW_W, VIEW_H - 150, '#4a3426');
+    for (let y = 154; y < VIEW_H; y += 7) rect(g, 0, y, VIEW_W, 1, '#3d2a1f');
+    // Fenster mit Londoner Nebel
+    rect(g, 12, 18, 52, 60, '#3a2418');
+    rect(g, 15, 21, 46, 54, '#9aa3a8');
+    for (let i = 0; i < 6; i++) rect(g, 15, 30 + i * 8, 46, 3, 'rgba(255,255,255,0.18)');
+    rect(g, 18, 52, 8, 23, '#6b7276');
+    rect(g, 30, 46, 10, 29, '#737a7e');
+    rect(g, 44, 56, 12, 19, '#6b7276');
+    rect(g, 37, 21, 2, 54, '#3a2418');
+    rect(g, 15, 47, 46, 2, '#3a2418');
+  }
+
+  function drawWheels(g, x, y, value, label, spin) {
+    rect(g, x + 10, y - 4, 4, 92, '#8a6f2e');
+    Font.drawCentered(g, label, x + 12, y - 14, '#ffd977');
+    const str = spin ? String(Math.floor(Math.random() * 9999)).padStart(4, '0') : value === null ? '----' : fmtNum(value).padStart(4, ' ').slice(-4);
+    for (let i = 0; i < 4; i++) {
+      const yy = y + i * 22;
+      rect(g, x - 1, yy - 1, 26, 18, PAL.k);
+      rect(g, x, yy, 24, 16, '#c9a646');
+      rect(g, x, yy, 24, 3, '#e8cf7a');
+      rect(g, x, yy + 13, 24, 3, '#9c7d2f');
+      Font.drawCentered(g, str[i] === ' ' ? '0' : str[i], x + 12, yy + 3, '#2b1d1f');
+    }
+  }
+
+  function drawGear(g, cx, cy, r, ang) {
+    for (let k = 0; k < 10; k++) {
+      const a = ang + (k / 10) * TAU;
+      rect(g, Math.round(cx + Math.cos(a) * r) - 1, Math.round(cy + Math.sin(a) * r) - 1, 3, 3, '#9c7d2f');
+    }
+    for (let yy = -r + 1; yy <= r - 1; yy++) for (let xx = -r + 1; xx <= r - 1; xx++) {
+      const d = xx * xx + yy * yy;
+      if (d <= (r - 1) * (r - 1)) px(g, cx + xx, cy + yy, d < 4 ? '#5a4a20' : '#c9a646');
+    }
+  }
+
+  function drawCard(g, x, y, op, on, label) {
+    const yy = y - (on ? 4 : 0);
+    rect(g, x - 1, yy - 1, 36, 28, on ? '#ffd977' : PAL.k);
+    rect(g, x, yy, 34, 26, '#f1e6c8');
+    op.holes.forEach((h, i) => { if (h) rect(g, x + 4 + i * 6, yy + 3, 3, 3, '#3a2a22'); });
+    Font.drawCentered(g, label || op.s, x + 17, yy + 9, '#3a2a22', null, 2);
+  }
+
+  function draw(g) {
+    if (phase === 'intro' || (phase === 'outro' && StoryCard.active())) {
+      StoryCard.draw(g);
+      return;
+    }
+    drawRoom(g);
+    const L = LEVELS[Math.min(level, LEVELS.length - 1)];
+    const spinning = phase === 'run' || phase === 'music';
+    // Maschine
+    rect(g, 140, 20, 238, 128, '#2b1d1f');
+    rect(g, 142, 22, 234, 124, '#3a2a20');
+    const vars = L.loop ? [run && run.seq ? run.shown : L.start, null, null] : [L.vars[0], L.vars[1], L.vars.length > 2 ? L.vars[2] : null];
+    drawWheels(g, 152, 44, vars[0], 'V1', false);
+    drawWheels(g, 186, 44, vars[1], 'V2', false);
+    drawWheels(g, 220, 44, vars[2], 'V3', false);
+    const res = phase === 'run' ? (run.seq ? run.shown : null) : run && run.done ? run.value : null;
+    drawWheels(g, 300, 44, res, 'Rechenwerk', phase === 'run' && !run.seq && run.t < run.dur - 0.2);
+    const ang = spinning ? t * 4 : 0;
+    drawGear(g, 270, 60, 9, ang);
+    drawGear(g, 284, 82, 7, -ang * 1.3);
+    drawGear(g, 266, 104, 8, ang * 1.1);
+    drawGear(g, 346, 122, 6, -ang);
+    // Ziel
+    const goalTxt = 'Ziel: ' + L.goal;
+    drawPanel(g, 150, 4, Font.measure(goalTxt) + 16, 15, 'rgba(30,22,34,0.95)', '#ffd977');
+    Font.draw(g, goalTxt, 158, 6, '#ffd977');
+    // Ada und Babbage
+    g.drawImage(charSprites(ADA.look).right[0], 70, 132);
+    g.drawImage(charSprites(BABBAGE.look).right[0], 96, 132);
+    for (const n of notes) {
+      g.globalAlpha = Math.max(0, 1 - n.t / 2.5);
+      Font.draw(g, n.s, Math.round(n.x), Math.round(n.y), '#ffd977');
+      g.globalAlpha = 1;
+    }
+    if (phase === 'music') {
+      Font.drawCentered(g, '♪ Die Maschine spielt ihre erste Melodie ♪', VIEW_W / 2, 152, '#ffd977', '#1a1220');
+      // Lochkarten laufen durch die Maschine
+      for (let i = 0; i < 8; i++) {
+        const x = ((i * 40 - musicT * 50) % 320 + 320) % 320 + 30;
+        drawCard(g, x, 168, OPS[i % 4], false);
+      }
+    }
+    drawWorldHud(g, 'Analytische Maschine', 'Rätsel ' + Math.min(level + 1, LEVELS.length) + ' / ' + LEVELS.length);
+    if (!Dialog.active() && phase === 'pick') {
+      drawPanel(g, 6, 152, 372, 58);
+      if (L.loop) {
+        Font.draw(g, 'Wie oft soll die Karte „× 2“ laufen?', 14, 158, UI_COL.title);
+        drawCard(g, 150, 178, OPS[2], true, '×2');
+        Font.draw(g, 'Wiederhole:', 200, 182, UI_COL.text);
+        Font.draw(g, String(reps) + '×', 262, 176, '#ffffff', 2);
+        Font.draw(g, '↑↓ ändern · E starten', 14, 196, UI_COL.dim);
+      } else {
+        const step = L.slots > 1 ? ' (Karte ' + (picks.length + 1) + ' von 2)' : '';
+        Font.draw(g, 'Rechenkarte wählen' + step + ':', 14, 156, UI_COL.title);
+        OPS.forEach((op, i) => drawCard(g, 120 + i * 42, 176, op, i === sel));
+        if (picks.length) Font.draw(g, 'Erste Karte: ' + OPS[picks[0]].s, 14, 186, UI_COL.good);
+        Font.draw(g, '←→ · E', 300, 196, UI_COL.dim);
+      }
+    }
+    if (StoryCard.active()) StoryCard.draw(g);
+  }
+
+  return {
+    enter, update, draw,
+    debug: () => ({ phase, level, sel, picks: picks.slice(), reps, mistakes }),
+  };
+})();
+
+// ===================================================================
+// Bücherliste (Taste B): alle Buchwelten, ab wie vielen ★ sie aufgehen.
+// grau = noch zu wenig ★ · normal = freigeschaltet · glitzert = erlebt
+// ===================================================================
+const BOOK_EMBLEMS = (() => {
+  const rows = {
+    haensel: [
+      '.....kkk........', '....kyyyk.......', '...kyykk........', '...kyk..........',
+      '...kyk.......k..', '...kyykk....kWk.', '....kyyyk....k..', '.....kkk........',
+      '................', '.......kkk......', '......kWWWk.....', '......kggGk.kkk.',
+      '.kkk...kkk.kWWWk', 'kWWWk......kggGk', 'kggGk.......kkk.', '.kkk............',
+    ],
+    moby: [
+      '................', '.kk..........kk.', 'kwwk........kwwk', 'kwwwk......kwwwk',
+      '.kwwwk....kwwwk.', '..kwwwkkkkwwwk..', '...kkwwwwwwkk...', '.....kwwwwk.....',
+      '......kwwk......', '......kwgk......', '......kwgk......', '..bb..kwgk..bb..',
+      '.bBBb.kwgk.bBBb.', 'bBbbBbbbbbbBbbBb', 'BBBBBBBBBBBBBBBB', '................',
+    ],
+    alice: [
+      '......kkkk......', '.....kxxxxk.....', '......kkkk......', '....kkkkkkkk....',
+      '...kwwwwkwwwk...', '..kwwwwwkwwwwk..', '..kwwwwwkwwwwk..', '..kwwwwwkkkwwk..',
+      '..kwwwwwwwwwwk..', '..kwwwwwwwwwwk..', '...kwwwwwwwwk...', '....kkkkkkkk....',
+      '................', '..m..........m..', '.mmm........mmm.', '..m..........m..',
+    ],
+    turing: [
+      '....kkkkkkkk....', '...kggggggggk...', '...kgddddddgk...', '...kgdlllldgk...',
+      '...kgdlLlldgk...', '...kgdlllldgk...', '...kgddddddgk...', '...kggggggggk...',
+      '...kgrggggygk...', '...kkkkkkkkkk...', '..kGGGGGGGGGGk..', '..kgwkwkwkwkgk..',
+      '..kgkwkwkwkwgk..', '..kGGGGGGGGGGk..', '..kkkkkkkkkkkk..', '................',
+    ],
+    gulliver: [
+      '.......k........', '......kwk.......', '.....kwwwk......', '....kwwwwwk.....',
+      '...kwwwwwwwk....', '.......k........', '..k....k....k...', '..kkkkkkkkkkkk..',
+      '...kTTTTTTTTk...', '....kkkkkkkk....', '................', '.b..b..b..b..b..',
+      'bBbbBbbBbbBbbBbb', '................', '..ss..ss..ss....', '..kk..kk..kk....',
+    ],
+    nuss: [
+      '................', '.....kkkkkk.....', '....kTtTtTtk....', '...kTtTtkTtTk...',
+      '..kTtTtTkTtTtk..', '..ktTtTtkTtTtk..', '..kTtTtTkTtTtk..', '..ktTtTtkTtTtk..',
+      '..kTtTtTkTtTtk..', '...kTtTtkTtTk...', '....kTtTtTtk....', '.....kkkkkk.....',
+      '................', '..xx..xx..xx....', '.kRRk.kRRkkRRk..', '.kkkk.kkkk.kkk..',
+    ],
+    reise: [
+      '.....kkkkkk.....', '...kkbbllbbkk...', '..kbbblllbbbbk..', '.kbbllllllbbbbk.',
+      '.kbblllllbbllbk.', 'kbbbllllbbbllbbk', 'kbbbbllbbbblllbk', 'kbbbbbbbbbbllbbk',
+      'kbllbbbbbbbbbbbk', 'kblllbbbbbbbbbbk', '.kblllbbbbbbbbk.', '.kbbllbbbbbbbbk.',
+      '..kbbbbbbbbbbk..', '...kkbbbbbbkk...', '.....kkkkkk.....', '................',
+    ],
+    mond: [
+      '.k..........k...', '......kkkkk.....', '.....kwwwgwk....', '....kwwgwwwwk...',
+      '....kwwwwwgwk...', '....kgwwwwwwk...', '....kwwwgwwwk...', '.....kwwwwwk....',
+      '......kkkkk.....', '..k.............', '....kk......k...', '...kggk.........',
+      '...kggk.........', '..krrrrk........', '...kkkk.........', '....oo..........',
+    ],
+    ada: [
+      '......kkkk......', '...kk.kxxk.kk...', '..kxxkkxxkkxxk..', '..kxxxxxxxxxxk..',
+      '...kxxkkkkxxk...', '.kkkxk....kxkkk.', '.kxxxk....kxxxk.', '.kxxxk....kxxxk.',
+      '.kkkxk....kxkkk.', '...kxxkkkkxxk...', '..kxxxxxxxxxxk..', '..kxxkkxxkkxxk..',
+      '...kk.kxxk.kk...', '......kkkk......', '................', '................',
+    ],
+  };
+  const out = {};
+  for (const id of Object.keys(rows)) {
+    const c = buildSprite(rows[id]);
+    // Graue Variante für noch gesperrte Bücher
+    const grey = makeCanvas(16, 16);
+    const gg = grey.getContext('2d');
+    gg.drawImage(c, 0, 0);
+    const img = gg.getImageData(0, 0, 16, 16);
+    const d = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = Math.round((d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11) * 0.55 + 30);
+      d[i] = v; d[i + 1] = v - 4; d[i + 2] = v + 6;
+    }
+    gg.putImageData(img, 0, 0);
+    out[id] = { c, grey };
+  }
+  return out;
+})();
+
+function worldState(id) {
+  if (S.worldsDone.includes(id)) return 'done';
+  if (Library.worldUnlocked(id)) return 'open';
+  return 'locked';
+}
+
+// Aufgeschlagenes Cover einer Buchwelt (auch für die Detailansicht)
+function drawBookCover(g, id, x, y, state, t) {
+  const w = WORLDS[id];
+  const col = state === 'locked' ? '#5a5060' : w.color;
+  rect(g, x + 2, y + 2, 32, 42, 'rgba(0,0,0,0.35)');
+  rect(g, x, y, 32, 42, PAL.k);
+  rect(g, x + 1, y + 1, 30, 40, col);
+  rect(g, x + 1, y + 1, 4, 40, shade(col, -0.3));
+  rect(g, x + 5, y + 1, 1, 40, shade(col, 0.2));
+  const gold = state === 'locked' ? '#7d7280' : '#e0b13c';
+  rect(g, x + 8, y + 4, 21, 1, gold);
+  rect(g, x + 8, y + 37, 21, 1, gold);
+  const em = BOOK_EMBLEMS[id];
+  if (em) g.drawImage(state === 'locked' ? em.grey : em.c, x + 10, y + 13);
+  if (state === 'locked') {
+    // kleines Schloss
+    rect(g, x + 22, y + 30, 7, 6, '#2b1d1f');
+    rect(g, x + 23, y + 31, 5, 4, '#b9aab8');
+    rect(g, x + 23, y + 27, 1, 3, '#2b1d1f');
+    rect(g, x + 27, y + 27, 1, 3, '#2b1d1f');
+    rect(g, x + 24, y + 26, 3, 1, '#2b1d1f');
+  }
+  if (state === 'done') {
+    for (let k = 0; k < 5; k++) {
+      const ph = t * 1.3 + k * 0.61;
+      const r = makeRng(k * 131 + Math.floor(ph) * 17 + id.length * 7);
+      drawTwinkle(g, x - 3 + r() * 38, y - 3 + r() * 48, Math.sin((ph % 1) * Math.PI));
+    }
+  }
+}
+
+const BookList = (() => {
+  let sel = 0;
+  let t = 0;
+  let hooks = null;
+  const X0 = 4;
+  const Y0 = 20;
+  const RH = 19;
+  const LW = 214;
+
+  function open(h) {
+    hooks = h || null;
+    t = 0;
+    let i = WORLD_IDS.findIndex((id) => worldState(id) === 'open');
+    if (i < 0) i = WORLD_IDS.findIndex((id) => worldState(id) === 'locked');
+    sel = i < 0 ? 0 : i;
+  }
+
+  // Rückgabe false = schließen
+  function update(dt) {
+    t += dt;
+    if (Input.hit('up')) { sel = (sel + WORLD_IDS.length - 1) % WORLD_IDS.length; Sound.sfx('blip'); }
+    if (Input.hit('down')) { sel = (sel + 1) % WORLD_IDS.length; Sound.sfx('blip'); }
+    if (Input.hitAny('books', 'menu', 'map')) return false;
+    if (Input.confirm()) {
+      if (hooks && hooks.showOnMap) {
+        Sound.sfx('select');
+        hooks.showOnMap(WORLD_IDS[sel]);
+        return false;
+      }
+      return false;
+    }
+    return true;
+  }
+
+  function fit(text, maxW) {
+    if (Font.measure(text) <= maxW) return text;
+    let s = text;
+    while (s.length > 1 && Font.measure(s + '…') > maxW) s = s.slice(0, -1);
+    return s.trimEnd() + '…';
+  }
+
+  function drawRow(g, id, i) {
+    const w = WORLDS[id];
+    const st = worldState(id);
+    const y = Y0 + i * RH;
+    const on = i === sel;
+    if (on) {
+      rect(g, X0, y, LW, RH - 1, 'rgba(255,217,119,0.17)');
+      rect(g, X0, y, 2, RH - 1, UI_COL.title);
+    }
+    const em = BOOK_EMBLEMS[id];
+    g.drawImage(st === 'locked' ? em.grey : em.c, X0 + 4, y + 1);
+    let right = '';
+    let rcol = '#8d8091';
+    if (st === 'locked') { right = w.need + ' ★'; rcol = '#8d8091'; }
+    else if (st === 'done') { right = '✓'; rcol = '#ffd977'; }
+    else { right = '★'; rcol = Math.floor(t * 3) % 2 ? '#ffd977' : '#fff3b0'; }
+    const rw = Font.measure(right);
+    const tcol = st === 'locked' ? '#8d8091' : st === 'done' ? '#ffd977' : '#f7f1e3';
+    const title = fit(w.title, LW - 23 - rw - 10);
+    Font.draw(g, title, X0 + 23, y + 4, on && st !== 'locked' ? '#ffffff' : tcol);
+    Font.draw(g, right, X0 + LW - rw - 5, y + 4, rcol);
+    if (st === 'done') {
+      // Glanz, der über den Titel wandert, und Glitzersterne
+      const tw = Font.measure(title);
+      const sx = X0 + 23 + ((t * 70 + i * 40) % (tw + 60)) - 30;
+      g.save();
+      g.beginPath();
+      g.rect(sx, y + 2, 9, 12);
+      g.clip();
+      Font.draw(g, title, X0 + 23, y + 4, '#fffbe6');
+      g.restore();
+      for (let k = 0; k < 3; k++) {
+        const ph = t * 1.1 + k * 0.37 + i * 0.23;
+        const r = makeRng(i * 977 + k * 131 + Math.floor(ph) * 29);
+        drawTwinkle(g, X0 + 3 + r() * (LW - 8), y + 1 + r() * (RH - 3), Math.sin((ph % 1) * Math.PI));
+      }
+    }
+  }
+
+  function drawDetail(g, id) {
+    const w = WORLDS[id];
+    const st = worldState(id);
+    const x = 222;
+    const y = 18;
+    const pw = 158;
+    drawPanel(g, x, y, pw, 182, 'rgba(40,30,48,0.96)', st === 'locked' ? '#6b5a70' : st === 'done' ? '#ffd977' : UI_COL.border);
+    drawBookCover(g, id, x + 7, y + 8, st, t);
+    Font.wrap(w.title, pw - 50).slice(0, 4).forEach((l, i) => Font.draw(g, l, x + 45, y + 9 + i * 10, st === 'locked' ? '#cfc3d0' : UI_COL.title));
+    let yy = y + 55;
+    Font.draw(g, w.author + ' · ' + w.year, x + 8, yy, UI_COL.dim);
+    yy += 12;
+    const topic = TOPICS[w.topic];
+    const col = COLLEGES[topic.college];
+    rect(g, x + 8, yy + 2, 6, 6, col.color);
+    Font.draw(g, FLOOR_NAMES[w.floor] + ' · College ' + col.num + ' · ' + col.colorName, x + 18, yy, UI_COL.text);
+    yy += 10;
+    for (const l of Font.wrap('Regal „' + topic.name + '“', pw - 22)) { Font.draw(g, l, x + 18, yy, UI_COL.dim); yy += 10; }
+    yy += 4;
+    for (const l of Font.wrap(w.teaser, pw - 14).slice(0, 4)) { Font.draw(g, l, x + 8, yy, '#efe6d6'); yy += 11; }
+    // Status
+    const sy = y + 146;
+    rect(g, x + 5, sy - 4, pw - 10, 1, 'rgba(234,217,181,0.25)');
+    if (st === 'locked') {
+      const left = Math.max(0, w.need - S.pts);
+      Font.draw(g, 'Ab ' + w.need + ' ★ · noch ' + left + ' ★', x + 8, sy, '#ffc95b');
+      const bw = pw - 16;
+      const f = clamp(S.pts / w.need, 0, 1);
+      rect(g, x + 8, sy + 15, bw, 6, '#2b2230');
+      rect(g, x + 8, sy + 15, Math.round(bw * f), 6, '#e0b13c');
+      rect(g, x + 8, sy + 15, Math.round(bw * f), 1, '#ffe680');
+    } else if (st === 'open') {
+      Font.draw(g, 'Freigeschaltet!', x + 8, sy, UI_COL.good);
+      Font.draw(g, 'Auf zum Regal!', x + 8, sy + 11, UI_COL.text);
+    } else {
+      Font.draw(g, 'Erlebt ✓', x + 8, sy, UI_COL.title);
+      Font.draw(g, 'Nochmal lesen geht immer.', x + 8, sy + 11, UI_COL.text);
+    }
+  }
+
+  function draw(g) {
+    rect(g, 0, 0, VIEW_W, VIEW_H, '#130e18');
+    for (let x = 0; x < VIEW_W; x += 3) rect(g, x, 0, 3, 2, pick(SPINES, makeRng(x * 7 + 3)));
+    Font.draw(g, 'Bücherwelten', 8, 4, UI_COL.title);
+    const done = WORLD_IDS.filter((id) => S.worldsDone.includes(id)).length;
+    Font.draw(g, done + ' von ' + WORLD_IDS.length + ' erlebt', 84, 4, UI_COL.dim);
+    const pts = '★ ' + S.pts;
+    Font.draw(g, pts, VIEW_W - Font.measure(pts) - 8, 4, '#ffd24a');
+    WORLD_IDS.forEach((id, i) => drawRow(g, id, i));
+    drawDetail(g, WORLD_IDS[sel]);
+    const help = hooks && hooks.showOnMap ? '↑↓ wählen · E Regal auf dem Lageplan zeigen · B schließen' : '↑↓ wählen · B schließen';
+    Font.drawCentered(g, help, VIEW_W / 2, 204, UI_COL.dim);
+  }
+
+  return { open, update, draw, get sel() { return sel; }, set sel(v) { sel = v; } };
+})();
+
+// ===================================================================
 // Bildschirme: Titel, Lageplan, Pausenmenü, Abzeichen, Steuerung
 // ===================================================================
 function drawMenuList(g, items, sel, x, y, w, color = UI_COL.text) {
@@ -4454,17 +7569,25 @@ const CONTROLS_TEXT = [
   ['Shift (halten)', 'rennen – macht aber Lärm!'],
   ['E / Enter / Leertaste', 'sprechen, Regal benutzen, weiter'],
   ['K', 'Lageplan öffnen'],
+  ['B', 'Bücherwelten: welches Buch ab wie vielen ★'],
   ['M', 'Musik an/aus'],
   ['Esc / P', 'Menü'],
   ['In Buchwelten', 'Leertaste springen · E sprechen · ↑ klettern'],
-  ['Touch', 'Steuerkreuz · A = Aktion · B = rennen/springen'],
+  ['Touch', 'Steuerkreuz · A = Aktion · B = rennen/springen · „Bücher“'],
 ];
+
+function fitText(text, maxW) {
+  if (Font.measure(text) <= maxW) return text;
+  let s = text;
+  while (s.length > 1 && Font.measure(s + '…') > maxW) s = s.slice(0, -1);
+  return s.trimEnd() + '…';
+}
 
 function drawControls(g, title = 'Steuerung') {
   drawPanel(g, 24, 16, 336, 184);
   Font.drawCentered(g, title, VIEW_W / 2, 24, UI_COL.title, '#1a1220', 2);
   CONTROLS_TEXT.forEach(([k, v], i) => {
-    const y = 52 + i * 17;
+    const y = 47 + i * 15;
     drawPanel(g, 34, y - 3, Font.measure(k) + 10, 14, '#4a3a55', '#8f7a99');
     Font.draw(g, k, 39, y - 1, '#ffffff');
     Font.draw(g, v, 46 + Font.measure(k) + 8, y - 1, UI_COL.text);
@@ -4478,6 +7601,7 @@ const MapView = (() => {
   const plans = {};
   let sel = 0;
   let t = 0;
+  let target = null;
   const PLAN_COL = { c1: '#f2d64b', c2: '#e0453f', c3: '#a3a3a3', c4: '#f39232', c5: '#3f86d8', c6: '#4cb050' };
 
   function buildPlan(F) {
@@ -4517,13 +7641,19 @@ const MapView = (() => {
     return c;
   }
 
-  function open() {
+  // opts.target = { floor, tx, ty, label } markiert ein Regal (aus der Bücherliste)
+  function open(opts) {
     const info = Library.miniInfo();
     for (const id of ['2', '3']) if (!plans[id]) plans[id] = buildPlan(info.floors[id]);
     const F = Library.floor;
     const p = Library.player;
     const z = ZONE_COLLEGE[zoneAt(F.id, Math.floor(p.x / TS), Math.floor(p.y / TS))];
     sel = z ? COLLEGE_IDS.indexOf(z) : 0;
+    target = opts && opts.target ? opts.target : null;
+    if (target) {
+      const cid = ZONE_COLLEGE[zoneAt(target.floor, target.tx, target.ty)];
+      if (cid) sel = COLLEGE_IDS.indexOf(cid);
+    }
     t = 0;
   }
 
@@ -4531,12 +7661,12 @@ const MapView = (() => {
     t += dt;
     if (Input.hit('up')) { sel = (sel + 5) % 6; Sound.sfx('blip'); }
     if (Input.hit('down')) { sel = (sel + 1) % 6; Sound.sfx('blip'); }
-    if (Input.hitAny('map', 'menu', 'act', 'jump')) return false;
+    if (Input.hitAny('map', 'menu', 'act', 'jump', 'books')) return false;
     return true;
   }
 
   function draw(g) {
-    rect(g, 0, 0, VIEW_W, VIEW_H, 'rgba(14,10,18,0.92)');
+    rect(g, 0, 0, VIEW_W, VIEW_H, 'rgba(14,10,18,0.97)');
     Font.draw(g, 'Lageplan · Hauptbücherei', 8, 4, UI_COL.title);
     const info = Library.miniInfo();
     const rows = [['2', 18], ['3', 104]];
@@ -4560,6 +7690,19 @@ const MapView = (() => {
         }
       }
     }
+    // Ziel aus der Bücherliste
+    if (target) {
+      const y = target.floor === '2' ? 18 : 104;
+      const bx = 8 + target.tx * SC;
+      const by = y + 14 + target.ty * SC;
+      const on = Math.floor(t * 4) % 2 === 0;
+      const r = 3 + Math.round((Math.sin(t * 6) + 1) * 1.5);
+      g.strokeStyle = on ? '#e0115f' : '#ffffff';
+      g.lineWidth = 1;
+      g.strokeRect(bx - r + 0.5, by - r + 0.5, 2 * SC + 2 * r - 1, 2 * SC + 2 * r - 1);
+      rect(g, bx, by, 2 * SC, 2 * SC, on ? '#ffd977' : '#e0115f');
+      drawBubble(g, bx + SC, by - r - 1, '★', '#c98f1c');
+    }
     // Legende
     const lx = 210;
     COLLEGE_IDS.forEach((cid, i) => {
@@ -4581,8 +7724,13 @@ const MapView = (() => {
         y += 9;
       }
     }
-    Font.draw(g, '↑↓ College wählen · K schließen', 8, 204, UI_COL.dim);
-    Font.draw(g, 'L Lift · i Info · R Rückgabe', 210, 204, UI_COL.dim);
+    if (target) {
+      Font.draw(g, fitText('★ ' + target.label, 300), 8, 204, '#ffd977');
+      Font.draw(g, 'E zurück', VIEW_W - 8 - Font.measure('E zurück'), 204, UI_COL.dim);
+    } else {
+      Font.draw(g, '↑↓ College wählen · K schließen', 8, 204, UI_COL.dim);
+      Font.draw(g, 'L Lift · i Info · R Rückgabe', 210, 204, UI_COL.dim);
+    }
   }
 
   return { open, update, draw };
@@ -4590,13 +7738,13 @@ const MapView = (() => {
 
 // --- Abzeichen --------------------------------------------------------
 function drawBadges(g) {
-  drawPanel(g, 14, 8, 356, 200);
-  Font.drawCentered(g, 'Abzeichen', VIEW_W / 2, 14, UI_COL.title, '#1a1220', 2);
+  drawPanel(g, 14, 6, 356, 204);
+  Font.drawCentered(g, 'Abzeichen', VIEW_W / 2, 11, UI_COL.title, '#1a1220', 2);
   BADGES.forEach((b, i) => {
     const col = i % 2;
     const row = Math.floor(i / 2);
     const x = 24 + col * 174;
-    const y = 42 + row * 38;
+    const y = 36 + row * 31;
     const got = S.badges.includes(b.id);
     // Medaille
     for (let yy = -7; yy <= 7; yy++) for (let xx = -7; xx <= 7; xx++) {
@@ -4605,9 +7753,9 @@ function drawBadges(g) {
     }
     if (got) Font.draw(g, '★', x + 5, y + 5, '#b8860b');
     Font.draw(g, b.name, x + 22, y, got ? UI_COL.title : UI_COL.dim);
-    Font.wrap(b.desc, 140).slice(0, 2).forEach((l, j) => Font.draw(g, l, x + 22, y + 11 + j * 10, got ? UI_COL.text : '#8d8091'));
+    Font.wrap(b.desc, 140).slice(0, 2).forEach((l, j) => Font.draw(g, l, x + 22, y + 10 + j * 9, got ? UI_COL.text : '#8d8091'));
   });
-  Font.drawCentered(g, S.badges.length + ' von ' + BADGES.length + ' · Weiter mit E', VIEW_W / 2, 194, UI_COL.dim);
+  Font.drawCentered(g, S.badges.length + ' von ' + BADGES.length + ' · Weiter mit E', VIEW_W / 2, 197, UI_COL.dim);
 }
 
 // --- Titelbildschirm ------------------------------------------------
@@ -4713,6 +7861,7 @@ const Pause = (() => {
   function rebuild() {
     items = [{ id: 'back', label: 'Weiterspielen' }];
     if (ctx === 'library') items.push({ id: 'map', label: 'Lageplan' });
+    if (ctx === 'library') items.push({ id: 'books', label: 'Bücherwelten' });
     items.push({ id: 'badges', label: 'Abzeichen' });
     items.push({ id: 'ctrl', label: 'Steuerung' });
     items.push({ id: 'music', label: 'Musik: ' + (S.music ? 'an' : 'aus') });
@@ -4737,6 +7886,7 @@ const Pause = (() => {
       switch (it.id) {
         case 'back': return false;
         case 'map': hooks.openMap(); return false;
+        case 'books': hooks.openBooks(); return false;
         case 'badges': sub = 'badges'; break;
         case 'ctrl': sub = 'ctrl'; break;
         case 'music': hooks.toggleMusic(); rebuild(); break;
@@ -4787,6 +7937,13 @@ const Game = (() => {
   let acc = 0;
   let running = true;
   let worldCtx = null;
+  let mapReturn = null;
+
+  // Buchwelten: Szene-Name = Welt-ID
+  const SCENES = {
+    haensel: HaenselWorld, moby: MobyWorld, alice: AliceWorld, turing: TuringWorld, gulliver: GulliverWorld,
+    nuss: NussWorld, reise: ReiseWorld, mond: MondWorld, ada: AdaWorld,
+  };
 
   const STEP = 1 / 60;
 
@@ -4889,8 +8046,7 @@ const Game = (() => {
     Library.persist();
     fadeTo(() => {
       scene = id;
-      if (id === 'moby') MobyWorld.enter(endWorld, first);
-      else AliceWorld.enter(endWorld, first);
+      SCENES[id].enter(endWorld, first);
     });
   }
 
@@ -4901,7 +8057,8 @@ const Game = (() => {
       scene = 'library';
       Sound.play('library');
       const w = WORLDS[ctx.id];
-      const shelf = Library.miniInfo().floors[w.floor].shelves.find((s) => s.topic === w.topic);
+      const at = Library.shelfFor(ctx.id);
+      const shelf = at ? at.shelf : null;
       if (result && ctx.first) {
         S.worldsDone.push(ctx.id);
         Library.addPoints(result.pts, 'Buchwelt „' + w.title + '“ abgeschlossen!');
@@ -4920,8 +8077,25 @@ const Game = (() => {
     endWorld(null);
   }
 
+  function openBooks() {
+    BookList.open({ showOnMap });
+    overlay = 'books';
+    Sound.sfx('select');
+  }
+
+  // Aus der Bücherliste: Regal auf dem Lageplan zeigen, danach zurück zur Liste
+  function showOnMap(id) {
+    const at = Library.shelfFor(id);
+    if (!at) return;
+    const w = WORLDS[id];
+    MapView.open({ target: { floor: at.floor, tx: at.shelf.tx, ty: at.shelf.ty, label: '„' + w.title + '“ · ' + FLOOR_NAMES[at.floor] + ', ' + TOPICS[w.topic].name } });
+    overlay = 'map';
+    mapReturn = 'books';
+  }
+
   const pauseHooks = {
-    openMap: () => { MapView.open(); overlay = 'map'; },
+    openMap: () => { MapView.open(); overlay = 'map'; mapReturn = null; },
+    openBooks,
     toggleMusic,
     toggleSfx,
     leaveWorld,
@@ -4952,7 +8126,14 @@ const Game = (() => {
     }
     if (Input.hit('music') && !Dialog.active()) toggleMusic();
     if (overlay === 'map') {
-      if (!MapView.update(dt)) overlay = null;
+      if (!MapView.update(dt)) {
+        overlay = mapReturn;
+        mapReturn = null;
+      }
+      return;
+    }
+    if (overlay === 'books') {
+      if (!BookList.update(dt) && overlay === 'books') overlay = null;
       return;
     }
     if (overlay === 'pause') {
@@ -4981,23 +8162,27 @@ const Game = (() => {
       if (Input.hit('map')) {
         MapView.open();
         overlay = 'map';
+        mapReturn = null;
         Sound.sfx('select');
         return;
       }
+      if (Input.hit('books')) {
+        openBooks();
+        return;
+      }
       Library.update(dt);
-    } else if (scene === 'moby') MobyWorld.update(dt);
-    else if (scene === 'alice') AliceWorld.update(dt);
+    } else if (SCENES[scene]) SCENES[scene].update(dt);
   }
 
   function draw() {
     if (scene === 'title') Title.draw(g);
     else if (scene === 'library') Library.draw(g);
-    else if (scene === 'moby') MobyWorld.draw(g);
-    else if (scene === 'alice') AliceWorld.draw(g);
+    else if (SCENES[scene]) SCENES[scene].draw(g);
     Banner.draw(g);
     Dialog.draw(g);
     Toast.draw(g);
     if (overlay === 'map') MapView.draw(g);
+    if (overlay === 'books') BookList.draw(g);
     if (overlay === 'pause') {
       Pause.draw(g);
       Dialog.draw(g);
@@ -5020,21 +8205,32 @@ const Game = (() => {
     }
   }
 
+  let errShown = false;
   function frame(now) {
     if (!running) return;
+    requestAnimationFrame(frame);
     const dt = Math.min(0.1, (now - last) / 1000 || 0);
     last = now;
     acc += dt;
     let steps = 0;
-    while (acc >= STEP && steps < 6) {
-      update(STEP);
+    try {
+      while (acc >= STEP && steps < 6) {
+        update(STEP);
+        Input.endFrame();
+        acc -= STEP;
+        steps++;
+      }
+      if (steps >= 6) acc = 0;
+      draw();
+    } catch (e) {
+      // Ein Fehler soll nicht das ganze Spiel anhalten
       Input.endFrame();
-      acc -= STEP;
-      steps++;
+      acc = 0;
+      if (!errShown) {
+        errShown = true;
+        console.error(e);
+      }
     }
-    if (steps >= 6) acc = 0;
-    draw();
-    requestAnimationFrame(frame);
   }
 
   function boot() {
@@ -5046,7 +8242,7 @@ const Game = (() => {
       S.sfx = loaded.sfx;
     }
     Library.init({
-      openMap: () => { MapView.open(); overlay = 'map'; },
+      openMap: () => { MapView.open(); overlay = 'map'; mapReturn = null; },
       startWorld,
     });
     Input.attach(window);
@@ -5101,7 +8297,7 @@ const Game = (() => {
     Font.draw(lg, text, 0, 0, '#ffd977');
   }
 
-  return { boot, get scene() { return scene; }, get overlay() { return overlay; } };
+  return { boot, startWorld, get scene() { return scene; }, get overlay() { return overlay; } };
 })();
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', Game.boot);
