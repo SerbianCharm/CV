@@ -1604,6 +1604,7 @@ const Sound = (() => {
     if (fEnd) filt.frequency.exponentialRampToValueAtTime(fEnd, t + dur);
     filt.Q.value = q;
     const g = ctx.createGain();
+    g.gain.value = 0; // sonst steht der Regler bis t auf 1: ein lautes Knacken im ersten Sample
     g.gain.setValueAtTime(vol, t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     src.connect(filt);
@@ -1628,6 +1629,16 @@ const Sound = (() => {
       osc('sine', f * 2, t, 0.15, v * 0.35, musicBus, { sustain: 0.1, release: 0.2 });
     },
     pluck: (f, t, d, v) => osc('triangle', f, t, 0.12, v, musicBus, { sustain: 0.2, release: 0.15 }),
+    // weiche Flöte: Sinus mit leisem Oberton, sanfter Einsatz
+    flute: (f, t, d, v) => {
+      osc('sine', f, t, d, v, musicBus, { attack: 0.04, sustain: 0.8, release: 0.15, vib: d > 0.35 });
+      osc('sine', f * 2, t, d, v * 0.12, musicBus, { attack: 0.04, sustain: 0.6, release: 0.1 });
+    },
+    // warmes E-Piano: kurzer Anschlag, klingt sanft aus
+    keys: (f, t, d, v) => {
+      osc('sine', f, t, Math.min(d, 0.6), v, musicBus, { attack: 0.006, sustain: 0.45, release: 0.45 });
+      osc('triangle', f * 2, t, 0.1, v * 0.2, musicBus, { attack: 0.004, sustain: 0.2, release: 0.12 });
+    },
     K: (f, t, d, v) => osc('sine', 130, t, 0.12, v, musicBus, { slide: 45, sustain: 0.6, release: 0.05 }),
     S: (f, t, d, v) => noise(t, 0.12, v, musicBus, 'bandpass', 1800, 0.8),
     H: (f, t, d, v) => noise(t, 0.04, v * 0.6, musicBus, 'highpass', 7000, 0.7),
@@ -1639,7 +1650,10 @@ const Sound = (() => {
   function chordTrack(bars, perBar, pattern, voicing) {
     const out = [];
     for (const name of bars) {
-      for (let i = 0; i < perBar; i++) out.push(pattern[i] === 'x' ? voicing[name] : pattern[i] === 'b' ? voicing[name].split('+')[0].replace(/\d/, (n) => String(Number(n) - 1)) : '.');
+      for (let i = 0; i < perBar; i++) {
+        const p = pattern[i];
+        out.push(p === 'x' ? voicing[name] : p === 'b' ? voicing[name].split('+')[0].replace(/\d/, (n) => String(Number(n) - 1)) : p === '-' ? '-' : '.');
+      }
     }
     return out.join(' ');
   }
@@ -1669,7 +1683,14 @@ const Sound = (() => {
     return out.join(' ');
   }
 
-  const libBars = ['F', 'Am', 'Bb', 'C', 'F', 'Dm', 'Gm', 'F', 'Dm', 'Am', 'Bb', 'F', 'Gm', 'Am', 'Bb', 'C'];
+  // Jeder Ton genau len Schritte lang, der letzte Schritt ist Pause
+  function held(notes, len) {
+    return notes.map((n) => [n, ...Array(len - 2).fill('-'), '.'].join(' ')).join(' ');
+  }
+
+  // Takte mit zwei Akkorden („Gm7|C7“) in Halbtakte zerlegen
+  const halves = (bars) => bars.flatMap((b) => (b.includes('|') ? b.split('|') : [b, b]));
+
   const forestBars = ['Am', 'F', 'G', 'Am', 'Dm', 'Am', 'E', 'Am', 'F', 'C', 'G', 'Em', 'Dm', 'Am', 'E', 'Am'];
   const labBars = ['Am', 'F', 'C', 'G', 'Am', 'F', 'Dm', 'E'];
   const lilliBars = ['D', 'G', 'A', 'D', 'Bm', 'G', 'A', 'D'];
@@ -1678,21 +1699,34 @@ const Sound = (() => {
   const spaceBars = ['C', 'Am', 'F', 'G', 'C', 'Em', 'F', 'G'];
   const engineBars = ['G', 'D', 'G', 'C', 'G', 'Am', 'D', 'G', 'Em', 'C', 'G', 'D', 'C', 'G', 'D', 'G'];
 
+  // Lesecafé (Bücherei): Jazz-Akkorde in F-Dur, eng gesetzt für das E-Piano
+  const cafeBars = ['F7', 'Dm7', 'Gm7', 'C7', 'F7', 'Dm7', 'Gm7|C7', 'F7', 'Bb7', 'C7', 'Am7', 'Dm7', 'Gm7', 'C7', 'F7', 'Gm7|C7'];
+  const VJ = { F7: 'A3+C4+E4', Dm7: 'A3+C4+F4', Gm7: 'Bb3+D4+F4', C7: 'Bb3+D4+E4', Bb7: 'A3+D4+F4', Am7: 'G3+C4+E4' };
+  // Kontrabass im Zweierschritt: Grundton und Quinte, je ein halber Takt
+  const cafeBass = [
+    'F2', 'C3', 'D3', 'A2', 'G2', 'D3', 'C3', 'G2', 'F2', 'A2', 'D3', 'A2', 'G2', 'C3', 'F2', 'C3',
+    'Bb2', 'F2', 'C3', 'G2', 'A2', 'E3', 'D3', 'A2', 'G2', 'D3', 'C3', 'Bb2', 'F2', 'A2', 'G2', 'C3',
+  ];
+
   const SONGS = {
+    // Bücherei & Titelbild: „Lesecafé“ – gemütlicher Swing (Dur, weiche Klänge, leise).
+    // Zweite Hälfte nur lange Flötentöne, damit die Schleife nicht aufdringlich wird.
     library: {
-      bpm: 84, spb: 2,
+      bpm: 96, spb: 3,
       tracks: [
-        { inst: 'lead', vol: 0.07, notes:
-          'C5 - A4 - F4 - A4 - C5 - E5 - D5 - C5 - D5 - - - Bb4 - C5 D5 C5 - - - - - . . ' +
-          'C5 - A4 - F4 - A4 C5 D5 - F5 - E5 - D5 - Bb4 - D5 - C5 - E4 - F4 - - - - - . . ' +
-          'F5 - E5 - D5 - A4 - C5 - E5 - A4 - - - Bb4 - D5 - F5 - D5 - C5 - - - A4 - - - ' +
-          'G4 - Bb4 - D5 - G5 - E5 - C5 - A4 - C5 - D5 - C5 - Bb4 - A4 - G4 - - - - - . .' },
-        { inst: 'bass', vol: 0.16, notes:
-          'F2 - - - C3 - - - A2 - - - E3 - - - Bb2 - - - F3 - - - C3 - - - G2 - - - ' +
-          'F2 - - - C3 - - - D3 - - - A2 - - - G2 - - - C3 - - - F2 - - - C3 - - - ' +
-          'D3 - - - A2 - - - A2 - - - E3 - - - Bb2 - - - F3 - - - F2 - - - C3 - - - ' +
-          'G2 - - - D3 - - - A2 - - - E3 - - - Bb2 - - - F3 - - - C3 - - - G2 - - -' },
-        { inst: 'arp', vol: 0.035, notes: arpTrack(libBars, 8) },
+        { inst: 'flute', vol: 0.07, notes:
+          'C5 - - A4 - - C5 - D5 E5 - - F5 - - - - - E5 - D5 C5 - - D5 - - Bb4 - - D5 - E5 F5 - - E5 - - - - - D5 - C5 Bb4 - - ' +
+          'A4 - - C5 - - F5 - - E5 - - D5 - - C5 - - A4 - - F4 - - D5 - - Bb4 - - C5 - E5 G5 - - F5 - - - - - - - - . . . ' +
+          'F5 - - D5 - - Bb4 - - A4 - - G4 - - Bb4 - - E5 - - D5 - - C5 - - - - - E5 - D5 C5 - - F5 - - E5 - - D5 - - A4 - - ' +
+          'Bb4 - - D5 - - F5 - - D5 - - E5 - - - - - G5 - F5 E5 - - F5 - - C5 - - A4 - - C5 - - Bb4 - - A4 - - G4 - - A4 - Bb4 ' +
+          // zweiter Durchgang: nur lange, ruhige Töne
+          'E5 - - - - - C5 - - - - - D5 - - - - - . . . . . . F5 - - - - - D5 - - - - - E5 - - - - - . . . . . . ' +
+          'C5 - - - - - A4 - - C5 - - D5 - - - - - . . . . . . Bb4 - - - - - G4 - - - - - A4 - - - - - - - - . . . ' +
+          'D5 - - - - - F5 - - - - - E5 - - - - - . . . . . . C5 - - - - - E5 - - - - - F5 - - - - - . . . . . . ' +
+          'D5 - - - - - Bb4 - - - - - G4 - - - - - Bb4 - - - - - A4 - - - - - - - - - - - . . . . . . . . . A4 - Bb4' },
+        { inst: 'keys', vol: 0.045, notes: chordTrack(halves([...cafeBars, ...cafeBars]), 6, '...x-.', VJ) },
+        { inst: 'bass', vol: 0.15, notes: held([...cafeBass, ...cafeBass], 6) },
+        { inst: 'H', vol: 0.02, notes: 'H . . H . H H . . H . H '.repeat(32) },
       ],
     },
     shanty: {
@@ -1883,7 +1917,7 @@ const Sound = (() => {
 
   function songInfo(id) {
     const sg = SONGS[id];
-    return sg ? { stepDur: sg.stepDur, len: sg.len, tracks: sg.tracks.map((tr) => tr.tokens.slice()) } : null;
+    return sg ? { stepDur: sg.stepDur, len: sg.len, insts: sg.tracks.map((tr) => tr.inst), tracks: sg.tracks.map((tr) => tr.tokens.slice()) } : null;
   }
 
   // Meeresrauschen für Moby Dick
@@ -5850,7 +5884,15 @@ const GulliverWorld = (() => {
   const W = 720;
   const LILLI = 150;
   const BLEF = 600;
-  const TIME = 90;
+  const TIME = 100;
+  // Schwierigkeit (per Spiel-Simulation abgestimmt): Die Bogenschützen schießen seltener und
+  // langsamer, und nach einem Treffer ist Gulliver kurz geschützt – sonst lähmt ihn ein
+  // Pfeilhagel dauerhaft, sobald er stehen bleibt.
+  const ARROW_SPEED = 100;
+  const RELOAD_MIN = 2.2;
+  const RELOAD_VAR = 1.2;
+  const STUN = 0.35;
+  const SAFE = 1.2;
   const SHIP_SPR = buildSprite([
     '......kr.......', '......kkk......', '.....kwwwk.....', '....kwwwwwk....', '....kwwwwwk....',
     '...kwwwwwwwk...', '......kk.......', 'kkkkkkkkkkkkkkk', '.kTTTTTTTTTTTk.', '..kTTTTTTTTTk..', '...kkkkkkkkk...',
@@ -5936,7 +5978,7 @@ const GulliverWorld = (() => {
     said = {};
     result = null;
     arrows = [];
-    gul = { x: 110, y: 120, dir: 'right', anim: 0, moving: false, stun: 0, spr: charSprites(LOOK) };
+    gul = { x: 110, y: 120, dir: 'right', anim: 0, moving: false, stun: 0, safe: 0, spr: charSprites(LOOK) };
     ships = [];
     for (let col = 0; col < 3; col++) {
       for (let row = 0; row < 4; row++) ships.push({ x: 478 + col * 34 + (row % 2) * 10, y: 34 + row * 44, hooked: false, done: false, bob: Math.random() * 6 });
@@ -5951,7 +5993,7 @@ const GulliverWorld = (() => {
     const icon = emblemIcon('gulliver');
     StoryCard.show([
       { title: 'Gullivers Reisen', sub: 'Jonathan Swift · 1726', icon, text: 'Nach einem Schiffbruch erwacht der Schiffsarzt Lemuel Gulliver an einem fremden Strand – festgebunden mit hundert dünnen Fäden. Um ihn herum wuseln Menschen, kaum größer als ein Daumen.\n\nEr ist im Land Liliput.' },
-      { title: 'Gullivers Reisen', sub: 'Die Flotte von Blefuscu', icon, text: 'Liliput streitet mit der Nachbarinsel Blefuscu – darüber, an welchem Ende man ein Ei aufschlägt! Jetzt rüstet Blefuscu eine Flotte zum Angriff.\n\nGulliver watet hinüber und holt sich die Schiffe.\n\n↑↓←→ waten · E Schiff anhaken · Bring die Schiffe nach Liliput!' },
+      { title: 'Gullivers Reisen', sub: 'Die Flotte von Blefuscu', icon, text: 'Liliput streitet mit der Nachbarinsel Blefuscu – darüber, an welchem Ende man ein Ei aufschlägt! Jetzt rüstet Blefuscu eine Flotte zum Angriff.\n\nGulliver watet hinüber und holt sich die Schiffe.\n\n↑↓←→ waten · E Schiff anhaken, auch mehrere hintereinander · Bring sie nach Liliput!' },
     ], () => {
       phase = 'play';
       msg = { text: 'Wate hinüber nach Blefuscu (rechts). In der Mitte ist das Wasser tief – dort musst du schwimmen.', t: 5 };
@@ -5982,6 +6024,7 @@ const GulliverWorld = (() => {
     if (Input.down('up')) my -= 1;
     if (Input.down('down')) my += 1;
     gul.moving = false;
+    if (gul.safe > 0) gul.safe -= dt;
     if (gul.stun > 0) gul.stun -= dt;
     else if (mx || my) {
       const len = Math.hypot(mx, my);
@@ -6006,7 +6049,7 @@ const GulliverWorld = (() => {
         Sound.sfx('rope');
         if (!said.hook) {
           said.hook = true;
-          msg = { text: 'Gulliver schneidet das Ankertau durch und befestigt einen Haken am Bug. Hol so viele, wie du schaffst!', t: 4 };
+          msg = { text: 'Gulliver schneidet das Ankertau durch und hakt das Schiff an. Du kannst mehrere hintereinander ziehen!', t: 4 };
         }
       } else if (!said.near) {
         said.near = true;
@@ -6042,7 +6085,12 @@ const GulliverWorld = (() => {
         delivered += n;
         Sound.sfx('cheer');
         for (const f of folk) f.jump = 0.8;
-        msg = { text: n === 1 ? 'Ein Schiff mehr für Liliput! Die Liliputaner jubeln.' : n + ' Schiffe auf einmal! Die Liliputaner jubeln.', t: 3 };
+        if (n === 1 && !said.tow && delivered < ships.length) {
+          said.tow = true;
+          msg = { text: 'Ein Schiff mehr für Liliput! Tipp: Hak gleich mehrere an, dann sparst du dir Wege.', t: 4 };
+        } else {
+          msg = { text: n === 1 ? 'Ein Schiff mehr für Liliput! Die Liliputaner jubeln.' : n + ' Schiffe auf einmal! Die Liliputaner jubeln.', t: 3 };
+        }
       }
     }
     updateFolk(dt);
@@ -6089,10 +6137,10 @@ const GulliverWorld = (() => {
     for (const a of archers) {
       a.cd -= dt;
       if (a.cd <= 0) {
-        a.cd = 1.4 + Math.random() * 0.8;
+        a.cd = RELOAD_MIN + Math.random() * RELOAD_VAR;
         if (Math.abs(gul.x - a.x) < 250) {
           const ang = Math.atan2(gul.y - 22 - a.y, gul.x - a.x);
-          arrows.push({ x: a.x, y: a.y, vx: Math.cos(ang) * 120, vy: Math.sin(ang) * 120, life: 2.5 });
+          arrows.push({ x: a.x, y: a.y, vx: Math.cos(ang) * ARROW_SPEED, vy: Math.sin(ang) * ARROW_SPEED, life: 2.5 });
           Sound.sfx('arrow');
         }
       }
@@ -6103,7 +6151,9 @@ const GulliverWorld = (() => {
       ar.life -= dt;
       if (Math.abs(ar.x - gul.x) < 8 && Math.abs(ar.y - (gul.y - 22)) < 9) {
         ar.life = 0;
-        gul.stun = 0.35;
+        if (gul.safe > 0) continue; // kurz geschützt: der Pfeil prallt ab
+        gul.stun = STUN;
+        gul.safe = SAFE;
         Sound.sfx('ouch');
         if (!said.arrow) {
           said.arrow = true;
@@ -6181,7 +6231,7 @@ const GulliverWorld = (() => {
       g.fillStyle = 'rgba(0,0,0,0.25)';
       g.fillRect(gx + 8, Math.round(gul.y) - 3, 16, 3);
     }
-    if (gul.stun > 0 && Math.floor(gul.stun * 20) % 2 === 0) g.globalAlpha = 0.6;
+    if (gul.safe > 0 && Math.floor(gul.safe * 12) % 2 === 0) g.globalAlpha = 0.55; // blinkt, solange er geschützt ist
     g.drawImage(f, gx, gy, 32, 32);
     g.globalAlpha = 1;
     if (d > 0) {
@@ -6197,12 +6247,14 @@ const GulliverWorld = (() => {
       rect(g, x, a.y - 2, 2, 3, '#3a5a8a');
       rect(g, x - 2, a.y - 3, 1, 4, '#7a5a3a');
     }
+    // Pfeile: Spitze, Schaft und helle Federn – gut als Pfeil erkennbar, auch am Handy
     for (const ar of arrows) {
-      const x = Math.round(ar.x - ox);
-      const y = Math.round(ar.y);
-      const l = Math.hypot(ar.vx, ar.vy);
-      rect(g, x, y, 1, 1, '#2b1d1f');
-      rect(g, Math.round(x - (ar.vx / l) * 3), Math.round(y - (ar.vy / l) * 3), 1, 1, '#8a6a4a');
+      const l = Math.hypot(ar.vx, ar.vy) || 1;
+      const ux = ar.vx / l;
+      const uy = ar.vy / l;
+      for (let k = 0; k <= 4; k++) {
+        rect(g, Math.round(ar.x - ox - ux * k), Math.round(ar.y - uy * k), 1, 1, k === 0 ? '#2b1d1f' : k < 4 ? '#8a6a4a' : '#f0e6d0');
+      }
     }
     // HUD
     drawWorldHud(g, 'Gullivers Reisen', delivered + ' / ' + ships.length, SHIP_ICON);
@@ -6216,7 +6268,7 @@ const GulliverWorld = (() => {
 
   return {
     enter, update, draw,
-    debug: () => ({ phase, gul, ships, delivered, timeLeft, setTime: (v) => { timeLeft = v; } }),
+    debug: () => ({ phase, gul, ships, arrows, archers, delivered, timeLeft, setTime: (v) => { timeLeft = v; } }),
   };
 })();
 
